@@ -1,0 +1,41 @@
+:root {
+  /* Noir */
+  --zh-black: #07070a;
+  --zh-onyx: #0e0e12;
+  --zh-graphite: #17171c;
+  --zh-smoke: #2a2a31;
+  /* Gold — never a flat yellow */
+  --zh-gold-50: #f6e7c1;
+  --zh-gold-200: #e9c987;
+  --zh-gold-400: #cfa55a;
+  --zh-gold-600: #a9823f;
+  --zh-gold-800: #6e5223;
+  --zh-gold-gradient: linear-gradient(
+    135deg,
+    #6e5223 0%,
+    #a9823f 18%,
+    #e9c987 38%,
+    #f6e7c1 50%,
+    #cfa55a 64%,
+    #8a6a2e 82%,
+    #e9c987 100%
+  );
+  /* Ivory editorial */
+  --zh-ivory: #f5f1e8;
+  --zh-paper: #fbf8f2;
+  --zh-sand: #e7decc;
+  --zh-ink: #1a1814;
+  --zh-ink-soft: #5b5447;
+  /* Nature accents — use sparingly */
+  --zh-emerald: #0f6b4f;
+  --zh-emerald-glow: #1fa37a;
+  --zh-sunset: #e07a2e;
+  --zh-earth: #6b4a2b;
+  /* Text on black */
+  --zh-cream: #ede6d6;
+  --zh-muted: #9c958a;
+  /* Warm shadow, never cold grey */
+  --zh-shadow: 0 18px 50px rgba(110, 82, 35, 0.25);
+  --zh-radius: 3px;
+  --zh-header-height: 5.5rem;
+}

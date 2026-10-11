@@ -1,0 +1,48 @@
+{
+  "common": {
+    "skip": "Saltar al contenido",
+    "book": "Reservar una consulta",
+    "explore": "Explorar servicios",
+    "contact": "Conversemos",
+    "language": "ES",
+    "menu": "Menú",
+    "close": "Cerrar",
+    "next": "Siguiente",
+    "back": "Volver"
+  },
+  "nav": {
+    "home": "Inicio",
+    "about": "La firma",
+    "services": "Servicios",
+    "sectors": "Sectores",
+    "global": "Presencia global",
+    "insights": "Perspectivas",
+    "contact": "Contacto"
+  },
+  "footer": {
+    "company": "Firma",
+    "support": "Soporte",
+    "legal": "Legal",
+    "offices": "Oficinas",
+    "newsletter": "Perspectivas de Zoharav",
+    "rights": "Todos los derechos reservados."
+  },
+  "concierge": {
+    "title": "Concierge privado",
+    "body": "Cuéntenos su objetivo. Un asesor senior le contactará en un plazo de 24 horas hábiles.",
+    "book": "Reservar una consulta",
+    "email": "Escribirnos",
+    "whatsapp": "WhatsApp",
+    "offices": "Nuestras oficinas"
+  },
+  "form": {
+    "name": "Nombre",
+    "email": "Correo",
+    "phone": "Teléfono",
+    "company": "Empresa",
+    "interest": "Área de interés",
+    "message": "Mensaje",
+    "submit": "Enviar",
+    "success": "Escríbanos y le responderemos."
+  }
+}

@@ -1,0 +1,91 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+@import "./tokens.css";
+@import "./experience.css";
+
+@theme inline {
+  --color-zh-black: var(--zh-black);
+  --color-zh-onyx: var(--zh-onyx);
+  --color-zh-graphite: var(--zh-graphite);
+  --color-zh-smoke: var(--zh-smoke);
+  --color-zh-gold-50: var(--zh-gold-50);
+  --color-zh-gold-200: var(--zh-gold-200);
+  --color-zh-gold-400: var(--zh-gold-400);
+  --color-zh-gold-600: var(--zh-gold-600);
+  --color-zh-gold-800: var(--zh-gold-800);
+  --color-zh-ivory: var(--zh-ivory);
+  --color-zh-paper: var(--zh-paper);
+  --color-zh-sand: var(--zh-sand);
+  --color-zh-ink: var(--zh-ink);
+  --color-zh-ink-soft: var(--zh-ink-soft);
+  --color-zh-emerald: var(--zh-emerald);
+  --color-zh-emerald-glow: var(--zh-emerald-glow);
+  --color-zh-sunset: var(--zh-sunset);
+  --color-zh-earth: var(--zh-earth);
+  --color-zh-cream: var(--zh-cream);
+  --color-zh-muted: var(--zh-muted);
+  --font-display: var(--font-cormorant), "Times New Roman", serif;
+  --font-sans: var(--font-manrope), "Segoe UI", sans-serif;
+  --font-wordmark: var(--font-cinzel), "Times New Roman", serif;
+  --font-script: var(--font-script), cursive;
+}
+
+html {
+  background: var(--zh-black);
+  color: var(--zh-cream);
+  scroll-behavior: auto;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--zh-black);
+  color: var(--zh-cream);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--zh-gold-600);
+  color: var(--zh-black);
+}
+
+:focus-visible {
+  outline: 2px solid var(--zh-gold-400);
+  outline-offset: 3px;
+}
+
+.zh-gold-text {
+  background-image: var(--zh-gold-gradient);
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.zh-skip {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  transform: translateY(-160%);
+  background: var(--zh-gold-400);
+  color: var(--zh-black);
+  padding: 0.6rem 1rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.zh-skip:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

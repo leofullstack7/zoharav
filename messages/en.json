@@ -1,0 +1,48 @@
+{
+  "common": {
+    "skip": "Skip to content",
+    "book": "Book a Consultation",
+    "explore": "Explore our services",
+    "contact": "Get in Touch",
+    "language": "EN",
+    "menu": "Menu",
+    "close": "Close",
+    "next": "Next",
+    "back": "Back"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "sectors": "Sectors",
+    "global": "Global Presence",
+    "insights": "Insights",
+    "contact": "Contact"
+  },
+  "footer": {
+    "company": "Company",
+    "support": "Support",
+    "legal": "Legal",
+    "offices": "Offices",
+    "newsletter": "Insights by Zoharav",
+    "rights": "All rights reserved."
+  },
+  "concierge": {
+    "title": "Private Concierge",
+    "body": "Tell us your goal — a senior advisor will contact you within 24 business hours.",
+    "book": "Book a consultation",
+    "email": "Email us",
+    "whatsapp": "WhatsApp",
+    "offices": "Our offices"
+  },
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "company": "Company",
+    "interest": "Area of interest",
+    "message": "Message",
+    "submit": "Submit",
+    "success": "Message us and we'll get back to you."
+  }
+}
