@@ -24,6 +24,95 @@ export const hero = {
   } satisfies Localized,
 };
 
+export type BannerId = "mandato" | "horizonte" | "presencia";
+
+export const bannerOptions: { id: BannerId; label: Localized }[] = [
+  { id: "mandato", label: { en: "Mandate", es: "Mandato" } },
+  { id: "horizonte", label: { en: "Horizon", es: "Horizonte" } },
+  { id: "presencia", label: { en: "Presence", es: "Presencia" } },
+];
+
+export const banners: Record<
+  BannerId,
+  { eyebrow: Localized; title: Localized; lede: Localized }
+> = {
+  mandato: {
+    eyebrow: {
+      en: "Counsel for the person who signs",
+      es: "Consejo para quien firma",
+    },
+    title: {
+      en: "A decision a board can sign.",
+      es: "Una decisión que un directorio puede firmar.",
+    },
+    lede: {
+      en: "We read the market, structure the opportunity, and stay through the close. We advise on the resource. We do not operate it.",
+      es: "Leemos el mercado, estructuramos la oportunidad y nos quedamos hasta el cierre. Asesoramos el recurso. No lo operamos.",
+    },
+  },
+  horizonte: {
+    eyebrow: {
+      en: "After the resource, the decision.",
+      es: "Después del recurso, la decisión.",
+    },
+    title: {
+      en: "What still holds in ten years.",
+      es: "Lo que sigue en pie dentro de diez años.",
+    },
+    lede: {
+      en: "Oil, minerals, and the capital that moves them. The work is the judgment behind the transaction, not the commodity itself.",
+      es: "Petróleo, minerales y el capital que los mueve. El trabajo es el juicio detrás de la transacción, no la materia prima.",
+    },
+  },
+  presencia: {
+    eyebrow: {
+      en: "Three rooms. One judgment.",
+      es: "Tres mesas. Un criterio.",
+    },
+    title: {
+      en: "Medellín. Miami. Puerto Rico.",
+      es: "Medellín. Miami. Puerto Rico.",
+    },
+    lede: {
+      en: "A mandate can start in Latin America and close with a partner who is already in the room in Miami or the Caribbean.",
+      es: "Un mandato puede empezar en América Latina y cerrarse con un socio que ya está en la mesa en Miami o en el Caribe.",
+    },
+  },
+};
+
+export const trust = [
+  {
+    id: "room",
+    title: { en: "Who is in the room", es: "Quién está en la sala" },
+    body: {
+      en: "Senior consultants, more than 15 years in leading global firms, former Fortune 500 executives, and specialists who hold PMP and CFA credentials.",
+      es: "Consultores senior, más de 15 años en firmas globales de primer nivel, exejecutivos de compañías Fortune 500 y especialistas con PMP y CFA.",
+    },
+    href: "/about",
+    cta: { en: "The firm", es: "La firma" },
+  },
+  {
+    id: "limit",
+    title: { en: "The line we do not cross", es: "La línea que no cruzamos" },
+    body: {
+      en: "We do not sell, transport, or operate oil, gas, or minerals. The mandate is counsel. That boundary is how a board knows what it is buying.",
+      es: "No vendemos, transportamos ni operamos petróleo, gas o minerales. El mandato es de consejo. Ese límite es lo que un directorio sabe que está comprando.",
+    },
+    href: "/faq",
+    cta: { en: "The boundary", es: "El límite" },
+  },
+  {
+    id: "start",
+    title: { en: "How a mandate starts", es: "Cómo empieza un mandato" },
+    body: {
+      en: "Sixty minutes with a senior advisor. The USD 500 reservation is credited to the engagement if you continue.",
+      es: "Sesenta minutos con un asesor senior. La reserva de USD 500 se acredita al encargo si deciden continuar.",
+    },
+    href: "/booking",
+    cta: { en: "Reserve the session", es: "Reservar la sesión" },
+  },
+] as const;
+
 export const chapters = {
   bridge: {
     quote: {

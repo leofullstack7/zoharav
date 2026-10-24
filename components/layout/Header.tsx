@@ -53,7 +53,13 @@ export function Header({ locale }: { locale: string }) {
             {locale === "es" ? "Reservar" : "Book"} <span aria-hidden>→</span>
           </Link>
         </nav>
-        <button className="menu-toggle" type="button" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+        <button
+          className="menu-toggle"
+          type="button"
+          aria-expanded={open}
+          aria-label={open ? (locale === "es" ? "Cerrar menú" : "Close menu") : locale === "es" ? "Abrir menú" : "Open menu"}
+          onClick={() => setOpen((v) => !v)}
+        >
           {open ? "×" : "☰"}
         </button>
       </header>

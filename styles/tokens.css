@@ -4,21 +4,21 @@
   --zh-onyx: #0e0e12;
   --zh-graphite: #17171c;
   --zh-smoke: #2a2a31;
-  /* Gold — never a flat yellow */
-  --zh-gold-50: #f6e7c1;
-  --zh-gold-200: #e9c987;
-  --zh-gold-400: #cfa55a;
-  --zh-gold-600: #a9823f;
-  --zh-gold-800: #6e5223;
+  /* Silver — cool metal, never a flat grey */
+  --zh-gold-50: #f5f8fc;
+  --zh-gold-200: #d5dee8;
+  --zh-gold-400: #b7c4d4;
+  --zh-gold-600: #8d9bab;
+  --zh-gold-800: #5c6876;
   --zh-gold-gradient: linear-gradient(
-    135deg,
-    #6e5223 0%,
-    #a9823f 18%,
-    #e9c987 38%,
-    #f6e7c1 50%,
-    #cfa55a 64%,
-    #8a6a2e 82%,
-    #e9c987 100%
+    115deg,
+    #6d7886 0%,
+    #c5d0dc 20%,
+    #f7fbff 42%,
+    #ffffff 50%,
+    #d5e0ea 64%,
+    #8b98a8 82%,
+    #eef3f8 100%
   );
   /* Ivory editorial */
   --zh-ivory: #f5f1e8;
@@ -32,10 +32,9 @@
   --zh-sunset: #e07a2e;
   --zh-earth: #6b4a2b;
   /* Text on black */
-  --zh-cream: #ede6d6;
-  --zh-muted: #9c958a;
-  /* Warm shadow, never cold grey */
-  --zh-shadow: 0 18px 50px rgba(110, 82, 35, 0.25);
+  --zh-cream: #e7edf3;
+  --zh-muted: #9aa3ae;
+  --zh-shadow: 0 18px 50px rgba(150, 168, 188, 0.16);
   --zh-radius: 3px;
   --zh-header-height: 5.5rem;
 }

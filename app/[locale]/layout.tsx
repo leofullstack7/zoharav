@@ -75,6 +75,14 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${cormorant.variable} ${manrope.variable} ${cinzel.variable} ${script.variable}`}
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body>
         <a className="zh-skip" href="#content">
           {t("skip")}

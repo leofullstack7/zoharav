@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { LiveFrame } from "@/components/motion/LiveFrame";
 import { Reveal } from "@/components/motion/Reveal";
-import { chapters, hero } from "@/content/home";
-import { homePillars, homeServiceCards } from "@/content/navigation";
+import { banners, chapters, trust } from "@/content/home";
+import { homeServiceCards } from "@/content/navigation";
 import { activeOffices } from "@/content/offices";
 import { services } from "@/content/services";
 import { homeStats } from "@/content/stats";
@@ -13,6 +12,16 @@ import { Link } from "@/i18n/navigation";
 import { loc } from "@/lib/i18n/loc";
 
 const line = (value: { en: string; es: string }, locale: string) => loc(value, locale);
+
+function heroTitle(text: string) {
+  const words = text.replace(/\s+/g, " ").trim().split(" ");
+  const mark = words.slice(-2).join(" ");
+  const rest = words.slice(0, -2);
+  const small = rest[0] ?? "";
+  const heroWord = rest[1] ?? "";
+  const bridge = rest.slice(2).join(" ");
+  return { small, heroWord, bridge, mark };
+}
 
 function Band({
   locale,
@@ -84,74 +93,81 @@ const covers: Record<string, string> = {
 };
 
 export function HomeExperience({ locale }: { locale: string }) {
-  const [impact, setImpact] = useState(0);
-  const rotating = hero.titleRotating[impact] ?? hero.titleRotating[0];
-
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      setImpact((current) => (current + 1) % hero.titleRotating.length);
-    }, 4200);
-    return () => window.clearInterval(id);
-  }, []);
+  const slide = banners.mandato;
+  const title = heroTitle(line(slide.title, locale));
 
   return (
-    <div>
-      <section className="hero">
-        <div className="hero-media">
-          <img src="/images/hero/yacht.jpg" alt="Offshore platform at sunset, seen from the deck of a yacht" />
-          <div className="hero-shade" />
+    <div className="home-stage">
+      <section className="hero hero-mandato">
+        <div className="hero-wash" aria-hidden>
+          <img src="/images/hero/yacht.jpg" alt="" />
         </div>
+        <div className="hero-sun" aria-hidden>
+          <span className="hero-sun-core" />
+          <span className="hero-sun-ray" />
+        </div>
+        <div className="hero-shade" />
         <div className="hero-copy">
-          <p className="eyebrow">{line(hero.eyebrow, locale)}</p>
+          <p className="eyebrow">{line(slide.eyebrow, locale)}</p>
           <h1>
-            <span className="zh-gold-text">{line(hero.titleGold, locale)}</span>
-            <span key={rotating.en}>{line(rotating, locale)}</span>
+            <span className="hero-small">{title.small}</span>
+            <span className="hero-word">{title.heroWord}</span>
+            {title.bridge ? <span className="hero-bridge">{title.bridge}</span> : null}
+            <span className="hero-mark">{title.mark}</span>
           </h1>
-          <p className="hero-lede">{line(hero.subtitle, locale)}</p>
+          <p className="hero-lede">{line(slide.lede, locale)}</p>
           <div className="hero-actions">
-            <a className="btn-gold" href="#services">
-              {locale === "es" ? "Explorar servicios" : "Explore our services"} <span aria-hidden>→</span>
-            </a>
-            <Link className="text-link" href="/booking">
-              {locale === "es" ? "Reservar consulta" : "Book a consultation"}
+            <Link className="btn-gold" href="/booking">
+              {locale === "es" ? "Reservar sesión" : "Reserve a session"} <span aria-hidden>→</span>
             </Link>
+            <a className="text-link" href="#trust">
+              {locale === "es" ? "Por qué confiar" : "Why the trust holds"}
+            </a>
           </div>
         </div>
         <div className="scroll-cue" aria-hidden>
           SCROLL
           <i />
         </div>
-        <div className="pillars">
-          {homePillars.map((pillar) => (
-            <Link className="pillar" href={pillar.href} key={pillar.id}>
-              <img src={pillar.image} alt="" />
-              <div>
-                <strong>{line(pillar.title, locale)}</strong>
-                <p>{line(pillar.lines, locale)}</p>
-              </div>
-            </Link>
-          ))}
+      </section>
+
+      <section className="chapter trust" id="trust">
+        <div className="firm-layout">
+          <Reveal>
+            <header className="firm-head">
+              <p className="firm-kicker">
+                <span>00</span>
+                {locale === "es" ? "Antes del discurso" : "Before the pitch"}
+              </p>
+              <h2>{locale === "es" ? "Lo que sostiene la confianza" : "What the trust rests on"}</h2>
+            </header>
+          </Reveal>
+          <div className="trust-grid">
+            {trust.map((item, index) => (
+              <article key={item.id}>
+                <span>0{index + 1}</span>
+                <h3>{line(item.title, locale)}</h3>
+                <p>{line(item.body, locale)}</p>
+                <Link href={item.href}>{line(item.cta, locale)}</Link>
+              </article>
+            ))}
+          </div>
+          <div className="stat-row trust-stats">
+            {homeStats
+              .filter((stat) => stat.kind === "company")
+              .map((stat) => (
+                <article key={stat.id}>
+                  <strong>{stat.value}</strong>
+                  <p>{line(stat.label, locale)}</p>
+                </article>
+              ))}
+          </div>
         </div>
       </section>
 
       <section className="bridge">
         <Reveal>
           <p>{line(chapters.bridge.quote, locale)}</p>
-        </Reveal>
-      </section>
-
-      <section className="chapter">
-        <Reveal>
-          <div className="stat-row">
-            {homeStats
-              .filter((stat) => stat.kind === "company")
-              .map((stat) => (
-              <article className="glass" key={stat.id}>
-                <strong>{stat.value}</strong>
-                <p>{line(stat.label, locale)}</p>
-              </article>
-            ))}
-          </div>
         </Reveal>
       </section>
 
