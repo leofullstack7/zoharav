@@ -32,6 +32,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
+    ...services.flatMap((service) =>
+      service.subServices.map((sub) => ({
+        path: `/services/${service.slug}/${sub.id}`,
+        changeFrequency: "monthly" as const,
+        priority: 0.6,
+      })),
+    ),
     ...legalDocIds.map((doc) => ({
       path: `/legal/${doc}`,
       changeFrequency: "yearly" as const,

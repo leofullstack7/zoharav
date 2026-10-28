@@ -133,7 +133,7 @@ export function Header({ locale }: { locale: string }) {
                   </div>
                   <div className="mega-list">
                     {service.subServices.map((sub) => (
-                      <Link key={sub.id} href={`/services/${service.slug}#${sub.id}`}>
+                      <Link key={sub.id} href={`/services/${service.slug}/${sub.id}`}>
                         {loc(sub.title, locale)}
                       </Link>
                     ))}
@@ -189,7 +189,7 @@ export function Header({ locale }: { locale: string }) {
                         </button>
                         {mobileGroup === entry.slug
                           ? entry.subServices.map((sub) => (
-                              <Link key={sub.id} href={`/services/${entry.slug}#${sub.id}`}>
+                              <Link key={sub.id} href={`/services/${entry.slug}/${sub.id}`}>
                                 {loc(sub.title, locale)}
                               </Link>
                             ))

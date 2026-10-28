@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
 import { Reveal } from "@/components/motion/Reveal";
-import { sectors } from "@/content/sectors";
+import { sectors, sectorsCopy } from "@/content/sectors";
 import { Link } from "@/i18n/navigation";
 import { loc } from "@/lib/i18n/loc";
 import { getSiteImagePhoto } from "@/lib/images/getSiteImage";
@@ -40,15 +40,24 @@ export default async function SectorsPage({ params }: { params: Promise<{ locale
         </div>
       </section>
       <section className="panel">
-        <div className="cards-2">
+        <Reveal>
+          <p className="body sector-intro">{loc(sectorsCopy.intro, locale)}</p>
+        </Reveal>
+        <Reveal delay={60}>
+          <p className="body sector-intro">{loc(sectorsCopy.introSecondary, locale)}</p>
+        </Reveal>
+        <div className="cards-2" style={{ marginTop: "2.2rem" }}>
           {sectors.map((sector, index) => (
             <Reveal delay={index * 70} key={sector.id}>
-              <article className="soft-card">
+              <article className="soft-card sector-card">
+                <span className="sector-index" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
                 <h3>{loc(sector.name, locale)}</h3>
                 <p>{loc(sector.summary, locale)}</p>
-                <p className="kicker">
+                <p className="sector-services">
                   {sector.services.map((slug) => (
-                    <Link key={slug} href={`/services/${slug}`} style={{ marginRight: "0.8rem" }}>
+                    <Link key={slug} href={`/services/${slug}`}>
                       {slug}
                     </Link>
                   ))}

@@ -1,25 +1,37 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { BookingDetailModal } from "@/components/admin/BookingDetailModal";
+import type { Booking } from "@/components/admin/types";
 
-type Booking = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string | null;
-  topic: string | null;
-  source: string;
-  status: string;
-  createdAt: string;
-  slot: { id: string; startsAt: string; durationMinutes: number | null } | null;
-};
+/**
+ * CRM card board for every booking. Upgraded from a plain table: each
+ * booking renders as a card (name, topic, date, outcome badge); clicking a
+ * card opens BookingDetailModal, where an admin reviews the full record and
+ * records how the consultation went. The cancel action from the original
+ * table still lives inside that modal — cancelling and setting an outcome
+ * are different concepts (see BookingDetailModal's header comment).
+ */
 
 const formatter = new Intl.DateTimeFormat("es", { dateStyle: "medium", timeStyle: "short" });
+
+function OutcomeBadge({ booking }: { booking: Booking }) {
+  if (booking.status === "cancelled") {
+    return <span className="zh-admin-badge zh-admin-badge-cancelled">Cancelada</span>;
+  }
+  if (booking.outcome === "effective") {
+    return <span className="zh-admin-badge zh-admin-badge-effective">Efectiva</span>;
+  }
+  if (booking.outcome === "not_realized") {
+    return <span className="zh-admin-badge zh-admin-badge-not-realized">No se realizó</span>;
+  }
+  return <span className="zh-admin-badge zh-admin-badge-pending">Pendiente</span>;
+}
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState<Booking[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Booking | null>(null);
 
   const load = useCallback(async () => {
     setError(null);
@@ -40,107 +52,55 @@ export default function BookingsPage() {
     load();
   }, [load]);
 
-  async function handleCancel(id: string) {
-    if (!window.confirm("¿Cancelar esta reserva? El turno quedará libre de nuevo.")) return;
-    setCancellingId(id);
-    setError(null);
-    try {
-      const response = await fetch(`/api/admin/bookings/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "cancelled" }),
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        setError(data?.error || "No se pudo cancelar la reserva.");
-        setCancellingId(null);
-        return;
-      }
-      await load();
-      setCancellingId(null);
-    } catch {
-      setError("No se pudo conectar con el servidor.");
-      setCancellingId(null);
-    }
+  function handleSaved(updated: Partial<Booking>) {
+    setBookings((prev) =>
+      prev?.map((b) => (b.id === selected?.id ? { ...b, ...updated } : b)) ?? prev,
+    );
+    setSelected((prev) => (prev ? { ...prev, ...updated } : prev));
   }
 
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-lg font-semibold text-zh-cream">Reservas</h1>
-        <p className="text-sm text-zh-muted">Todas las reservas, más recientes primero.</p>
+        <h1 className="text-lg font-semibold text-zh-cream">Reservas · CRM</h1>
+        <p className="text-sm text-zh-muted">
+          Todas las reservas, más recientes primero. Haz clic en una tarjeta para ver el detalle y registrar el
+          resultado de la consultoría.
+        </p>
       </div>
 
       {error ? <p role="alert" className="text-sm text-[#e07a7a]">{error}</p> : null}
 
-      <div className="zh-admin-card overflow-x-auto">
-        <table className="zh-admin-table">
-          <thead>
-            <tr>
-              <th>Cliente</th>
-              <th>Contacto</th>
-              <th>Tema</th>
-              <th>Turno</th>
-              <th>Estado</th>
-              <th>Creada</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {bookings === null ? (
-              <tr>
-                <td colSpan={7} className="text-center text-zh-muted">
-                  Cargando…
-                </td>
-              </tr>
-            ) : bookings.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="text-center text-zh-muted">
-                  No hay reservas todavía.
-                </td>
-              </tr>
-            ) : (
-              bookings.map((booking) => (
-                <tr key={booking.id}>
-                  <td className="text-zh-cream">{booking.name}</td>
-                  <td className="text-zh-muted">
-                    <div>{booking.email}</div>
-                    {booking.phone ? <div>{booking.phone}</div> : null}
-                  </td>
-                  <td className="text-zh-muted">{booking.topic || "—"}</td>
-                  <td className="text-zh-muted">
-                    {booking.slot ? formatter.format(new Date(booking.slot.startsAt)) : "—"}
-                  </td>
-                  <td>
-                    <span
-                      className={`zh-admin-badge ${
-                        booking.status === "cancelled" ? "zh-admin-badge-cancelled" : "zh-admin-badge-open"
-                      }`}
-                    >
-                      {booking.status === "cancelled" ? "Cancelada" : booking.status}
-                    </span>
-                  </td>
-                  <td className="text-zh-muted">{formatter.format(new Date(booking.createdAt))}</td>
-                  <td className="text-right">
-                    {booking.status !== "cancelled" ? (
-                      <button
-                        type="button"
-                        onClick={() => handleCancel(booking.id)}
-                        disabled={cancellingId === booking.id}
-                        className="zh-admin-btn-danger"
-                      >
-                        {cancellingId === booking.id ? "Cancelando…" : "Cancelar"}
-                      </button>
-                    ) : (
-                      <span className="text-xs text-zh-muted">—</span>
-                    )}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+      {bookings === null ? (
+        <p className="text-sm text-zh-muted">Cargando…</p>
+      ) : bookings.length === 0 ? (
+        <p className="zh-admin-card p-6 text-center text-sm text-zh-muted">No hay reservas todavía.</p>
+      ) : (
+        <div className="zh-crm-grid">
+          {bookings.map((booking, index) => (
+            <button
+              type="button"
+              key={booking.id}
+              className="zh-crm-card zh-admin-rise"
+              style={{ animationDelay: `${Math.min(index, 8) * 0.04}s` }}
+              onClick={() => setSelected(booking)}
+            >
+              <div className="zh-crm-card-head">
+                <span className="zh-crm-card-name">{booking.name}</span>
+                <OutcomeBadge booking={booking} />
+              </div>
+              <span className="zh-crm-card-topic">{booking.topic || "Consultoría"}</span>
+              <span className="zh-crm-card-date">
+                {booking.slot ? formatter.format(new Date(booking.slot.startsAt)) : "Sin turno asignado"}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {selected ? (
+        <BookingDetailModal booking={selected} onClose={() => setSelected(null)} onSaved={handleSaved} />
+      ) : null}
     </div>
   );
 }

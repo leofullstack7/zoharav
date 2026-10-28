@@ -8,6 +8,25 @@ export type Sector = {
   services: ServiceSlug[];
 };
 
+/**
+ * Introductory copy for the Sectors index. Grounded only in facts already
+ * documented elsewhere on the site (content/home.ts, content/site.ts): the
+ * six advisory lines in content/services.ts, the "we advise, we do not
+ * operate" boundary repeated across the compliance statement and the home
+ * banners, and the three-hub presence (Medellín, Miami, Puerto Rico). No
+ * new claims, figures, or capabilities are introduced here.
+ */
+export const sectorsCopy = {
+  intro: {
+    en: "ZOHARAV & CO. advises across eight sectors where natural resources, capital, and policy meet — oil and gas, mining, energy and utilities, manufacturing, logistics, agriculture, financial services, and the public institutions that regulate them. Every mandate draws on the same six advisory lines — energy transition, oil & energy, mining & natural resources, sustainability & ESG, investment & financial advisory, and strategic & operational consulting — applied to the facts of that sector, not offered as a fixed package.",
+    es: "ZOHARAV & CO. asesora en ocho sectores donde se cruzan los recursos naturales, el capital y la política pública: petróleo y gas, minería, energía y servicios públicos, manufactura, logística, agricultura, servicios financieros y las instituciones públicas que los regulan. Cada mandato se apoya en las mismas seis líneas de asesoría —transición energética, petróleo y energía, minería y recursos naturales, sostenibilidad y ESG, asesoría de inversión y finanzas, y consultoría estratégica y operativa— aplicadas a la realidad de cada sector, no como un paquete fijo.",
+  } satisfies Localized,
+  introSecondary: {
+    en: "Our role is counsel, not operation: we read the market, structure the opportunity, and stay through the close, working from Medellín, Miami, and Puerto Rico as one desk for cross-border mandates. The sectors below are where that judgment is engaged today; each links to the advisory lines most relevant to it.",
+    es: "Nuestro papel es el consejo, no la operación: leemos el mercado, estructuramos la oportunidad y nos quedamos hasta el cierre, trabajando desde Medellín, Miami y Puerto Rico como una sola mesa para mandatos transfronterizos. Los sectores a continuación son donde ese criterio se aplica hoy; cada uno enlaza a las líneas de asesoría más relevantes.",
+  } satisfies Localized,
+};
+
 export const sectors: Sector[] = [
   {
     id: "energy-utilities",

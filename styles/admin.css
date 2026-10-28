@@ -168,3 +168,501 @@ body {
 .zh-admin-table tr:last-child td {
   border-bottom: none;
 }
+
+/* ------------------------------------------------------------------ */
+/* Entrance animation — CSS-only, enhancement only. The keyframe itself
+   carries the opacity: 0 -> 1 transition and runs automatically on paint
+   (no JS/IntersectionObserver involved), so content is never left
+   invisible if a script fails to run. Outside the no-preference media
+   query, elements simply render at their normal (opacity: 1) state. */
+/* ------------------------------------------------------------------ */
+@keyframes zh-admin-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .zh-admin-rise {
+    animation: zh-admin-rise 0.55s var(--zh-ease) both;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Dashboard                                                          */
+/* ------------------------------------------------------------------ */
+
+.zh-admin-glow-card {
+  position: relative;
+  background: linear-gradient(165deg, var(--zh-onyx) 0%, var(--zh-graphite) 100%);
+  border: 1px solid var(--zh-smoke);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.zh-admin-glow-card::before {
+  content: "";
+  position: absolute;
+  inset: -40% -40% auto auto;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(183, 196, 212, 0.14) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.zh-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.9rem;
+}
+
+.zh-kpi-tile {
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.zh-kpi-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--zh-muted);
+}
+
+.zh-kpi-value {
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: var(--zh-cream);
+  letter-spacing: -0.01em;
+}
+
+.zh-kpi-sub {
+  font-size: 0.78rem;
+  color: var(--zh-muted);
+}
+
+.zh-chart-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 860px) {
+  .zh-chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.zh-chart-card {
+  padding: 1.4rem 1.5rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.zh-chart-card-head h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--zh-cream);
+}
+
+.zh-chart-card-head p {
+  font-size: 0.78rem;
+  color: var(--zh-muted);
+  margin-top: 0.15rem;
+}
+
+.zh-bar-chart {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.zh-bar-chart rect.zh-bar {
+  transition: opacity 0.15s var(--zh-ease);
+}
+
+.zh-bar-chart rect.zh-bar:hover {
+  opacity: 0.82;
+}
+
+.zh-bar-chart text {
+  fill: var(--zh-muted);
+  font-size: 9px;
+}
+
+.zh-bar-chart text.zh-bar-value {
+  fill: var(--zh-cream);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.zh-status-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.zh-status-legend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+}
+
+.zh-status-legend-key {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--zh-cream);
+}
+
+.zh-status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  flex: none;
+}
+
+.zh-status-legend-count {
+  color: var(--zh-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.zh-proportion-bar {
+  width: 100%;
+  height: 14px;
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+  background: var(--zh-graphite);
+}
+
+.zh-proportion-seg {
+  height: 100%;
+}
+
+.zh-recent-strip {
+  display: flex;
+  gap: 0.8rem;
+  overflow-x: auto;
+  padding-bottom: 0.3rem;
+}
+
+.zh-recent-chip {
+  flex: none;
+  width: 190px;
+  padding: 0.85rem 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.zh-recent-chip-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--zh-cream);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zh-recent-chip-topic {
+  font-size: 0.72rem;
+  color: var(--zh-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zh-recent-chip-date {
+  font-size: 0.7rem;
+  color: var(--zh-gold-400);
+}
+
+/* ------------------------------------------------------------------ */
+/* Status badges — reserved colors, never reused for anything else    */
+/* ------------------------------------------------------------------ */
+
+.zh-admin-badge-effective {
+  background: rgba(31, 163, 122, 0.15);
+  color: #4fd3a8;
+}
+
+.zh-admin-badge-not-realized {
+  background: rgba(224, 157, 90, 0.14);
+  color: #e0a35c;
+}
+
+.zh-admin-badge-pending {
+  background: rgba(183, 196, 212, 0.12);
+  color: var(--zh-gold-200);
+}
+
+/* ------------------------------------------------------------------ */
+/* CRM card grid                                                      */
+/* ------------------------------------------------------------------ */
+
+.zh-crm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.9rem;
+}
+
+.zh-crm-card {
+  text-align: left;
+  width: 100%;
+  padding: 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  cursor: pointer;
+  background: linear-gradient(160deg, var(--zh-onyx) 0%, var(--zh-graphite) 120%);
+  border: 1px solid var(--zh-smoke);
+  border-radius: 6px;
+  transition: border-color 0.18s var(--zh-ease), transform 0.18s var(--zh-ease);
+}
+
+.zh-crm-card:hover,
+.zh-crm-card:focus-visible {
+  border-color: var(--zh-gold-400);
+  transform: translateY(-2px);
+}
+
+.zh-crm-card:focus-visible {
+  outline: 2px solid var(--zh-gold-400);
+  outline-offset: 2px;
+}
+
+.zh-crm-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.zh-crm-card-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--zh-cream);
+  line-height: 1.3;
+}
+
+.zh-crm-card-topic {
+  font-size: 0.78rem;
+  color: var(--zh-gold-400);
+}
+
+.zh-crm-card-date {
+  font-size: 0.78rem;
+  color: var(--zh-muted);
+}
+
+/* ------------------------------------------------------------------ */
+/* CRM modal                                                          */
+/* ------------------------------------------------------------------ */
+
+.zh-crm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(7, 7, 10, 0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.zh-crm-modal {
+  position: relative;
+  width: min(640px, 100%);
+  max-height: min(88vh, 820px);
+  overflow-y: auto;
+  background: linear-gradient(175deg, var(--zh-onyx) 0%, var(--zh-black) 100%);
+  border: 1px solid var(--zh-smoke);
+  border-radius: 8px;
+  box-shadow: var(--zh-shadow);
+  padding: 1.6rem 1.7rem 1.8rem;
+}
+
+.zh-crm-modal:focus {
+  outline: none;
+}
+
+.zh-crm-modal-art {
+  position: absolute;
+  top: -10%;
+  right: -12%;
+  width: 60%;
+  height: auto;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.zh-crm-modal > * {
+  position: relative;
+  z-index: 1;
+}
+
+.zh-crm-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--zh-smoke);
+}
+
+.zh-crm-modal-close {
+  background: transparent;
+  border: 1px solid var(--zh-smoke);
+  border-radius: 999px;
+  color: var(--zh-muted);
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  flex: none;
+}
+
+.zh-crm-modal-close:hover {
+  border-color: var(--zh-gold-400);
+  color: var(--zh-cream);
+}
+
+.zh-crm-field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+  font-size: 0.82rem;
+  margin-bottom: 1.1rem;
+}
+
+@media (max-width: 520px) {
+  .zh-crm-field-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.zh-crm-field-grid dt {
+  color: var(--zh-muted);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.zh-crm-field-grid dd {
+  color: var(--zh-cream);
+  margin: 0.1rem 0 0.6rem;
+}
+
+.zh-crm-outcome-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.zh-crm-outcome-btn {
+  border-radius: var(--zh-radius);
+  padding: 0.5rem 0.85rem;
+  font-size: 0.8rem;
+  border: 1px solid var(--zh-smoke);
+  background: transparent;
+  color: var(--zh-muted);
+  cursor: pointer;
+  transition: border-color 0.15s var(--zh-ease), color 0.15s var(--zh-ease), background 0.15s var(--zh-ease);
+}
+
+.zh-crm-outcome-btn:hover {
+  border-color: var(--zh-gold-400);
+  color: var(--zh-cream);
+}
+
+.zh-crm-outcome-btn[data-active="true"][data-kind="effective"] {
+  border-color: #4fd3a8;
+  background: rgba(31, 163, 122, 0.14);
+  color: #4fd3a8;
+}
+
+.zh-crm-outcome-btn[data-active="true"][data-kind="not_realized"] {
+  border-color: #e0a35c;
+  background: rgba(224, 157, 90, 0.14);
+  color: #e0a35c;
+}
+
+.zh-crm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.9rem;
+}
+
+.zh-crm-field label {
+  font-size: 0.75rem;
+  color: var(--zh-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.zh-crm-field textarea,
+.zh-crm-field input {
+  background: var(--zh-graphite);
+  border: 1px solid var(--zh-smoke);
+  border-radius: var(--zh-radius);
+  color: var(--zh-cream);
+  padding: 0.6rem 0.75rem;
+  font-size: 0.86rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.zh-crm-field textarea:focus,
+.zh-crm-field input:focus {
+  outline: 2px solid var(--zh-gold-400);
+  outline-offset: 1px;
+}
+
+.zh-crm-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1.3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--zh-smoke);
+}
+
+/* ------------------------------------------------------------------ */
+/* Availability — struck-through past+booked slots                   */
+/* ------------------------------------------------------------------ */
+
+.zh-slot-past-booked {
+  text-decoration: line-through;
+  color: var(--zh-muted);
+}
+
+.zh-slot-past-tag {
+  display: inline-flex;
+  margin-left: 0.5rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--zh-muted);
+  border: 1px solid var(--zh-smoke);
+  border-radius: 999px;
+  padding: 0.05rem 0.4rem;
+  text-decoration: none;
+}

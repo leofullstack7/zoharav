@@ -17,11 +17,14 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
           <p className="text-xs text-zh-muted">Panel de administración</p>
         </div>
         <nav className="flex items-center gap-2 text-sm">
+          <Link href="/admin" className="zh-admin-btn-ghost">
+            Dashboard
+          </Link>
           <Link href="/admin/availability" className="zh-admin-btn-ghost">
             Disponibilidad
           </Link>
           <Link href="/admin/bookings" className="zh-admin-btn-ghost">
-            Reservas
+            Reservas · CRM
           </Link>
           <Link href="/admin/images" className="zh-admin-btn-ghost">
             Imágenes

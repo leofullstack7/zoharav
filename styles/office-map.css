@@ -47,6 +47,16 @@
   color: var(--zh-gold-400);
 }
 
+/* OpenStreetMap's standard tiles are daylight-toned (cream land, light-blue
+   water). Invert + hue-rotate flips them into a dark navy/charcoal basemap
+   that reads as a companion to the site's black/silver palette, while
+   brightness/contrast keep road and label linework legible instead of
+   crushing to pure black/white. Scoped to the tile pane only (a sibling of
+   leaflet-marker-pane) so the gold pin markers and popups are unaffected. */
+.office-map__canvas .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.93) contrast(0.88) saturate(0.85);
+}
+
 /* Custom marker: a soft glowing silver dot, no default Leaflet pin image. */
 .zh-pin {
   position: relative;

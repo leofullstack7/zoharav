@@ -1,13 +1,28 @@
 import type { Metadata } from "next";
 import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
+import { Monogram } from "@/components/brand/Monogram";
 import { Reveal } from "@/components/motion/Reveal";
 import { aboutCopy } from "@/content/home";
+import { aboutStats } from "@/content/stats";
 import { team, values } from "@/content/team";
 import { Link } from "@/i18n/navigation";
 import { loc } from "@/lib/i18n/loc";
 import { getSiteImagePhoto } from "@/lib/images/getSiteImage";
 import { buildPageMetadata } from "@/lib/seo";
 import { setRequestLocale } from "next-intl/server";
+
+/** Same initials rule as components/home/TeamSlider.tsx's TeamCard, kept
+ * local here since this is a server component and that helper isn't
+ * exported from a "use client" module. */
+function initials(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "Z&";
+  return parts
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
 
 export async function generateMetadata({
   params,
@@ -51,10 +66,24 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <p>{loc(aboutCopy.mission, locale)}</p>
           </article>
         </div>
-        <div className="cards-3" style={{ marginTop: "2.5rem" }}>
+        <Reveal>
+          <div className="stat-row trust-stats" style={{ marginTop: "2.8rem" }}>
+            {aboutStats.map((stat) => (
+              <article key={stat.id}>
+                <strong>{stat.value}</strong>
+                <p>{loc(stat.label, locale)}</p>
+              </article>
+            ))}
+          </div>
+        </Reveal>
+        <h2 style={{ marginTop: "3.2rem" }}>{locale === "es" ? "Nuestros valores" : "Our values"}</h2>
+        <div className="cards-3" style={{ marginTop: "1.4rem" }}>
           {values.map((value, index) => (
             <Reveal delay={index * 70} key={value.id}>
-              <article className="soft-card">
+              <article className="soft-card value-card">
+                <span className="value-index" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
                 <h3>{loc(value.title, locale)}</h3>
                 <p>{loc(value.line, locale)}</p>
               </article>
@@ -62,19 +91,28 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           ))}
         </div>
         <h2 style={{ marginTop: "3rem" }}>{locale === "es" ? "Equipo" : "Leadership"}</h2>
-        <div className="cards-2" style={{ marginTop: "1rem" }}>
+        <div className="cards-2" style={{ marginTop: "1.4rem" }}>
           {team
             .filter((member) => !member.placeholder)
             .map((member, index) => (
             <Reveal delay={index * 70} key={member.id}>
-              <article className="soft-card">
-                <h3>{member.name}</h3>
-                <p className="kicker">{loc(member.role, locale)}</p>
+              <article className="soft-card member-card">
+                <span className="member-portrait" aria-hidden="true">
+                  {member.placeholder ? (
+                    <Monogram className="member-monogram" />
+                  ) : (
+                    <span className="member-initials">{initials(member.name)}</span>
+                  )}
+                </span>
+                <div>
+                  <h3>{member.name}</h3>
+                  <p className="kicker">{loc(member.role, locale)}</p>
+                </div>
               </article>
             </Reveal>
           ))}
         </div>
-        <div className="hero-actions">
+        <div className="hero-actions" style={{ marginTop: "2.6rem" }}>
           <Link className="btn-gold" href="/contact">
             {locale === "es" ? "Conversemos" : "Get in touch"} →
           </Link>

@@ -9,12 +9,14 @@ import { query } from "@/lib/db/client";
  * Response shape: { bookings: Booking[] }
  * Booking: {
  *   id, name, email, phone, topic, source, status, createdAt,
+ *   outcome, summary, keyPoints, dealsConsolidated, dealValue, reviewedAt,
  *   slot: { id, startsAt, durationMinutes } | null
  * }
  * `slot` is null if the slot row was ever deleted independently of its
  * booking (shouldn't normally happen — DELETE /api/admin/availability/[id]
  * refuses to delete booked slots — but a left join keeps this endpoint
- * robust either way).
+ * robust either way). The CRM fields (outcome and onward) are all nullable
+ * — null until an admin reviews the booking from the CRM card modal.
  */
 
 type BookingRow = {
@@ -26,6 +28,12 @@ type BookingRow = {
   source: string;
   status: string;
   created_at: Date;
+  outcome: string | null;
+  summary: string | null;
+  key_points: string | null;
+  deals_consolidated: string | null;
+  deal_value: string | null;
+  reviewed_at: Date | null;
   slot_id: string | null;
   starts_at: Date | null;
   duration_minutes: number | null;
@@ -40,6 +48,7 @@ export async function GET() {
   try {
     const result = await query<BookingRow>(
       `select b.id, b.name, b.email, b.phone, b.topic, b.source, b.status, b.created_at,
+              b.outcome, b.summary, b.key_points, b.deals_consolidated, b.deal_value, b.reviewed_at,
               s.id as slot_id, s.starts_at, s.duration_minutes
        from bookings b
        left join availability_slots s on s.id = b.slot_id
@@ -55,6 +64,12 @@ export async function GET() {
       source: row.source,
       status: row.status,
       createdAt: new Date(row.created_at).toISOString(),
+      outcome: row.outcome as "effective" | "not_realized" | null,
+      summary: row.summary,
+      keyPoints: row.key_points,
+      dealsConsolidated: row.deals_consolidated,
+      dealValue: row.deal_value !== null ? Number(row.deal_value) : null,
+      reviewedAt: row.reviewed_at ? new Date(row.reviewed_at).toISOString() : null,
       slot:
         row.slot_id && row.starts_at
           ? {

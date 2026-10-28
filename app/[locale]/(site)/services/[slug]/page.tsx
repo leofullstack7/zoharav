@@ -3,7 +3,7 @@ import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
 import { Reveal } from "@/components/motion/Reveal";
 import { getService, services } from "@/content/services";
 import { Link } from "@/i18n/navigation";
-import { loc } from "@/lib/i18n/loc";
+import { loc, locParagraphs } from "@/lib/i18n/loc";
 import { getSiteImagePhoto } from "@/lib/images/getSiteImage";
 import { buildPageMetadata } from "@/lib/seo";
 import { setRequestLocale } from "next-intl/server";
@@ -63,13 +63,20 @@ export default async function ServicePage({
             <Reveal delay={Math.min(index, 4) * 60} key={item.id}>
               <article id={item.id}>
                 <p className="kicker">{loc(item.tagline, locale)}</p>
-                <h2>{loc(item.title, locale)}</h2>
-                <p>{loc(item.body, locale)}</p>
+                <h2>
+                  <Link href={`/services/${service.slug}/${item.id}`}>{loc(item.title, locale)}</Link>
+                </h2>
+                {locParagraphs(item.body, locale).map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
                 <ul className="diamonds">
                   {item.bullets.map((bullet) => (
                     <li key={bullet.en}>{loc(bullet, locale)}</li>
                   ))}
                 </ul>
+                <Link className="text-link as-button" href={`/services/${service.slug}/${item.id}`}>
+                  {locale === "es" ? "Ver ficha completa" : "View full brief"} →
+                </Link>
               </article>
             </Reveal>
           ))}

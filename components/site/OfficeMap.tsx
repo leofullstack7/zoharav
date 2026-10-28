@@ -8,13 +8,25 @@ import type { Office } from "@/content/offices";
 import { isFilled, loc } from "@/lib/i18n/loc";
 
 /**
- * Free, no-API-key CARTO "Dark Matter" basemap tiles. Attribution is kept
- * small via Leaflet's built-in attribution control (bottom-right), per
- * CARTO + OpenStreetMap ToS.
+ * Standard OpenStreetMap raster tiles: genuinely free, no API key/account of
+ * any kind, no request signing. (CARTO's "Dark Matter" tiles — the previous
+ * source here — started requiring a free API key on 2026-09-25; unauthenticated
+ * requests now return an HTTP 200 but with a static "API KEY REQUIRED"
+ * watermark image instead of real map data, which is why the map looked
+ * completely broken in production.)
+ *
+ * Per OSM's tile usage policy (operations.osmfoundation.org/policies/tiles):
+ * use the single canonical hostname (no `{s}` subdomain sharding — "other
+ * subdomains may be slower or withdrawn without notice"), and a real browser
+ * sends a compliant User-Agent + Referer automatically, so no extra headers
+ * are needed here. The source basemap is daylight-toned; `.office-map__canvas
+ * .leaflet-tile-pane` in office-map.css applies a CSS filter to invert it
+ * into a dark theme that matches the site's black/silver palette, without
+ * touching the (separately-paned) markers/pins or UI chrome.
  */
-const TILE_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 const TILE_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>';
+  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors';
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -98,7 +110,7 @@ export default function OfficeMap({ offices, locale }: { offices: Office[]; loca
           style={{ height: "100%", width: "100%" }}
           attributionControl
         >
-          <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} subdomains={["a", "b", "c", "d"]} />
+          <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} />
           <FitAllOnce positions={positions} />
           <FlyToSelected target={target} reduceMotion={reduceMotion} />
           {offices.map((office) => (

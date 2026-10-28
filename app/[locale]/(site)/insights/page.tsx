@@ -46,24 +46,36 @@ export default async function InsightsPage({ params }: { params: Promise<{ local
           </p>
         </div>
       </section>
-      {insights.length > 0 ? (
-        <section className="panel">
+      <section className="panel">
+        {insights.length > 0 ? (
           <div className="cards-2">
             {insights.map((insight, index) => (
               <Reveal delay={index * 70} key={insight.slug}>
-                <article className="soft-card">
+                <article className="soft-card insight-card">
                   <p className="kicker">{insight.frontmatter.category}</p>
                   <h3>{insight.frontmatter.title}</h3>
-                  <p>{insight.excerpt}</p>
-                  <Link href={`/insights/${insight.slug}`}>
+                  <p className="excerpt">{insight.excerpt}</p>
+                  <Link className="text-link" href={`/insights/${insight.slug}`}>
                     {es ? "Leer más" : "Read more"} →
                   </Link>
                 </article>
               </Reveal>
             ))}
           </div>
-        </section>
-      ) : null}
+        ) : (
+          <Reveal>
+            <div className="insight-empty">
+              <p className="kicker">{es ? "En revisión" : "In review"}</p>
+              <h2>{es ? "Los próximos ensayos están en camino" : "The next essays are on their way"}</h2>
+              <p>
+                {es
+                  ? "Cada artículo pasa por la aprobación del cliente antes de publicarse, así que esta página se mantiene deliberadamente en blanco hasta entonces. Mientras tanto, puede conocer a la firma y a nuestras líneas de asesoría en las páginas de la firma y los sectores."
+                  : "Every essay clears client approval before it is published, so this page stays deliberately quiet until then. In the meantime, the firm and our advisory lines are covered on the About and Sectors pages."}
+              </p>
+            </div>
+          </Reveal>
+        )}
+      </section>
     </main>
   );
 }
