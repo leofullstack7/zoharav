@@ -1,13 +1,38 @@
+import type { Metadata } from "next";
+import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
+import { Reveal } from "@/components/motion/Reveal";
+import { Link } from "@/i18n/navigation";
+import { getPublishedInsights } from "@/lib/content/insights";
+import { buildPageMetadata } from "@/lib/seo";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const es = locale === "es";
+  return buildPageMetadata({
+    locale,
+    path: "/insights",
+    title: es ? "Perspectivas" : "Insights",
+    description: es
+      ? "Tres ensayos esperan la aprobación del cliente antes de publicarse."
+      : "Three essays are waiting for client approval before they are published.",
+  });
+}
 
 export default async function InsightsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const es = locale === "es";
+  const insights = getPublishedInsights(locale);
+
   return (
     <main id="content">
       <section className="page-hero">
-        <img src="/images/offices/medellin.jpg" alt="" />
+        <Image src="/images/offices/medellin.svg" alt="" fill priority sizes="100vw" />
         <div className="veil" />
         <div className="copy">
           <p className="eyebrow">{es ? "Borradores" : "Drafts"}</p>
@@ -19,6 +44,24 @@ export default async function InsightsPage({ params }: { params: Promise<{ local
           </p>
         </div>
       </section>
+      {insights.length > 0 ? (
+        <section className="panel">
+          <div className="cards-2">
+            {insights.map((insight, index) => (
+              <Reveal delay={index * 70} key={insight.slug}>
+                <article className="soft-card">
+                  <p className="kicker">{insight.frontmatter.category}</p>
+                  <h3>{insight.frontmatter.title}</h3>
+                  <p>{insight.excerpt}</p>
+                  <Link href={`/insights/${insight.slug}`}>
+                    {es ? "Leer más" : "Read more"} →
+                  </Link>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      ) : null}
     </main>
   );
 }

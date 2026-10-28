@@ -20,7 +20,7 @@ export const energyTransition: Service = {
     en: "Navigating the path to net-zero through strategic decarbonization, renewable integration, and a disciplined energy transformation. We advise. We do not operate energy assets or trade energy products.",
     es: "Acompañamos el camino hacia el cero neto mediante descarbonización estratégica, integración de renovables y una transformación energética disciplinada. Asesoramos. No operamos activos ni comercializamos productos energéticos.",
   },
-  image: "/images/services/energy-transition.jpg",
+  image: "/images/hero/yacht.svg",
   industries: ["energy-utilities", "oil-gas", "manufacturing", "logistics"],
   slides: [],
   methodologies: [

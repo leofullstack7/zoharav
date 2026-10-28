@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">
+  <defs>
+    <linearGradient id="zh-mono-gradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6D7886" />
+      <stop offset="38%" stop-color="#D5E0EA" />
+      <stop offset="50%" stop-color="#FFFFFF" />
+      <stop offset="70%" stop-color="#B7C4D4" />
+      <stop offset="100%" stop-color="#8D9BAB" />
+    </linearGradient>
+  </defs>
+  <circle cx="36" cy="36" r="36" fill="#07070a" />
+  <circle cx="36" cy="36" r="30" fill="none" stroke="url(#zh-mono-gradient)" stroke-width="1" />
+  <path
+    d="M18 22h36L22 50h32"
+    fill="none"
+    stroke="url(#zh-mono-gradient)"
+    stroke-width="2.4"
+    stroke-linejoin="miter"
+  />
+  <path
+    d="M46 18c10 4 14 12 14 18s-4 14-14 18"
+    fill="none"
+    stroke="url(#zh-mono-gradient)"
+    stroke-width="1.8"
+    stroke-linecap="round"
+  />
+</svg>

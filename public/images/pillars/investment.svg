@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Abstract ascending ribbon line mark on a soft silver field">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#17171c"/>
+<stop offset="50%" stop-color="#0e0e12"/>
+<stop offset="100%" stop-color="#07070a"/>
+</linearGradient>
+<radialGradient id="glow" cx="58%" cy="36%" r="50%">
+<stop offset="0%" stop-color="#f5f8fc" stop-opacity="0.2"/>
+<stop offset="60%" stop-color="#8d9bab" stop-opacity="0.05"/>
+<stop offset="100%" stop-color="#17171c" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="vig" cx="50%" cy="50%" r="72%">
+<stop offset="55%" stop-color="#000" stop-opacity="0"/>
+<stop offset="100%" stop-color="#000" stop-opacity="0.4"/>
+</radialGradient>
+<filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+<feGaussianBlur stdDeviation="36"/>
+</filter>
+<filter id="ds" x="-30%" y="-30%" width="160%" height="160%">
+<feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.4"/>
+</filter>
+</defs>
+<rect width="1600" height="1000" fill="url(#bg)"/>
+<rect width="1600" height="1000" fill="url(#glow)"/>
+<line x1="500" y1="700" x2="1100" y2="700" stroke="#8d9bab" stroke-opacity="0.2" stroke-width="2"/>
+<ellipse cx="800" cy="500" rx="260" ry="90" fill="#d5dee8" opacity="0.1" filter="url(#soft)"/>
+<g fill="none" filter="url(#ds)">
+<path d="M520 660 L640 580 L760 610 L900 460 L1080 360" stroke="#8d9bab" stroke-width="10" stroke-linecap="round" opacity="0.3"/>
+<path d="M520 660 L640 580 L760 610 L900 460 L1080 360" stroke="#f5f8fc" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+</g>
+<g fill="#f5f8fc" opacity="0.6">
+<circle cx="520" cy="660" r="5"/>
+<circle cx="640" cy="580" r="5"/>
+<circle cx="760" cy="610" r="5"/>
+<circle cx="900" cy="460" r="5"/>
+<circle cx="1080" cy="360" r="6"/>
+</g>
+<g stroke="#d5dee8" stroke-opacity="0.5" stroke-width="2.5" filter="url(#ds)">
+<line x1="1080" y1="360" x2="1030" y2="380"/>
+<line x1="1080" y1="360" x2="1062" y2="412"/>
+</g>
+<rect width="1600" height="1000" fill="url(#vig)"/>
+</svg>

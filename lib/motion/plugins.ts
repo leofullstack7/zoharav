@@ -23,3 +23,12 @@ export async function loadDrawSVG() {
   gsap.registerPlugin(DrawSVGPlugin);
   return DrawSVGPlugin;
 }
+
+/** Momentum dragging for sliders/carousels — Draggable + its Inertia companion. */
+export async function loadDraggable() {
+  registerGsap();
+  const { Draggable } = await import("gsap/Draggable");
+  const { InertiaPlugin } = await import("gsap/InertiaPlugin");
+  gsap.registerPlugin(Draggable, InertiaPlugin);
+  return Draggable;
+}

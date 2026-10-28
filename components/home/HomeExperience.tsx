@@ -1,10 +1,14 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { LiveFrame } from "@/components/motion/LiveFrame";
 import { Reveal } from "@/components/motion/Reveal";
+import { TeamSlider } from "@/components/home/TeamSlider";
 import { banners, chapters, trust } from "@/content/home";
 import { homeServiceCards } from "@/content/navigation";
 import { activeOffices } from "@/content/offices";
+import { gsap, prefersReducedMotion, registerGsap } from "@/lib/motion";
 import { services } from "@/content/services";
 import { homeStats } from "@/content/stats";
 import { compliance, site } from "@/content/site";
@@ -84,25 +88,56 @@ function Band({
 }
 
 const covers: Record<string, string> = {
-  "energy-transition": "/images/hero/yacht.jpg",
-  "oil-and-energy": "/images/hero/yacht.jpg",
-  "mining-natural-resources": "/images/mining/emeralds.jpg",
-  "sustainability-esg": "/images/sustainability/plant.jpg",
-  "investment-financial-advisory": "/images/investment/handshake.jpg",
-  "strategic-operational-consulting": "/images/services/jet.jpg",
+  "energy-transition": "/images/hero/yacht.svg",
+  "oil-and-energy": "/images/hero/yacht.svg",
+  "mining-natural-resources": "/images/mining/emeralds.svg",
+  "sustainability-esg": "/images/sustainability/plant.svg",
+  "investment-financial-advisory": "/images/investment/handshake.svg",
+  "strategic-operational-consulting": "/images/services/jet.svg",
 };
 
 export function HomeExperience({ locale }: { locale: string }) {
   const slide = banners.mandato;
   const title = heroTitle(line(slide.title, locale));
+  const heroRef = useRef<HTMLDivElement>(null);
+  const sunRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    const sun = sunRef.current;
+    if (!hero || !sun) return;
+    registerGsap();
+    if (prefersReducedMotion()) return;
+
+    // The hero's light recedes and softens as the visitor scrolls past it —
+    // ties the "soft moving light" into the act of scrolling itself,
+    // instead of only drifting on its own clock.
+    const tween = gsap.to(sun, {
+      yPercent: 22,
+      scale: 1.14,
+      opacity: 0.3,
+      ease: "none",
+      scrollTrigger: {
+        trigger: hero,
+        start: "top top",
+        end: "bottom top",
+        scrub: 0.3,
+      },
+    });
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, []);
 
   return (
     <div className="home-stage">
-      <section className="hero hero-mandato">
+      <section className="hero hero-mandato" ref={heroRef}>
         <div className="hero-wash" aria-hidden>
-          <img src="/images/hero/yacht.jpg" alt="" />
+          <Image src="/images/hero/yacht.svg" alt="" fill priority sizes="100vw" />
         </div>
-        <div className="hero-sun" aria-hidden>
+        <div className="hero-sun" aria-hidden ref={sunRef}>
           <span className="hero-sun-core" />
           <span className="hero-sun-ray" />
         </div>
@@ -165,6 +200,8 @@ export function HomeExperience({ locale }: { locale: string }) {
         </div>
       </section>
 
+      <TeamSlider locale={locale} />
+
       <section className="bridge">
         <Reveal>
           <p>{line(chapters.bridge.quote, locale)}</p>
@@ -193,7 +230,7 @@ export function HomeExperience({ locale }: { locale: string }) {
               </div>
             </Reveal>
             <LiveFrame
-              src="/images/firm/office.jpg"
+              src="/images/firm/office.svg"
               alt="Private office overlooking a city skyline at night"
               caption={chapters.firm.signature}
             />
@@ -221,7 +258,7 @@ export function HomeExperience({ locale }: { locale: string }) {
             </header>
           </Reveal>
           <div className="studio-main studio-services">
-            <LiveFrame src="/images/services/jet.jpg" alt="Two advisors walking toward a private jet at sunset" />
+            <LiveFrame src="/images/services/jet.svg" alt="Two advisors walking toward a private jet at sunset" />
             <ol className="studio-rows">
               {homeServiceCards.map((card, index) => (
                 <li key={card.id}>
@@ -238,7 +275,7 @@ export function HomeExperience({ locale }: { locale: string }) {
             {services.map((service, index) => (
               <Reveal delay={index * 70} key={service.slug}>
                 <Link className="line-card" href={`/services/${service.slug}`}>
-                  <img src={covers[service.slug]} alt="" />
+                  <Image src={covers[service.slug]} alt="" fill sizes="(max-width: 900px) 100vw, 33vw" />
                   <div>
                     <h3>{line(service.name, locale)}</h3>
                     <p>{line(service.cardLine, locale)}</p>
@@ -259,7 +296,7 @@ export function HomeExperience({ locale }: { locale: string }) {
         points={chapters.oil.bullets}
         href="/services/oil-and-energy"
         cta={locale === "es" ? "Ver la asesoría" : "View the advisory"}
-        image="/images/hero/yacht.jpg"
+        image="/images/hero/yacht.svg"
         alt="Energy infrastructure at golden hour"
       />
 
@@ -272,7 +309,7 @@ export function HomeExperience({ locale }: { locale: string }) {
         points={chapters.mining.bullets}
         href="/services/mining-natural-resources"
         cta={locale === "es" ? "Ver minería" : "View mining"}
-        image="/images/mining/emeralds.jpg"
+        image="/images/mining/emeralds.svg"
         alt="Gold and faceted emeralds on dark stone"
         flip
       />
@@ -294,7 +331,7 @@ export function HomeExperience({ locale }: { locale: string }) {
               <Reveal delay={index * 100} key={office.id}>
                 <Link className="city" href="/global-presence">
                   <div className="frame">
-                    <img src={office.image} alt="" />
+                    <Image src={office.image} alt="" fill sizes="(max-width: 900px) 50vw, 25vw" />
                   </div>
                   <h3>{line(office.city, locale)}</h3>
                   <p>{line(office.role, locale)}</p>
@@ -314,7 +351,7 @@ export function HomeExperience({ locale }: { locale: string }) {
         points={chapters.sustainability.pillars}
         href="/services/sustainability-esg"
         cta={locale === "es" ? "Ver sostenibilidad" : "View sustainability"}
-        image="/images/sustainability/plant.jpg"
+        image="/images/sustainability/plant.svg"
         alt="Hands holding soil and a young plant"
       />
 
@@ -327,7 +364,7 @@ export function HomeExperience({ locale }: { locale: string }) {
         points={chapters.investment.bullets}
         href="/services/investment-financial-advisory"
         cta={locale === "es" ? "Ver inversión" : "View investment"}
-        image="/images/investment/handshake.jpg"
+        image="/images/investment/handshake.svg"
         alt="Handshake over investment documents"
         flip
       />
@@ -368,7 +405,7 @@ export function HomeExperience({ locale }: { locale: string }) {
                 </Link>
               </div>
             </Reveal>
-            <LiveFrame src="/images/contact/tower.jpg" alt="Corporate tower and palms at sunset" />
+            <LiveFrame src="/images/contact/tower.svg" alt="Corporate tower and palms at sunset" />
           </div>
         </div>
       </section>

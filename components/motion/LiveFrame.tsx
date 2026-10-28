@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { gsap, prefersReducedMotion, registerGsap } from "@/lib/motion/gsap";
 
 /** Slow Ken Burns plus scroll drift, with a closer crop on hover. GSAP owns the motion. */
@@ -77,7 +78,7 @@ export function LiveFrame({
 
   return (
     <figure className="firm-photo live" ref={frame}>
-      <img ref={photo} src={src} alt={alt} />
+      <Image ref={photo} src={src} alt={alt} fill sizes="(max-width: 900px) 100vw, 50vw" />
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
   );

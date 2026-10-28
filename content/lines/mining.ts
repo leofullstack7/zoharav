@@ -58,7 +58,7 @@ export const mining: Service = {
     en: "Development and investment advisory for high-value mineral assets. Precious resources, strategic value, and a standard of care that includes the community and the land after the mine.",
     es: "Asesoría de desarrollo e inversión para activos minerales de alto valor. Recursos preciosos, valor estratégico y un estándar de cuidado que incluye a la comunidad y a la tierra después de la mina.",
   },
-  image: "/images/services/mining.jpg",
+  image: "/images/mining/emeralds.svg",
   industries: ["mining", "financial", "public-sector"],
   faqs,
   methodologies: [

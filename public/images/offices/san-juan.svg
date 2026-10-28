@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Abstract bastion wall curve and a lighthouse line over a bay, suggesting San Juan">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#17171c"/>
+<stop offset="52%" stop-color="#0e0e12"/>
+<stop offset="100%" stop-color="#07070a"/>
+</linearGradient>
+<radialGradient id="glow" cx="40%" cy="42%" r="50%">
+<stop offset="0%" stop-color="#f5f8fc" stop-opacity="0.18"/>
+<stop offset="60%" stop-color="#8d9bab" stop-opacity="0.05"/>
+<stop offset="100%" stop-color="#17171c" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="vig" cx="50%" cy="50%" r="75%">
+<stop offset="55%" stop-color="#000" stop-opacity="0"/>
+<stop offset="100%" stop-color="#000" stop-opacity="0.4"/>
+</radialGradient>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+<feGaussianBlur stdDeviation="32"/>
+</filter>
+<filter id="ds" x="-30%" y="-30%" width="160%" height="160%">
+<feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#000" flood-opacity="0.4"/>
+</filter>
+</defs>
+<rect width="1600" height="1000" fill="url(#bg)"/>
+<rect width="1600" height="1000" fill="url(#glow)"/>
+<line x1="0" y1="680" x2="1600" y2="680" stroke="#8d9bab" stroke-opacity="0.2" stroke-width="2"/>
+<ellipse cx="640" cy="640" rx="360" ry="70" fill="#d5dee8" opacity="0.09" filter="url(#soft)"/>
+<path d="M60 680 C 220 680, 220 560, 360 560 L 520 560 C 560 560, 560 620, 620 620 L 820 620 C 860 620, 860 680, 920 680 L 1540 680" fill="none" stroke="#5c6876" stroke-opacity="0.6" stroke-width="10" filter="url(#ds)"/>
+<g stroke="#8d9bab" stroke-opacity="0.3" stroke-width="2">
+<line x1="400" y1="560" x2="400" y2="500"/>
+<line x1="380" y1="500" x2="420" y2="500"/>
+<line x1="700" y1="620" x2="700" y2="560"/>
+<line x1="680" y1="560" x2="720" y2="560"/>
+</g>
+<g filter="url(#ds)" opacity="0.6">
+<line x1="1180" y1="360" x2="1180" y2="680" stroke="#f5f8fc" stroke-width="4"/>
+<path d="M1160 360 L1180 320 L1200 360 Z" fill="#f5f8fc"/>
+<line x1="1150" y1="420" x2="1210" y2="420" stroke="#d5dee8" stroke-width="2"/>
+</g>
+<ellipse cx="1180" cy="330" rx="30" ry="30" fill="#f5f8fc" opacity="0.2" filter="url(#soft)"/>
+<rect width="1600" height="1000" fill="url(#vig)"/>
+</svg>

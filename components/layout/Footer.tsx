@@ -1,4 +1,5 @@
 import { Monogram } from "@/components/brand/Monogram";
+import { NewsletterForm } from "@/components/site/NewsletterForm";
 import { footerNav } from "@/content/navigation";
 import { activeOffices } from "@/content/offices";
 import { compliance, site } from "@/content/site";
@@ -17,6 +18,15 @@ export function Footer({ locale }: { locale: string }) {
     <footer className="site-footer">
       <Monogram className="mb-4 h-14 w-14" />
       <p className="footer-word">{site.name}</p>
+      <div className="footer-newsletter">
+        <h3>{locale === "es" ? "Perspectivas de Zoharav" : "Insights by Zoharav"}</h3>
+        <p>
+          {locale === "es"
+            ? "Reciba análisis selectos directamente en su correo."
+            : "Get select analysis delivered straight to your inbox."}
+        </p>
+        <NewsletterForm locale={locale} />
+      </div>
       <div className="footer-grid">
         {columns.map((column) => (
           <div key={column.title}>

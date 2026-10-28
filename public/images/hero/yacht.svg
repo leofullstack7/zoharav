@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Abstract horizon with soft light over a minimal platform silhouette">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#17171c"/>
+<stop offset="48%" stop-color="#0e0e12"/>
+<stop offset="100%" stop-color="#07070a"/>
+</linearGradient>
+<radialGradient id="glow" cx="66%" cy="42%" r="55%">
+<stop offset="0%" stop-color="#f5f8fc" stop-opacity="0.24"/>
+<stop offset="55%" stop-color="#8d9bab" stop-opacity="0.07"/>
+<stop offset="100%" stop-color="#17171c" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="vig" cx="50%" cy="50%" r="72%">
+<stop offset="60%" stop-color="#000" stop-opacity="0"/>
+<stop offset="100%" stop-color="#000" stop-opacity="0.4"/>
+</radialGradient>
+<filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+<feGaussianBlur stdDeviation="46"/>
+</filter>
+<filter id="ds" x="-40%" y="-40%" width="180%" height="180%">
+<feDropShadow dx="0" dy="9" stdDeviation="11" flood-color="#000" flood-opacity="0.4"/>
+</filter>
+</defs>
+<rect width="1600" height="1000" fill="url(#bg)"/>
+<rect width="1600" height="1000" fill="url(#glow)"/>
+<ellipse cx="1060" cy="420" rx="70" ry="70" fill="#f5f8fc" opacity="0.14" filter="url(#soft)"/>
+<line x1="0" y1="640" x2="1600" y2="640" stroke="#8d9bab" stroke-opacity="0.28" stroke-width="2"/>
+<ellipse cx="1040" cy="645" rx="440" ry="80" fill="#d5dee8" opacity="0.1" filter="url(#soft)"/>
+<g stroke="#b7c4d4" stroke-opacity="0.16" stroke-width="1.5">
+<line x1="140" y1="672" x2="520" y2="672"/>
+<line x1="110" y1="708" x2="640" y2="708"/>
+<line x1="150" y1="746" x2="560" y2="746"/>
+<line x1="90" y1="788" x2="700" y2="788"/>
+</g>
+<g filter="url(#ds)" opacity="0.22">
+<line x1="440" y1="500" x2="440" y2="642" stroke="#d5dee8" stroke-width="3"/>
+<line x1="408" y1="642" x2="472" y2="642" stroke="#d5dee8" stroke-width="3"/>
+<line x1="440" y1="540" x2="410" y2="642" stroke="#d5dee8" stroke-width="2"/>
+<line x1="440" y1="540" x2="470" y2="642" stroke="#d5dee8" stroke-width="2"/>
+</g>
+<g filter="url(#ds)" opacity="0.58">
+<line x1="1100" y1="430" x2="1100" y2="640" stroke="#f5f8fc" stroke-width="3.5"/>
+<line x1="1050" y1="640" x2="1150" y2="640" stroke="#f5f8fc" stroke-width="3.5"/>
+<line x1="1100" y1="470" x2="1058" y2="640" stroke="#d5dee8" stroke-width="2.5"/>
+<line x1="1100" y1="470" x2="1142" y2="640" stroke="#d5dee8" stroke-width="2.5"/>
+<line x1="1078" y1="500" x2="1122" y2="500" stroke="#d5dee8" stroke-width="2"/>
+</g>
+<rect width="1600" height="1000" fill="url(#vig)"/>
+</svg>

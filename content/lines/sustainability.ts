@@ -58,7 +58,7 @@ export const sustainability: Service = {
     en: "Responsible development for future generations. We advise on decarbonization, disclosure, climate risk, circular models, and the social conditions of a resource project.",
     es: "Desarrollo responsable para las próximas generaciones. Asesoramos descarbonización, divulgación, riesgo climático, modelos circulares y las condiciones sociales de un proyecto de recursos.",
   },
-  image: "/images/services/sustainability.jpg",
+  image: "/images/sustainability/plant.svg",
   industries: ["energy-utilities", "oil-gas", "mining", "manufacturing", "agriculture", "public-sector"],
   faqs,
   methodologies: [

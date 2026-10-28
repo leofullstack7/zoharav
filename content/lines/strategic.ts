@@ -64,7 +64,7 @@ export const strategic: Service = {
     en: "Corporate strategy, market intelligence, partnerships, and the operating work that makes them real: lean processes, supply and assets, indicators, and risk. For natural resources and the industries around them.",
     es: "Estrategia corporativa, inteligencia de mercado, alianzas y el trabajo operativo que las vuelve reales: procesos lean, suministro y activos, indicadores y riesgo. Para los recursos naturales y las industrias que los rodean.",
   },
-  image: "/images/services/strategic-operational.jpg",
+  image: "/images/services/jet.svg",
   industries: ["manufacturing", "energy-utilities", "mining", "logistics", "financial", "public-sector"],
   faqs,
   slides: [

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Abstract single growth line rising with simple leaf nodes, suggesting stewardship">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#17171c"/>
+<stop offset="50%" stop-color="#0e0e12"/>
+<stop offset="100%" stop-color="#07070a"/>
+</linearGradient>
+<radialGradient id="glow" cx="50%" cy="78%" r="45%">
+<stop offset="0%" stop-color="#1fa37a" stop-opacity="0.12"/>
+<stop offset="60%" stop-color="#8d9bab" stop-opacity="0.04"/>
+<stop offset="100%" stop-color="#17171c" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="vig" cx="50%" cy="50%" r="75%">
+<stop offset="55%" stop-color="#000" stop-opacity="0"/>
+<stop offset="100%" stop-color="#000" stop-opacity="0.4"/>
+</radialGradient>
+<filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+<feGaussianBlur stdDeviation="38"/>
+</filter>
+<filter id="ds" x="-30%" y="-30%" width="160%" height="160%">
+<feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.4"/>
+</filter>
+</defs>
+<rect width="1600" height="1000" fill="url(#bg)"/>
+<rect width="1600" height="1000" fill="url(#glow)"/>
+<line x1="0" y1="800" x2="1600" y2="800" stroke="#8d9bab" stroke-opacity="0.16" stroke-width="2"/>
+<ellipse cx="800" cy="800" rx="260" ry="36" fill="#1fa37a" opacity="0.12" filter="url(#soft)"/>
+<g filter="url(#ds)" fill="none">
+<path d="M800 800 C 790 680, 820 600, 790 480 C 765 380, 800 320, 800 260" stroke="#8d9bab" stroke-width="10" stroke-linecap="round" opacity="0.3"/>
+<path d="M800 800 C 790 680, 820 600, 790 480 C 765 380, 800 320, 800 260" stroke="#d5dee8" stroke-width="3" stroke-linecap="round" opacity="0.65"/>
+</g>
+<g filter="url(#ds)" opacity="0.6">
+<path d="M795 620 C 850 600, 900 560, 920 500 C 870 520, 820 550, 795 620 Z" fill="#1fa37a" opacity="0.5"/>
+<path d="M795 480 C 740 455, 700 410, 690 350 C 740 375, 780 410, 795 480 Z" fill="#1fa37a" opacity="0.45"/>
+<path d="M800 380 C 850 360, 885 325, 895 280 C 850 300, 815 330, 800 380 Z" fill="#0f6b4f" opacity="0.4"/>
+</g>
+<circle cx="800" cy="262" r="10" fill="#f5f8fc" opacity="0.5"/>
+<circle cx="800" cy="262" r="26" fill="#f5f8fc" opacity="0.12" filter="url(#soft)"/>
+<rect width="1600" height="1000" fill="url(#vig)"/>
+</svg>

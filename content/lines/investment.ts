@@ -58,7 +58,7 @@ export const investment: Service = {
     en: "From capital structuring to a financial diagnostic, we help you take complex decisions with a clear eye. The focus is green financing, project finance, and the risk of resource markets — as advisors, never as traders of the commodity.",
     es: "De la estructuración de capital a un diagnóstico financiero, ayudamos a tomar decisiones complejas con la mirada clara. El foco es el financiamiento verde, el project finance y el riesgo de los mercados de recursos, como asesores y nunca como traders del commodity.",
   },
-  image: "/images/services/investment.jpg",
+  image: "/images/investment/handshake.svg",
   industries: ["financial", "energy-utilities", "oil-gas", "mining", "public-sector"],
   faqs,
   slides: [

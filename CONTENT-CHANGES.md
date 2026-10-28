@@ -106,7 +106,7 @@ No se añadieron clientes, certificaciones ni teléfonos.
 | Industrias, lista reducida | `/sectors` |
 | Oficinas y geografías del FAQ | `/global-presence` |
 | FAQ | `/faq` y bloque del home |
-| Consulting Advisory + producto de USD $500 | `/booking` y `/booking/success` |
+| Consulting Advisory + producto de USD $500 (captura de lead, sin pago en línea) | `/booking` |
 | Contact | `/contact` |
 | Privacy, Terms, Refund, Damage | `/legal/privacy`, `/legal/terms`, `/legal/refund`, `/legal/damage` |
 | Data & AI, Cybersecurity, Help | Sin página. Redirección 301 a `/services` o `/faq` |

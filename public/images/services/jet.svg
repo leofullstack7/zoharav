@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Abstract compass rose and an ascending bearing line, suggesting strategic direction">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#17171c"/>
+<stop offset="50%" stop-color="#0e0e12"/>
+<stop offset="100%" stop-color="#07070a"/>
+</linearGradient>
+<radialGradient id="glow" cx="30%" cy="30%" r="55%">
+<stop offset="0%" stop-color="#f5f8fc" stop-opacity="0.18"/>
+<stop offset="60%" stop-color="#8d9bab" stop-opacity="0.05"/>
+<stop offset="100%" stop-color="#17171c" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="vig" cx="50%" cy="50%" r="75%">
+<stop offset="58%" stop-color="#000" stop-opacity="0"/>
+<stop offset="100%" stop-color="#000" stop-opacity="0.42"/>
+</radialGradient>
+<filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+<feGaussianBlur stdDeviation="40"/>
+</filter>
+<filter id="ds" x="-40%" y="-40%" width="180%" height="180%">
+<feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.4"/>
+</filter>
+</defs>
+<rect width="1600" height="1000" fill="url(#bg)"/>
+<rect width="1600" height="1000" fill="url(#glow)"/>
+<ellipse cx="470" cy="520" rx="260" ry="260" fill="#8d9bab" opacity="0.07" filter="url(#soft)"/>
+<g filter="url(#ds)" fill="none" stroke="#b7c4d4">
+<circle cx="470" cy="520" r="210" stroke-opacity="0.22" stroke-width="1.5"/>
+<circle cx="470" cy="520" r="150" stroke-opacity="0.3" stroke-width="1.5"/>
+<circle cx="470" cy="520" r="90" stroke-opacity="0.4" stroke-width="1.5"/>
+</g>
+<g stroke="#d5dee8" stroke-opacity="0.45" stroke-width="1.5">
+<line x1="470" y1="300" x2="470" y2="740"/>
+<line x1="250" y1="520" x2="690" y2="520"/>
+</g>
+<path d="M470 470 L490 520 L470 570 L450 520 Z" fill="#f5f8fc" opacity="0.65"/>
+<g filter="url(#ds)" opacity="0.6">
+<path d="M560 680 C 760 620, 980 520, 1220 340" fill="none" stroke="#f5f8fc" stroke-width="3" stroke-linecap="round"/>
+</g>
+<g opacity="0.4">
+<path d="M560 680 C 760 620, 980 520, 1220 340" fill="none" stroke="#8d9bab" stroke-width="14" stroke-linecap="round" filter="url(#soft)"/>
+</g>
+<g stroke="#d5dee8" stroke-opacity="0.5" stroke-width="2.5" filter="url(#ds)">
+<line x1="1220" y1="340" x2="1170" y2="366"/>
+<line x1="1220" y1="340" x2="1198" y2="392"/>
+</g>
+<rect width="1600" height="1000" fill="url(#vig)"/>
+</svg>

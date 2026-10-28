@@ -37,4 +37,8 @@
   --zh-shadow: 0 18px 50px rgba(150, 168, 188, 0.16);
   --zh-radius: 3px;
   --zh-header-height: 5.5rem;
+  /* Motion + type rhythm, shared across the site */
+  --zh-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --zh-ease-silk: cubic-bezier(0.7, 0, 0.2, 1);
+  --zh-measure: 42rem;
 }

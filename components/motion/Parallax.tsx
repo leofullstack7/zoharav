@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 
 export function Parallax({
   src,
@@ -41,7 +42,7 @@ export function Parallax({
 
   return (
     <div className={`parallax${className ? ` ${className}` : ""}`} ref={frame}>
-      <img ref={photo} src={src} alt={alt} />
+      <Image ref={photo} src={src} alt={alt} fill sizes="100vw" />
     </div>
   );
 }

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Abstract corporate tower silhouette with soft sunset glow and palm fronds">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#17171c"/>
+<stop offset="55%" stop-color="#0e0e12"/>
+<stop offset="100%" stop-color="#07070a"/>
+</linearGradient>
+<radialGradient id="glow" cx="62%" cy="40%" r="46%">
+<stop offset="0%" stop-color="#f5f8fc" stop-opacity="0.22"/>
+<stop offset="55%" stop-color="#e07a2e" stop-opacity="0.05"/>
+<stop offset="100%" stop-color="#17171c" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="vig" cx="50%" cy="50%" r="75%">
+<stop offset="55%" stop-color="#000" stop-opacity="0"/>
+<stop offset="100%" stop-color="#000" stop-opacity="0.42"/>
+</radialGradient>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+<feGaussianBlur stdDeviation="40"/>
+</filter>
+<filter id="ds" x="-30%" y="-30%" width="160%" height="160%">
+<feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.4"/>
+</filter>
+</defs>
+<rect width="1600" height="1000" fill="url(#bg)"/>
+<rect width="1600" height="1000" fill="url(#glow)"/>
+<line x1="0" y1="760" x2="1600" y2="760" stroke="#8d9bab" stroke-opacity="0.18" stroke-width="2"/>
+<ellipse cx="1000" cy="420" rx="220" ry="220" fill="#f5f8fc" opacity="0.1" filter="url(#soft)"/>
+<g filter="url(#ds)">
+<rect x="940" y="220" width="120" height="540" fill="#17171c" opacity="0.85" stroke="#5c6876" stroke-opacity="0.5" stroke-width="2"/>
+<g stroke="#b7c4d4" stroke-opacity="0.18" stroke-width="1.5">
+<line x1="940" y1="270" x2="1060" y2="270"/>
+<line x1="940" y1="320" x2="1060" y2="320"/>
+<line x1="940" y1="370" x2="1060" y2="370"/>
+<line x1="940" y1="420" x2="1060" y2="420"/>
+<line x1="940" y1="470" x2="1060" y2="470"/>
+<line x1="940" y1="520" x2="1060" y2="520"/>
+<line x1="940" y1="570" x2="1060" y2="570"/>
+<line x1="940" y1="620" x2="1060" y2="620"/>
+</g>
+<g fill="#f5f8fc" opacity="0.3">
+<rect x="958" y="340" width="6" height="8"/>
+<rect x="990" y="390" width="6" height="8"/>
+<rect x="1020" y="440" width="6" height="8"/>
+<rect x="970" y="490" width="6" height="8"/>
+<rect x="1035" y="540" width="6" height="8"/>
+</g>
+</g>
+<g stroke="#5c6876" stroke-opacity="0.45" stroke-width="3" fill="none" filter="url(#ds)">
+<path d="M300 760 C 330 700, 310 650, 260 620"/>
+<path d="M300 760 C 350 715, 380 670, 400 630"/>
+<path d="M300 760 C 280 705, 230 675, 190 660"/>
+<path d="M300 760 C 320 700, 360 640, 420 600"/>
+</g>
+<rect width="1600" height="1000" fill="url(#vig)"/>
+</svg>

@@ -2,6 +2,7 @@
 @import "lenis/dist/lenis.css";
 @import "./tokens.css";
 @import "./experience.css";
+@import "./office-map.css";
 
 @theme inline {
   --color-zh-black: var(--zh-black);
@@ -27,7 +28,6 @@
   --font-display: var(--font-cormorant), "Times New Roman", serif;
   --font-sans: var(--font-manrope), "Segoe UI", sans-serif;
   --font-wordmark: var(--font-cinzel), "Times New Roman", serif;
-  --font-script: var(--font-script), cursive;
 }
 
 html {
@@ -45,6 +45,18 @@ body {
   font-size: 1.0625rem;
   line-height: 1.7;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Type rhythm: a sane default for every heading unless a component rule
+   is more specific. Keeps display type confident without clipping
+   accented caps (á, é, ñ…) at very tight line-heights. */
+h1, h2, h3, h4 {
+  line-height: 1.08;
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
 }
 
 ::selection {
@@ -84,8 +96,107 @@ body {
   transform: translateY(0);
 }
 
+/* ===== Cookie consent banner (components/site/CookieConsent.tsx) ===== */
+.zh-cookie-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  padding: 1.1rem 5vw;
+  background: rgba(7, 7, 10, 0.96);
+  border-top: 1px solid rgba(186, 198, 214, 0.28);
+  backdrop-filter: blur(10px);
+  animation: fadein 0.5s var(--zh-ease) both;
+}
+.zh-cookie-copy {
+  margin: 0;
+  max-width: 48rem;
+  color: var(--zh-cream);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.zh-cookie-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .zh-cookie-banner {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  .zh-cookie-actions {
+    justify-content: center;
+  }
+}
+
+/* ===== Newsletter form (components/site/NewsletterForm.tsx, in Footer) ===== */
+.footer-newsletter {
+  margin-top: 2rem;
+  max-width: 30rem;
+}
+.footer-newsletter h3 {
+  margin: 0 0 0.5rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--zh-gold-200);
+}
+.footer-newsletter p {
+  margin: 0;
+  color: var(--zh-cream);
+  font-size: 0.92rem;
+}
+.newsletter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 0.4rem;
+  max-width: 26rem;
+}
+.newsletter-field {
+  flex: 1 1 12rem;
+}
+.newsletter-field input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--zh-gold-400);
+  background: transparent;
+  color: var(--zh-cream);
+  padding: 0.55rem 0;
+  font: inherit;
+  font-size: 0.92rem;
+}
+.newsletter-field input::placeholder {
+  color: var(--zh-muted);
+}
+.newsletter-field input:focus-visible {
+  outline: none;
+  border-color: var(--zh-gold-200);
+}
+.newsletter-note {
+  margin-top: 0.4rem;
+  max-width: 26rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  /* Safety net for every transition/animation added across the site —
+     the targeted overrides in experience.css stay as the primary list,
+     this just makes sure nothing new slips through. */
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

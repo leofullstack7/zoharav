@@ -101,12 +101,12 @@ export const bookingCategories: BookingCategory[] = [
 export const bookingCopy = {
   title: { en: "Book a Strategic Session", es: "Reserve una sesión estratégica" },
   intro: {
-    en: "A 60-minute session with a senior advisor. USD $500, credited toward the full engagement if you proceed. Virtual or in person. Payment is handled securely at checkout.",
-    es: "Una sesión de 60 minutos con un asesor senior. USD $500, acreditables al encargo completo si decide continuar. Virtual o presencial. El pago se procesa de forma segura al finalizar.",
+    en: "A 60-minute session with a senior advisor. USD $500, credited toward the full engagement if you proceed. Virtual or in person. Request a session below and we will confirm scheduling and payment details by email or call.",
+    es: "Una sesión de 60 minutos con un asesor senior. USD $500, acreditables al encargo completo si decide continuar. Virtual o presencial. Solicite una sesión a continuación y confirmaremos el horario y los detalles de pago por correo o llamada.",
   },
   badges: [
     { en: "60-min session", es: "Sesión de 60 min" },
-    { en: "Secure payment", es: "Pago seguro" },
+    { en: "Response within 1 business day", es: "Respuesta en 1 día hábil" },
     { en: "Virtual or in-person", es: "Virtual o presencial" },
   ] satisfies Localized[],
   productName: {

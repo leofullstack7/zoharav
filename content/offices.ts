@@ -10,6 +10,9 @@ export type Office = {
   hours: { en: string; es: string };
   active: boolean;
   image: string;
+  /** City-level coordinates, used by the interactive office map. */
+  lat: number;
+  lng: number;
 };
 
 export const offices: Office[] = [
@@ -24,7 +27,9 @@ export const offices: Office[] = [
     timezoneLabel: "COT (UTC-5)",
     hours: { en: "", es: "" },
     active: true,
-    image: "/images/offices/medellin.jpg",
+    image: "/images/offices/medellin.svg",
+    lat: 6.2442,
+    lng: -75.5812,
   },
   {
     id: "miami",
@@ -38,7 +43,9 @@ export const offices: Office[] = [
       es: "Lunes a jueves: 8:00 a. m. – 5:00 p. m. · Viernes: 8:00 a. m. – 2:00 p. m. · Sábado y domingo: cerrado",
     },
     active: true,
-    image: "/images/offices/miami.jpg",
+    image: "/images/offices/miami.svg",
+    lat: 25.765,
+    lng: -80.1936,
   },
   {
     id: "puerto-rico",
@@ -52,7 +59,9 @@ export const offices: Office[] = [
       es: "Lunes a jueves: 8:00 a. m. – 5:00 p. m. · Viernes: 8:00 a. m. – 2:00 p. m. · Sábado y domingo: cerrado",
     },
     active: true,
-    image: "/images/offices/san-juan.jpg",
+    image: "/images/offices/san-juan.svg",
+    lat: 18.4655,
+    lng: -66.1057,
   },
   {
     id: "dubai",
@@ -68,6 +77,8 @@ export const offices: Office[] = [
     // Editable: set active to true only after the client confirms the office.
     active: false,
     image: "/images/offices/dubai.jpg",
+    lat: 25.0805,
+    lng: 55.1403,
   },
 ];
 

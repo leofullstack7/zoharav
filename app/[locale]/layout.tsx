@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Cinzel, Cormorant_Garamond, Great_Vibes, Manrope } from "next/font/google";
+import { Bodoni_Moda, Cinzel, Cormorant_Garamond, Manrope } from "next/font/google";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { CookieConsent } from "@/components/site/CookieConsent";
 import { site } from "@/content/site";
 import { routing } from "@/i18n/routing";
 import { SmoothScroll } from "@/lib/motion";
@@ -30,10 +31,11 @@ const cinzel = Cinzel({
   display: "swap",
 });
 
-const script = Great_Vibes({
+const bodoni = Bodoni_Moda({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-script",
+  weight: ["500"],
+  style: ["normal", "italic"],
+  variable: "--font-bodoni",
   display: "swap",
 });
 
@@ -49,12 +51,42 @@ export async function generateMetadata({
   const { locale } = await params;
   const copy = locale === "es" ? site.seo.description.es : site.seo.description.en;
   const title = locale === "es" ? site.seo.title.es : site.seo.title.en;
+  const ogLocale = locale === "es" ? "es_ES" : "en_US";
 
   return {
     metadataBase: new URL(site.url),
     title: { default: title, template: "%s · ZOHARAV & CO." },
     description: copy,
     keywords: [...site.seo.keywords],
+    openGraph: {
+      title,
+      description: copy,
+      siteName: site.name,
+      locale: ogLocale,
+      type: "website",
+      images: [{ url: "/images/firm/office.png" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: copy,
+      images: ["/images/firm/office.png"],
+    },
+    robots: { index: true, follow: true },
+  };
+}
+
+function organizationJsonLd() {
+  const sameAs = site.social.map((s) => s.url).filter(Boolean);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: site.name,
+    url: site.url,
+    logo: `${site.url}/brand/monogram.svg`,
+    description: site.seo.description.en,
+    ...(site.email ? { email: site.email } : {}),
+    ...(sameAs.length ? { sameAs } : {}),
   };
 }
 
@@ -73,22 +105,24 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${cormorant.variable} ${manrope.variable} ${cinzel.variable} ${script.variable}`}
+      className={`${cormorant.variable} ${manrope.variable} ${cinzel.variable} ${bodoni.variable}`}
     >
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&display=swap"
-          rel="stylesheet"
-        />
-      </head>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
+        />
+        {/* If JS never runs at all, the scroll-reveal content (opacity: 0
+            until the Reveal component hydrates) must still be readable. */}
+        <noscript>
+          <style>{".reveal{opacity:1!important;transform:none!important;filter:none!important;}"}</style>
+        </noscript>
         <a className="zh-skip" href="#content">
           {t("skip")}
         </a>
         <NextIntlClientProvider>
           <SmoothScroll>{children}</SmoothScroll>
+          <CookieConsent locale={locale} />
         </NextIntlClientProvider>
       </body>
     </html>

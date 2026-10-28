@@ -58,7 +58,7 @@ export const oilAndEnergy: Service = {
     en: "Strategic consulting across the energy value chain: exploration and production advisory, infrastructure, government relations, and the transition. Powering opportunities does not mean lifting the barrel. We never do.",
     es: "Consultoría estratégica a lo largo de la cadena energética: asesoría de exploración y producción, infraestructura, relaciones con gobiernos y la transición. Impulsar oportunidades no significa levantar el barril. Nunca lo hacemos.",
   },
-  image: "/images/services/oil-and-energy.jpg",
+  image: "/images/pillars/oil-energy.svg",
   industries: ["oil-gas", "energy-utilities", "logistics"],
   faqs,
   methodologies: [

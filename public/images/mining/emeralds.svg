@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Abstract cluster of faceted gem-like polygons in cool silver and emerald tones">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#17171c"/>
+<stop offset="50%" stop-color="#0e0e12"/>
+<stop offset="100%" stop-color="#07070a"/>
+</linearGradient>
+<radialGradient id="glow" cx="50%" cy="42%" r="50%">
+<stop offset="0%" stop-color="#1fa37a" stop-opacity="0.1"/>
+<stop offset="55%" stop-color="#8d9bab" stop-opacity="0.05"/>
+<stop offset="100%" stop-color="#17171c" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="vig" cx="50%" cy="50%" r="75%">
+<stop offset="55%" stop-color="#000" stop-opacity="0"/>
+<stop offset="100%" stop-color="#000" stop-opacity="0.42"/>
+</radialGradient>
+<filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+<feGaussianBlur stdDeviation="40"/>
+</filter>
+<filter id="ds" x="-30%" y="-30%" width="160%" height="160%">
+<feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity="0.45"/>
+</filter>
+</defs>
+<rect width="1600" height="1000" fill="url(#bg)"/>
+<rect width="1600" height="1000" fill="url(#glow)"/>
+<ellipse cx="800" cy="560" rx="300" ry="70" fill="#0f6b4f" opacity="0.1" filter="url(#soft)"/>
+<g filter="url(#ds)">
+<polygon points="800,380 900,440 880,560 720,560 700,440" fill="#17171c" stroke="#8d9bab" stroke-opacity="0.5" stroke-width="2"/>
+<polygon points="800,380 900,440 800,470" fill="#5c6876" opacity="0.5"/>
+<polygon points="800,380 700,440 800,470" fill="#2a2a31" opacity="0.6"/>
+<polygon points="700,440 720,560 800,470" fill="#1fa37a" opacity="0.14"/>
+<polygon points="900,440 880,560 800,470" fill="#0f6b4f" opacity="0.18"/>
+<polygon points="720,560 880,560 800,470" fill="#0e0e12" opacity="0.7"/>
+<line x1="800" y1="380" x2="800" y2="470" stroke="#f5f8fc" stroke-opacity="0.35" stroke-width="1.5"/>
+<line x1="700" y1="440" x2="800" y2="470" stroke="#f5f8fc" stroke-opacity="0.25" stroke-width="1"/>
+<line x1="900" y1="440" x2="800" y2="470" stroke="#f5f8fc" stroke-opacity="0.25" stroke-width="1"/>
+</g>
+<g filter="url(#ds)" opacity="0.45">
+<polygon points="520,520 580,555 560,620 470,620 450,555" fill="#17171c" stroke="#8d9bab" stroke-opacity="0.4" stroke-width="1.5"/>
+<polygon points="520,520 580,555 520,572" fill="#5c6876" opacity="0.5"/>
+<polygon points="520,520 450,555 520,572" fill="#2a2a31" opacity="0.6"/>
+</g>
+<g filter="url(#ds)" opacity="0.4">
+<polygon points="1080,540 1130,570 1115,625 1040,625 1025,570" fill="#17171c" stroke="#8d9bab" stroke-opacity="0.4" stroke-width="1.5"/>
+<polygon points="1080,540 1130,570 1080,585" fill="#5c6876" opacity="0.5"/>
+<polygon points="1080,540 1025,570 1080,585" fill="#2a2a31" opacity="0.6"/>
+</g>
+<rect width="1600" height="1000" fill="url(#vig)"/>
+</svg>
