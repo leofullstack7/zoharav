@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
 import { BookingForm } from "@/components/booking/BookingForm";
 import { Reveal } from "@/components/motion/Reveal";
 import { bookingCategories, bookingCopy } from "@/content/booking";
 import { site } from "@/content/site";
 import { loc } from "@/lib/i18n/loc";
+import { getSiteImagePhoto } from "@/lib/images/getSiteImage";
 import { buildPageMetadata, trimCopy } from "@/lib/seo";
 import { setRequestLocale } from "next-intl/server";
 
@@ -27,10 +28,11 @@ export default async function BookingPage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   setRequestLocale(locale);
   const seeMore = locale === "es" ? "Ver más" : "See more";
+  const heroPhoto = await getSiteImagePhoto("booking.hero");
   return (
     <main id="content">
       <section className="page-hero">
-        <Image src="/images/firm/office.svg" alt="" fill priority sizes="100vw" />
+        <ArtOverPhoto photoUrl={heroPhoto} artSrc="/images/firm/office.svg" priority sizes="100vw" />
         <div className="veil" />
         <div className="copy">
           <p className="eyebrow">USD {site.booking.amount}</p>

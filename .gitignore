@@ -43,3 +43,8 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# Recovered originals used once by scripts/migrate-site-images.ts to seed
+# Supabase Storage — binary photos, never meant to live in the repo (the
+# site now serves them from Storage, not from /public).
+/scripts/.seed-images/

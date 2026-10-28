@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
 import { Reveal } from "@/components/motion/Reveal";
 import { getService, services } from "@/content/services";
 import { Link } from "@/i18n/navigation";
 import { loc } from "@/lib/i18n/loc";
+import { getSiteImagePhoto } from "@/lib/images/getSiteImage";
 import { buildPageMetadata } from "@/lib/seo";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -39,11 +40,12 @@ export default async function ServicePage({
   setRequestLocale(locale);
   const service = getService(slug);
   if (!service) notFound();
+  const heroPhoto = await getSiteImagePhoto(`services.${service.slug}.cover`);
 
   return (
     <main id="content">
       <section className="page-hero">
-        <Image src={service.image} alt="" fill priority sizes="100vw" />
+        <ArtOverPhoto photoUrl={heroPhoto} artSrc={service.image} priority sizes="100vw" />
         <div className="veil" />
         <div className="copy">
           <h1>{loc(service.heroTitle, locale)}</h1>

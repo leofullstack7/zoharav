@@ -32,6 +32,18 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Admin-uploaded images (lib/images/getSiteImage.ts) are served from the
+    // public "site-images" Supabase Storage bucket, created in
+    // scripts/migrate-site-images.ts — next/image needs the host allow-listed
+    // to optimize/serve them. Any Supabase project's public Storage URL
+    // matches this pattern, not just the current project ref.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
   },
   async redirects() {
     return legacyRedirects.map(([source, destination]) => ({

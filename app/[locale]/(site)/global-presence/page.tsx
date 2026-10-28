@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
 import { OfficeMapSection } from "@/components/site/OfficeMapSection";
 import { activeOffices } from "@/content/offices";
 import { chapters } from "@/content/home";
 import { isFilled, loc } from "@/lib/i18n/loc";
+import { getSiteImagePhoto, getSiteImagePhotos } from "@/lib/images/getSiteImage";
 import { buildPageMetadata } from "@/lib/seo";
 import { setRequestLocale } from "next-intl/server";
 
@@ -25,10 +26,14 @@ export async function generateMetadata({
 export default async function PresencePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const heroPhoto = await getSiteImagePhoto("global-presence.hero");
+  const officePhotos = await getSiteImagePhotos(
+    activeOffices.map((office) => `offices.${office.id}.cover`),
+  );
   return (
     <main id="content">
       <section className="page-hero">
-        <Image src="/images/offices/miami.svg" alt="" fill priority sizes="100vw" />
+        <ArtOverPhoto photoUrl={heroPhoto} artSrc="/images/offices/miami.svg" priority sizes="100vw" />
         <div className="veil" />
         <div className="copy">
           <p className="eyebrow">05</p>
@@ -46,7 +51,11 @@ export default async function PresencePage({ params }: { params: Promise<{ local
             {activeOffices.map((office) => (
               <article className="soft-card" key={office.id}>
                 <div style={{ position: "relative", width: "100%", height: 180 }}>
-                  <Image src={office.image} alt="" fill sizes="(max-width: 900px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+                  <ArtOverPhoto
+                    photoUrl={officePhotos[`offices.${office.id}.cover`]}
+                    artSrc={office.image}
+                    sizes="(max-width: 900px) 100vw, 33vw"
+                  />
                 </div>
                 <h3>{loc(office.city, locale)}</h3>
                 <p className="kicker">{loc(office.role, locale)}</p>

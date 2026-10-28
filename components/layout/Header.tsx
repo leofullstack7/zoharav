@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
 import { Monogram } from "@/components/brand/Monogram";
 import { navigation } from "@/content/navigation";
 import { services } from "@/content/services";
 import { site } from "@/content/site";
 import { Link, usePathname } from "@/i18n/navigation";
 import { loc } from "@/lib/i18n/loc";
+
+type ServiceCoverPayload = Record<string, { photoUrl: string | null; art: string }>;
 
 export function Header({ locale }: { locale: string }) {
   const pathname = usePathname();
@@ -18,8 +20,35 @@ export function Header({ locale }: { locale: string }) {
   const [activeService, setActiveService] = useState(services[0].slug);
   const [mobileGroup, setMobileGroup] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
+  const [serviceCovers, setServiceCovers] = useState<ServiceCoverPayload>({});
   const closeTimer = useRef<number | null>(null);
   const service = services.find((item) => item.slug === activeService) ?? services[0];
+
+  // Resolves the mega-menu thumbnail through the admin's per-service image
+  // slot (site_images, slot "services.<slug>.cover") instead of the
+  // hardcoded content/lines/*.ts default, so a single admin upload updates
+  // this thumbnail everywhere it appears (same ArtOverPhoto layering as
+  // the rest of the site: photo behind, darkened; art on top). Fetched
+  // client-side (the panel is hidden until hover, so this never competes
+  // with the page's own LCP image) rather than baked into the shared
+  // layout, which would otherwise force a full-site revalidation on every
+  // service-cover upload.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/site-images/services")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!cancelled && data && typeof data === "object") {
+          setServiceCovers(data as ServiceCoverPayload);
+        }
+      })
+      .catch(() => {
+        /* keep the content/lines/*.ts default below on any failure */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const openMega = () => {
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
@@ -111,7 +140,11 @@ export function Header({ locale }: { locale: string }) {
                     <p>{loc(service.cardLine, locale)}</p>
                   </div>
                   <Link className="mega-shot" href={`/services/${service.slug}`}>
-                    <Image src={service.image} alt="" fill sizes="240px" />
+                    <ArtOverPhoto
+                      photoUrl={serviceCovers[service.slug]?.photoUrl ?? null}
+                      artSrc={serviceCovers[service.slug]?.art ?? service.image}
+                      sizes="240px"
+                    />
                     <span>{loc(service.name, locale)}</span>
                   </Link>
                 </div>

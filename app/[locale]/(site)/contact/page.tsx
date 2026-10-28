@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
 import { ContactForm } from "@/components/site/ContactForm";
 import { chapters } from "@/content/home";
 import { site } from "@/content/site";
 import { loc } from "@/lib/i18n/loc";
+import { getSiteImagePhoto } from "@/lib/images/getSiteImage";
 import { buildPageMetadata } from "@/lib/seo";
 import { setRequestLocale } from "next-intl/server";
 
@@ -26,10 +27,11 @@ export async function generateMetadata({
 export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const heroPhoto = await getSiteImagePhoto("contact.hero");
   return (
     <main id="content">
       <section className="page-hero">
-        <Image src="/images/contact/tower.svg" alt="" fill priority sizes="100vw" />
+        <ArtOverPhoto photoUrl={heroPhoto} artSrc="/images/contact/tower.svg" priority sizes="100vw" />
         <div className="veil" />
         <div className="copy">
           <p className="eyebrow">08</p>

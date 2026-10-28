@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
 import { setRequestLocale } from "next-intl/server";
 import { Reveal } from "@/components/motion/Reveal";
 import { Link } from "@/i18n/navigation";
 import { getPublishedInsights } from "@/lib/content/insights";
+import { getSiteImagePhoto } from "@/lib/images/getSiteImage";
 import { buildPageMetadata } from "@/lib/seo";
 
 export async function generateMetadata({
@@ -28,11 +29,12 @@ export default async function InsightsPage({ params }: { params: Promise<{ local
   setRequestLocale(locale);
   const es = locale === "es";
   const insights = getPublishedInsights(locale);
+  const heroPhoto = await getSiteImagePhoto("insights.hero");
 
   return (
     <main id="content">
       <section className="page-hero">
-        <Image src="/images/offices/medellin.svg" alt="" fill priority sizes="100vw" />
+        <ArtOverPhoto photoUrl={heroPhoto} artSrc="/images/offices/medellin.svg" priority sizes="100vw" />
         <div className="veil" />
         <div className="copy">
           <p className="eyebrow">{es ? "Borradores" : "Drafts"}</p>

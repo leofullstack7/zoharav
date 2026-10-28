@@ -770,6 +770,45 @@
   inset: 0;
   background: linear-gradient(90deg, rgba(7, 7, 10, 0.88) 0%, rgba(7, 7, 10, 0.45) 70%);
 }
+
+/*
+ * components/site/ArtOverPhoto.tsx: an admin-uploaded (or
+ * recovered-original) photo layered BEHIND the site's hand-built SVG/
+ * editorial art, never swapped in for it. `.art-over-photo-backdrop` is
+ * the photo, pushed dark; `.art-over-photo-art` is the art on top in
+ * `screen` blend mode, which makes its near-black base rect all but
+ * vanish into the photo while its lighter glow/linework (drawn at low
+ * opacity in the source SVGs) reads as a bright overlay — the photo
+ * becomes a moody backdrop, the art stays the legible, primary visual.
+ * Generic enough to drop into any already-positioned container (page
+ * heroes, LiveFrame frames, card thumbnails, the mega-menu shot) — each
+ * of those already gives its `img` children `position:absolute;inset:0`
+ * (or Next's `fill` prop does it inline), so only `filter` /
+ * `mix-blend-mode` need setting here.
+ */
+.art-over-photo-img {
+  /* Baseline so ArtOverPhoto looks right even where the parent container
+     has no pre-existing `img { object-fit: cover }` rule of its own. */
+  object-fit: cover;
+}
+.art-over-photo-backdrop {
+  filter: brightness(0.4) saturate(0.7) contrast(1.05);
+}
+.art-over-photo-art {
+  mix-blend-mode: screen;
+}
+/* .hero-wash's own `img` rule (below) already sets filter/opacity/animation
+   for the lone-art case; scope a photo-aware override so the backdrop gets
+   pushed darker still and the art layer reads at full strength on top of
+   it, while still inheriting the shared drift animation from `.hero-wash img`. */
+.hero-wash .art-over-photo-backdrop {
+  filter: saturate(0.5) contrast(1.05) brightness(0.38);
+}
+.hero-wash .art-over-photo-art {
+  opacity: 1;
+  filter: none;
+  mix-blend-mode: screen;
+}
 .page-hero .copy { position: relative; padding: 9rem 6vw 4rem; max-width: 900px; }
 .page-hero h1 {
   margin: 0.4rem 0 0;

@@ -23,6 +23,9 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
           <Link href="/admin/bookings" className="zh-admin-btn-ghost">
             Reservas
           </Link>
+          <Link href="/admin/images" className="zh-admin-btn-ghost">
+            Imágenes
+          </Link>
           <Link href="/admin/settings" className="zh-admin-btn-ghost">
             Configuración
           </Link>

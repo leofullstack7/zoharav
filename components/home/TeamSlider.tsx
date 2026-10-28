@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { Monogram } from "@/components/brand/Monogram";
 import { Reveal } from "@/components/motion/Reveal";
 import { team, type TeamMember } from "@/content/team";
@@ -27,18 +28,36 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-function TeamCard({ member, locale }: { member: TeamMember; locale: string }) {
+function TeamCard({
+  member,
+  locale,
+  photoUrl,
+}: {
+  member: TeamMember;
+  locale: string;
+  photoUrl?: string | null;
+}) {
   const displayName = member.placeholder ? loc(copy.openSeat, locale) : member.name;
   return (
     <article className={styles.card}>
       <div className={styles.portrait}>
-        <span className={styles.portraitSheen} aria-hidden />
-        {member.placeholder ? (
-          <Monogram className={styles.monogram} />
+        {photoUrl ? (
+          // A real admin-uploaded photo exists for this seat — show it
+          // plainly (no SVG art ever existed for team portraits, so there
+          // is nothing to layer it behind, unlike the rest of the site's
+          // ArtOverPhoto treatment).
+          <Image src={photoUrl} alt={displayName} fill sizes="200px" style={{ objectFit: "cover" }} />
         ) : (
-          <span className={styles.initials} aria-hidden>
-            {initials(member.name)}
-          </span>
+          <>
+            <span className={styles.portraitSheen} aria-hidden />
+            {member.placeholder ? (
+              <Monogram className={styles.monogram} />
+            ) : (
+              <span className={styles.initials} aria-hidden>
+                {initials(member.name)}
+              </span>
+            )}
+          </>
         )}
       </div>
       <h3 className={styles.name}>{displayName}</h3>
@@ -47,7 +66,13 @@ function TeamCard({ member, locale }: { member: TeamMember; locale: string }) {
   );
 }
 
-export function TeamSlider({ locale }: { locale: string }) {
+export function TeamSlider({
+  locale,
+  photos,
+}: {
+  locale: string;
+  photos?: Record<string, string | null>;
+}) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [reduced, setReduced] = useState(true);
@@ -164,7 +189,7 @@ export function TeamSlider({ locale }: { locale: string }) {
       {reduced ? (
         <div className={styles.staticGrid}>
           {team.map((member) => (
-            <TeamCard key={member.id} member={member} locale={locale} />
+            <TeamCard key={member.id} member={member} locale={locale} photoUrl={photos?.[member.id]} />
           ))}
         </div>
       ) : (
@@ -172,7 +197,7 @@ export function TeamSlider({ locale }: { locale: string }) {
           <div className={styles.viewport} ref={viewportRef}>
             <div className={styles.track} ref={trackRef}>
               {team.map((member) => (
-                <TeamCard key={member.id} member={member} locale={locale} />
+                <TeamCard key={member.id} member={member} locale={locale} photoUrl={photos?.[member.id]} />
               ))}
             </div>
           </div>

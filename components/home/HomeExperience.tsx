@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
+import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
 import { LiveFrame } from "@/components/motion/LiveFrame";
 import { Reveal } from "@/components/motion/Reveal";
 import { TeamSlider } from "@/components/home/TeamSlider";
@@ -12,6 +12,7 @@ import { gsap, prefersReducedMotion, registerGsap } from "@/lib/motion";
 import { services } from "@/content/services";
 import { homeStats } from "@/content/stats";
 import { compliance, site } from "@/content/site";
+import type { HomeImages } from "@/lib/images/homeImages";
 import { Link } from "@/i18n/navigation";
 import { loc } from "@/lib/i18n/loc";
 
@@ -87,16 +88,7 @@ function Band({
   );
 }
 
-const covers: Record<string, string> = {
-  "energy-transition": "/images/hero/yacht.svg",
-  "oil-and-energy": "/images/hero/yacht.svg",
-  "mining-natural-resources": "/images/mining/emeralds.svg",
-  "sustainability-esg": "/images/sustainability/plant.svg",
-  "investment-financial-advisory": "/images/investment/handshake.svg",
-  "strategic-operational-consulting": "/images/services/jet.svg",
-};
-
-export function HomeExperience({ locale }: { locale: string }) {
+export function HomeExperience({ locale, images }: { locale: string; images: HomeImages }) {
   const slide = banners.mandato;
   const title = heroTitle(line(slide.title, locale));
   const heroRef = useRef<HTMLDivElement>(null);
@@ -135,7 +127,7 @@ export function HomeExperience({ locale }: { locale: string }) {
     <div className="home-stage">
       <section className="hero hero-mandato" ref={heroRef}>
         <div className="hero-wash" aria-hidden>
-          <Image src="/images/hero/yacht.svg" alt="" fill priority sizes="100vw" />
+          <ArtOverPhoto photoUrl={images.hero} artSrc="/images/hero/yacht.svg" priority sizes="100vw" />
         </div>
         <div className="hero-sun" aria-hidden ref={sunRef}>
           <span className="hero-sun-core" />
@@ -200,7 +192,7 @@ export function HomeExperience({ locale }: { locale: string }) {
         </div>
       </section>
 
-      <TeamSlider locale={locale} />
+      <TeamSlider locale={locale} photos={images.teamPhotos} />
 
       <section className="bridge">
         <Reveal>
@@ -233,6 +225,7 @@ export function HomeExperience({ locale }: { locale: string }) {
               src="/images/firm/office.svg"
               alt="Private office overlooking a city skyline at night"
               caption={chapters.firm.signature}
+              photoUrl={images.firm}
             />
           </div>
           <ol className="firm-rail">
@@ -275,7 +268,11 @@ export function HomeExperience({ locale }: { locale: string }) {
             {services.map((service, index) => (
               <Reveal delay={index * 70} key={service.slug}>
                 <Link className="line-card" href={`/services/${service.slug}`}>
-                  <Image src={covers[service.slug]} alt="" fill sizes="(max-width: 900px) 100vw, 33vw" />
+                  <ArtOverPhoto
+                    photoUrl={images.serviceCovers[service.slug] ?? null}
+                    artSrc={service.image}
+                    sizes="(max-width: 900px) 100vw, 33vw"
+                  />
                   <div>
                     <h3>{line(service.name, locale)}</h3>
                     <p>{line(service.cardLine, locale)}</p>
@@ -331,7 +328,11 @@ export function HomeExperience({ locale }: { locale: string }) {
               <Reveal delay={index * 100} key={office.id}>
                 <Link className="city" href="/global-presence">
                   <div className="frame">
-                    <Image src={office.image} alt="" fill sizes="(max-width: 900px) 50vw, 25vw" />
+                    <ArtOverPhoto
+                      photoUrl={images.officeCovers[office.id] ?? null}
+                      artSrc={office.image}
+                      sizes="(max-width: 900px) 50vw, 25vw"
+                    />
                   </div>
                   <h3>{line(office.city, locale)}</h3>
                   <p>{line(office.role, locale)}</p>
@@ -405,7 +406,11 @@ export function HomeExperience({ locale }: { locale: string }) {
                 </Link>
               </div>
             </Reveal>
-            <LiveFrame src="/images/contact/tower.svg" alt="Corporate tower and palms at sunset" />
+            <LiveFrame
+              src="/images/contact/tower.svg"
+              alt="Corporate tower and palms at sunset"
+              photoUrl={images.contactFrame}
+            />
           </div>
         </div>
       </section>

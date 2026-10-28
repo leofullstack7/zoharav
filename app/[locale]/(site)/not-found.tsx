@@ -1,15 +1,17 @@
-import Image from "next/image";
+import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
 import { getLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { getSiteImagePhoto } from "@/lib/images/getSiteImage";
 
 export default async function SiteNotFound() {
   const locale = await getLocale();
   const es = locale === "es";
+  const heroPhoto = await getSiteImagePhoto("not-found.hero");
 
   return (
     <main id="content">
       <section className="page-hero">
-        <Image src="/images/firm/office.svg" alt="" fill priority sizes="100vw" />
+        <ArtOverPhoto photoUrl={heroPhoto} artSrc="/images/firm/office.svg" priority sizes="100vw" />
         <div className="veil" />
         <div className="copy">
           <p className="eyebrow">404</p>

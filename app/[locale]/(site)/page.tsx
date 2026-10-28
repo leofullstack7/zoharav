@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { HomeExperience } from "@/components/home/HomeExperience";
 import { site } from "@/content/site";
+import { getHomeImages } from "@/lib/images/homeImages";
 import { buildPageMetadata } from "@/lib/seo";
 
 export async function generateMetadata({
@@ -27,9 +28,10 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const images = await getHomeImages();
   return (
     <main id="content">
-      <HomeExperience locale={locale} />
+      <HomeExperience locale={locale} images={images} />
     </main>
   );
 }

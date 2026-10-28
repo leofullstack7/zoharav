@@ -1,25 +1,33 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
+import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
 import { gsap, prefersReducedMotion, registerGsap } from "@/lib/motion/gsap";
 
-/** Slow Ken Burns plus scroll drift, with a closer crop on hover. GSAP owns the motion. */
+/**
+ * Slow Ken Burns plus scroll drift, with a closer crop on hover. GSAP owns
+ * the motion. When `photoUrl` is set, renders the admin's photo as a
+ * darkened backdrop behind `src` (the hand-built SVG art) via
+ * ArtOverPhoto, and animates both layers together as a single unit (the
+ * transform target is the wrapping `<div>`, not an individual `<img>`).
+ */
 export function LiveFrame({
   src,
   alt,
   caption,
+  photoUrl,
 }: {
   src: string;
   alt: string;
   caption?: string;
+  photoUrl?: string | null;
 }) {
   const frame = useRef<HTMLElement>(null);
-  const photo = useRef<HTMLImageElement>(null);
+  const media = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const box = frame.current;
-    const image = photo.current;
+    const image = media.current;
     if (!box || !image) return;
     registerGsap();
     if (prefersReducedMotion()) return;
@@ -78,7 +86,9 @@ export function LiveFrame({
 
   return (
     <figure className="firm-photo live" ref={frame}>
-      <Image ref={photo} src={src} alt={alt} fill sizes="(max-width: 900px) 100vw, 50vw" />
+      <div ref={media} style={{ position: "absolute", inset: 0 }}>
+        <ArtOverPhoto photoUrl={photoUrl} artSrc={src} alt={alt} sizes="(max-width: 900px) 100vw, 50vw" />
+      </div>
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
   );
