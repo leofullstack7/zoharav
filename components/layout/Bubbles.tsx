@@ -1,27 +1,49 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Monogram } from "@/components/brand/Monogram";
-import { site } from "@/content/site";
 import { Link } from "@/i18n/navigation";
+
+/**
+ * The full Octano chat (message list, input, booking modal, OpenAI calls)
+ * is real weight — it must never ship in the initial/shared bundle. It is
+ * only imported, client-side, the first time someone actually opens the
+ * bubble. `ssr: false` because it talks to the browser-only pieces of
+ * lib/motion (matchMedia) and has no useful server-rendered state anyway.
+ */
+const OctanoChatPanel = dynamic(() => import("@/components/chat/OctanoChatPanel").then((m) => m.OctanoChatPanel), {
+  ssr: false,
+  loading: () => (
+    <div className="octano-panel octano-panel--loading" aria-hidden="true">
+      <div className="octano-skeleton-line" />
+      <div className="octano-skeleton-line" />
+      <div className="octano-skeleton-line octano-skeleton-line--short" />
+    </div>
+  ),
+});
 
 export function Bubbles({ locale }: { locale: string }) {
   const [open, setOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const es = locale === "es";
+
+  function handleToggle() {
+    setOpen((value) => !value);
+    setLoaded(true);
+  }
 
   return (
     <div className="bubbles">
-      {open ? (
-        <div className="bubble-panel" role="dialog" aria-label={es ? "Concierge privado" : "Private Concierge"}>
-          <p className="kicker">{es ? "Concierge privado" : "Private Concierge"}</p>
-          <p>
-            {es
-              ? "Cuéntenos el objetivo. Un asesor senior le escribe en 24 horas hábiles."
-              : "Tell us the aim. A senior advisor writes within 24 business hours."}
-          </p>
-          <Link href="/booking">{es ? "Reservar la sesión" : "Book the session"}</Link>
-          <a href={`mailto:${site.email}`}>{site.email}</a>
-          <Link href="/global-presence">{es ? "Las oficinas" : "The offices"}</Link>
+      {loaded ? (
+        // Stays mounted once loaded (hidden via CSS, not unmounted) so the
+        // conversation survives closing/reopening the bubble and, crucially,
+        // client-side navigation to a /services/[slug] page triggered from
+        // inside the chat itself — this component tree lives in the
+        // persistent (site) layout, sibling to {children}, so route changes
+        // within that layout never remount it.
+        <div className={`octano-panel-wrap${open ? " is-open" : ""}`}>
+          <OctanoChatPanel locale={locale} onClose={() => setOpen(false)} />
         </div>
       ) : null}
 
@@ -31,12 +53,7 @@ export function Bubbles({ locale }: { locale: string }) {
       <Link className="bubble bubble-book" href="/booking" aria-label={es ? "Reservar" : "Book"}>
         <span>→</span>
       </Link>
-      <button
-        className="bubble bubble-main"
-        type="button"
-        aria-expanded={open}
-        onClick={() => setOpen((value) => !value)}
-      >
+      <button className="bubble bubble-main" type="button" aria-expanded={open} onClick={handleToggle}>
         <Monogram />
         <i />
       </button>

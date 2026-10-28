@@ -2087,3 +2087,532 @@
     transition: none;
   }
 }
+
+/* ===== Booking category cards (app/[locale]/(site)/booking/page.tsx) =====
+   Deliberately its own class — NOT a .soft-card variant — because
+   .soft-card still has to stay light/paper for About, Global Presence,
+   Insights and Sectors. Collapse/expand reuses the FAQ accordion's
+   proven, JS-optional pattern: a native <details>/<summary> with a
+   grid-template-rows 0fr -> 1fr transition, so the options list and the
+   request form are always in the DOM and usable without client JS. */
+.booking-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.3rem;
+  align-items: start;
+}
+
+.booking-card {
+  position: relative;
+  border: 1px solid rgba(186, 198, 214, 0.2);
+  border-radius: var(--zh-radius);
+  background: linear-gradient(165deg, rgba(23, 23, 28, 0.86), rgba(7, 7, 10, 0.92));
+  backdrop-filter: blur(14px) saturate(130%);
+  color: var(--zh-cream);
+  overflow: hidden;
+  transition: border-color 0.4s var(--zh-ease), box-shadow 0.4s var(--zh-ease);
+}
+.booking-card:hover,
+.booking-card:focus-within {
+  border-color: rgba(197, 208, 220, 0.42);
+  box-shadow: var(--zh-shadow);
+}
+
+.booking-card-summary {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 13rem;
+  padding: 1.5rem 3.8rem 1.3rem 1.4rem;
+  cursor: pointer;
+  list-style: none;
+}
+.booking-card-summary::-webkit-details-marker { display: none; }
+.booking-card-summary:focus-visible { outline: none; }
+
+.booking-card-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+}
+.booking-card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(190deg, rgba(7, 7, 10, 0.22) 0%, rgba(7, 7, 10, 0.72) 62%, rgba(7, 7, 10, 0.95) 100%);
+}
+
+.booking-card-name {
+  position: relative;
+  z-index: 1;
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.08rem, 1.5vw, 1.3rem);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  line-height: 1.24;
+  color: var(--zh-cream);
+  transition: color 0.3s var(--zh-ease);
+}
+.booking-card-summary:hover .booking-card-name { color: var(--zh-gold-50); }
+
+/* Diagonal corner affordance: a bright metallic disc holding a cross
+   rotated 45deg (reads as a diagonal mark), bottom-right of the card. */
+.booking-card-toggle {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 2;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--zh-gold-gradient);
+  background-size: 220% 220%;
+  background-position: 0% 50%;
+  box-shadow: 0 8px 20px rgba(7, 7, 10, 0.55);
+  transition: box-shadow 0.4s var(--zh-ease), transform 0.4s var(--zh-ease), background-position 0.8s var(--zh-ease);
+}
+.booking-card-summary:hover .booking-card-toggle,
+.booking-card-summary:focus-visible .booking-card-toggle {
+  transform: scale(1.08);
+  background-position: 100% 50%;
+  box-shadow: 0 0 0 7px rgba(222, 232, 242, 0.14), 0 10px 28px rgba(222, 232, 242, 0.4);
+}
+.booking-card-summary:focus-visible .booking-card-toggle {
+  box-shadow: 0 0 0 3px var(--zh-black), 0 0 0 6px var(--zh-gold-200), 0 10px 28px rgba(222, 232, 242, 0.4);
+}
+
+.booking-card-icon {
+  position: relative;
+  width: 0.85rem;
+  height: 0.85rem;
+  transform: rotate(45deg);
+}
+.booking-card-icon::before,
+.booking-card-icon::after {
+  content: "";
+  position: absolute;
+  background: var(--zh-black);
+  transition: transform 0.4s var(--zh-ease);
+}
+.booking-card-icon::before { left: 0; top: 50%; width: 100%; height: 2px; transform: translateY(-50%); }
+.booking-card-icon::after { top: 0; left: 50%; width: 2px; height: 100%; transform: translateX(-50%); }
+.booking-card[open] .booking-card-icon::after { transform: translateX(-50%) scaleY(0); }
+
+.booking-card-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  visibility: hidden;
+  transition: grid-template-rows 0.5s var(--zh-ease), visibility 0.5s step-end;
+}
+.booking-card[open] .booking-card-panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition: grid-template-rows 0.5s var(--zh-ease), visibility 0s;
+}
+.booking-card-panel > div {
+  min-height: 0;
+  overflow: hidden;
+  padding: 0.2rem 1.4rem 1.6rem;
+}
+
+/* The nested .diamonds / .kicker / .field / .text-link elements belong to
+   BookingForm and were tuned for light, paper-colored surfaces elsewhere
+   (.soft-card, .panel on its own). Re-tint just the copies rendered inside
+   the dark booking card so labels and input text stay legible — the form's
+   own markup and logic are untouched. */
+.booking-card .kicker { color: var(--zh-gold-200); }
+.booking-card .field span { color: var(--zh-gold-400); }
+.booking-card .field input,
+.booking-card .field textarea,
+.booking-card .field select {
+  color: var(--zh-cream);
+  border-bottom-color: rgba(222, 232, 242, 0.4);
+}
+.booking-card .field input:focus-visible,
+.booking-card .field textarea:focus-visible,
+.booking-card .field select:focus-visible {
+  border-color: var(--zh-gold-50);
+  box-shadow: 0 1.5px 0 0 var(--zh-gold-50);
+}
+
+@media (max-width: 1024px) {
+  .booking-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .booking-grid { grid-template-columns: 1fr; }
+  .booking-card-summary { height: 11.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .booking-card,
+  .booking-card-name,
+  .booking-card-toggle,
+  .booking-card-icon::after,
+  .booking-card-panel {
+    transition: none;
+  }
+}
+
+/* ===== Octano chat widget (components/chat/OctanoChatPanel.tsx) =====
+   Lives inside .bubbles, replacing the old static .bubble-panel as the
+   primary surface. Kept mounted once loaded and only hidden via display,
+   so conversation state survives closing/reopening and client-side
+   navigation (see components/layout/Bubbles.tsx). */
+.octano-panel-wrap {
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: 92px;
+}
+.octano-panel-wrap.is-open { display: block; }
+
+.octano-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(360px, calc(100vw - 2.2rem));
+  height: min(560px, calc(100vh - 160px));
+  background: rgba(7, 7, 10, 0.97);
+  border: 1px solid rgba(186, 198, 214, 0.45);
+  color: var(--zh-cream);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  animation: fadein 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  overflow: hidden;
+}
+.octano-panel--loading { padding: 1.1rem; gap: 0.6rem; justify-content: center; }
+.octano-skeleton-line {
+  height: 0.8rem;
+  border-radius: 2px;
+  background: rgba(186, 198, 214, 0.14);
+  animation: octano-pulse 1.4s ease-in-out infinite;
+}
+.octano-skeleton-line--short { width: 60%; }
+@keyframes octano-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.octano-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(186, 198, 214, 0.22);
+  flex-shrink: 0;
+}
+.octano-head-name {
+  font-family: var(--font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--zh-gold-50);
+  font-size: 1rem;
+}
+.octano-close {
+  background: none;
+  border: none;
+  color: var(--zh-muted);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.1rem 0.4rem;
+}
+.octano-close:hover, .octano-close:focus-visible { color: var(--zh-gold-50); }
+
+.octano-messages {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.octano-row { display: flex; flex-direction: column; }
+.octano-row--user { align-items: flex-end; }
+.octano-row--assistant { align-items: flex-start; }
+
+.octano-bubble {
+  max-width: 86%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  line-height: 1.42;
+}
+.octano-bubble p { margin: 0; }
+.octano-bubble--user {
+  background: var(--zh-gold-gradient);
+  color: var(--zh-black);
+  border-radius: 10px 10px 2px 10px;
+}
+.octano-bubble--assistant {
+  background: rgba(23, 23, 28, 0.9);
+  border: 1px solid rgba(186, 198, 214, 0.16);
+  border-radius: 10px 10px 10px 2px;
+}
+.octano-bubble-name {
+  display: block;
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--zh-gold-200);
+  margin-bottom: 0.2rem;
+}
+
+/* The gold → normal color-fade message, per the post-"Ver más" spec. The
+   end state (`to`) matches .octano-bubble--assistant above exactly, so the
+   animation lands cleanly on the resting style and stays "forwards". */
+.octano-bubble--gold {
+  animation: octano-gold-fade 2s var(--zh-ease) both;
+}
+@keyframes octano-gold-fade {
+  from {
+    background: var(--zh-gold-400);
+    border-color: var(--zh-gold-50);
+    color: var(--zh-black);
+  }
+  to {
+    background: rgba(23, 23, 28, 0.9);
+    border-color: rgba(186, 198, 214, 0.16);
+    color: var(--zh-cream);
+  }
+}
+.octano-bubble--gold .octano-bubble-name { color: inherit; opacity: 0.75; }
+
+.octano-typing { display: inline-flex; gap: 0.25rem; margin-top: 0.1rem; }
+.octano-typing i {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--zh-gold-200);
+  animation: octano-bounce 1.1s ease-in-out infinite;
+}
+.octano-typing i:nth-child(2) { animation-delay: 0.15s; }
+.octano-typing i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes octano-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
+  40% { transform: translateY(-3px); opacity: 1; }
+}
+
+.octano-rec-card {
+  margin-top: 0.55rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid rgba(197, 208, 220, 0.35);
+  border-radius: 6px;
+  background: rgba(14, 14, 18, 0.6);
+}
+.octano-rec-name {
+  margin: 0;
+  font-family: var(--font-display);
+  letter-spacing: 0.03em;
+  color: var(--zh-gold-50);
+  font-size: 0.95rem;
+}
+.octano-rec-reason { margin: 0.25rem 0 0; color: var(--zh-muted); font-size: 0.82rem; }
+.octano-rec-btn {
+  margin-top: 0.5rem;
+  background: none;
+  border: 1px solid var(--zh-gold-400);
+  color: var(--zh-gold-200);
+  padding: 0.3rem 0.65rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s var(--zh-ease), color 0.3s var(--zh-ease);
+}
+.octano-rec-btn:hover, .octano-rec-btn:focus-visible {
+  background: var(--zh-gold-gradient);
+  color: var(--zh-black);
+}
+
+.octano-yn-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.octano-yn-btn {
+  padding: 0.35rem 0.9rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid rgba(186, 198, 214, 0.4);
+  background: rgba(23, 23, 28, 0.9);
+  color: var(--zh-cream);
+  animation: octano-fade-in 0.35s var(--zh-ease) both;
+}
+.octano-yn-btn--no:hover, .octano-yn-btn--no:focus-visible { border-color: var(--zh-gold-200); }
+.octano-yn-btn--gold {
+  animation: octano-fade-in 0.35s var(--zh-ease) both, octano-gold-fade 2s var(--zh-ease) both;
+}
+@keyframes octano-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.octano-input-row {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid rgba(186, 198, 214, 0.22);
+  flex-shrink: 0;
+}
+.octano-input-row input {
+  flex: 1 1 auto;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(186, 198, 214, 0.3);
+  border-radius: 999px;
+  padding: 0.5rem 0.85rem;
+  color: var(--zh-cream);
+  font-size: 0.85rem;
+}
+.octano-input-row input:focus-visible { outline: none; border-color: var(--zh-gold-200); }
+.octano-input-row button {
+  background: var(--zh-gold-gradient);
+  color: var(--zh-black);
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 0.95rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.octano-input-row button:disabled { opacity: 0.5; cursor: default; }
+
+.octano-quick-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.9rem;
+  padding: 0.6rem 1rem 0.8rem;
+  font-size: 0.72rem;
+  border-top: 1px solid rgba(186, 198, 214, 0.14);
+  flex-shrink: 0;
+}
+.octano-quick-row a { color: var(--zh-gold-200); text-decoration: none; }
+.octano-quick-row a:hover { color: var(--zh-gold-50); text-decoration: underline; }
+
+@media (max-width: 480px) {
+  .octano-panel-wrap { right: -0.6rem; }
+  .octano-panel { width: calc(100vw - 1.4rem); }
+}
+
+/* ===== Octano booking modal (components/chat/BookingModal.tsx) =====
+   Centered, roomy dialog — deliberately not squeezed into the bubble
+   panel's footprint ("agenda amplia"). */
+.octano-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.2rem;
+  background: rgba(5, 5, 7, 0.72);
+  backdrop-filter: blur(3px);
+  animation: fadein 0.3s var(--zh-ease) both;
+}
+.octano-modal {
+  width: min(640px, 100%);
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  background: rgba(10, 10, 13, 0.98);
+  border: 1px solid rgba(186, 198, 214, 0.35);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
+  padding: 1.6rem 1.8rem 1.9rem;
+  color: var(--zh-cream);
+}
+.octano-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.octano-modal-head h2 {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.6rem;
+  letter-spacing: 0.02em;
+}
+.octano-modal-topic { margin: 0.3rem 0 0; color: var(--zh-gold-200); font-size: 0.85rem; }
+.octano-modal-close {
+  background: none;
+  border: none;
+  color: var(--zh-muted);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.octano-modal-close:hover, .octano-modal-close:focus-visible { color: var(--zh-gold-50); }
+
+.octano-modal-notice {
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--zh-gold-400);
+  background: rgba(183, 196, 212, 0.1);
+  color: var(--zh-gold-50);
+  font-size: 0.85rem;
+}
+
+.octano-modal-body { display: block; }
+.octano-modal-status { color: var(--zh-muted); font-size: 0.92rem; }
+.octano-modal-status--error { color: var(--zh-gold-50); }
+.octano-modal-selected {
+  grid-column: 1 / -1;
+  margin: 0 0 0.6rem;
+  color: var(--zh-muted);
+  font-size: 0.88rem;
+}
+.octano-modal-selected strong { color: var(--zh-cream); font-weight: 500; }
+.octano-modal-success { font-size: 1rem; margin-bottom: 0.5rem; }
+.octano-modal-booking-id { color: var(--zh-muted); font-size: 0.82rem; margin-bottom: 1rem; }
+
+.octano-slot-groups { display: grid; gap: 1rem; max-height: 46vh; overflow-y: auto; padding-right: 0.3rem; }
+.octano-slot-day {
+  margin: 0 0 0.45rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: capitalize;
+  color: var(--zh-gold-200);
+}
+.octano-slot-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.octano-slot-chip {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(186, 198, 214, 0.35);
+  background: rgba(23, 23, 28, 0.7);
+  color: var(--zh-cream);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: border-color 0.3s var(--zh-ease), background 0.3s var(--zh-ease);
+}
+.octano-slot-chip:hover, .octano-slot-chip:focus-visible {
+  border-color: var(--zh-gold-200);
+  background: rgba(183, 196, 212, 0.14);
+}
+
+@media (max-width: 640px) {
+  .octano-modal { padding: 1.3rem 1.2rem 1.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .octano-panel,
+  .octano-bubble--gold,
+  .octano-yn-btn,
+  .octano-yn-btn--gold,
+  .octano-skeleton-line,
+  .octano-typing i,
+  .octano-modal-overlay {
+    animation: none;
+  }
+  .octano-bubble--gold {
+    background: rgba(23, 23, 28, 0.9);
+    border-color: rgba(186, 198, 214, 0.16);
+    color: var(--zh-cream);
+  }
+}

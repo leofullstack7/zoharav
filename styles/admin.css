@@ -1,0 +1,170 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/*
+ * Minimal, utilitarian stylesheet for the internal /admin tool. Deliberately
+ * does NOT pull in styles/globals.css (lenis, experience.css, office-map.css,
+ * display fonts) — those are all marketing-site concerns. This reuses only
+ * the brand's color tokens from tokens.css so the admin reads as the same
+ * product (black + silver) without any of the showcase styling.
+ */
+
+@theme inline {
+  --color-zh-black: var(--zh-black);
+  --color-zh-onyx: var(--zh-onyx);
+  --color-zh-graphite: var(--zh-graphite);
+  --color-zh-smoke: var(--zh-smoke);
+  --color-zh-gold-50: var(--zh-gold-50);
+  --color-zh-gold-200: var(--zh-gold-200);
+  --color-zh-gold-400: var(--zh-gold-400);
+  --color-zh-gold-600: var(--zh-gold-600);
+  --color-zh-gold-800: var(--zh-gold-800);
+  --color-zh-cream: var(--zh-cream);
+  --color-zh-muted: var(--zh-muted);
+}
+
+html {
+  background: var(--zh-black);
+  color: var(--zh-cream);
+}
+
+body {
+  min-height: 100vh;
+  background: var(--zh-black);
+  color: var(--zh-cream);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.zh-admin-card {
+  background: var(--zh-onyx);
+  border: 1px solid var(--zh-smoke);
+  border-radius: var(--zh-radius);
+}
+
+.zh-admin-input {
+  background: var(--zh-graphite);
+  border: 1px solid var(--zh-smoke);
+  border-radius: var(--zh-radius);
+  color: var(--zh-cream);
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.zh-admin-input:focus {
+  outline: 2px solid var(--zh-gold-400);
+  outline-offset: 1px;
+}
+
+.zh-admin-btn {
+  background: var(--zh-gold-gradient);
+  color: var(--zh-black);
+  border-radius: var(--zh-radius);
+  padding: 0.6rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s var(--zh-ease);
+}
+
+.zh-admin-btn:hover {
+  opacity: 0.88;
+}
+
+.zh-admin-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.zh-admin-btn-ghost {
+  background: transparent;
+  color: var(--zh-cream);
+  border: 1px solid var(--zh-smoke);
+  border-radius: var(--zh-radius);
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.15s var(--zh-ease);
+}
+
+.zh-admin-btn-ghost:hover {
+  border-color: var(--zh-gold-400);
+}
+
+.zh-admin-btn-danger {
+  background: transparent;
+  color: #e07a7a;
+  border: 1px solid #5c2f2f;
+  border-radius: var(--zh-radius);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.15s var(--zh-ease), background 0.15s var(--zh-ease);
+}
+
+.zh-admin-btn-danger:hover {
+  border-color: #e07a7a;
+  background: rgba(224, 122, 122, 0.08);
+}
+
+.zh-admin-btn-danger:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.zh-admin-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.zh-admin-badge-open {
+  background: rgba(31, 163, 122, 0.15);
+  color: #4fd3a8;
+}
+
+.zh-admin-badge-booked {
+  background: rgba(183, 196, 212, 0.12);
+  color: var(--zh-gold-200);
+}
+
+.zh-admin-badge-cancelled {
+  background: rgba(224, 122, 122, 0.12);
+  color: #e07a7a;
+}
+
+.zh-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.zh-admin-table th {
+  text-align: left;
+  color: var(--zh-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--zh-smoke);
+}
+
+.zh-admin-table td {
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--zh-smoke);
+  vertical-align: top;
+}
+
+.zh-admin-table tr:last-child td {
+  border-bottom: none;
+}

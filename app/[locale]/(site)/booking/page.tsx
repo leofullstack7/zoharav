@@ -26,6 +26,7 @@ export async function generateMetadata({
 export default async function BookingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const seeMore = locale === "es" ? "Ver más" : "See more";
   return (
     <main id="content">
       <section className="page-hero">
@@ -38,20 +39,46 @@ export default async function BookingPage({ params }: { params: Promise<{ locale
         </div>
       </section>
       <section className="panel">
-        <div className="cards-2">
-          {bookingCategories.map((category, index) => (
-            <Reveal delay={index * 70} key={category.id}>
-              <article className="soft-card">
-                <h3>{loc(category.name, locale)}</h3>
-                <ul className="diamonds">
-                  {category.options.map((option) => (
-                    <li key={option.id}>{loc(option.label, locale)}</li>
-                  ))}
-                </ul>
-                <BookingForm category={category} locale={locale} />
-              </article>
-            </Reveal>
-          ))}
+        <div className="booking-grid">
+          {bookingCategories.map((category, index) => {
+            const categoryName = loc(category.name, locale);
+            return (
+              <Reveal delay={index * 70} key={category.id}>
+                {/* Native <details>/<summary> disclosure — same resilient,
+                    JS-optional pattern as the FAQ accordion. The category
+                    stays collapsed to just its image + name + the diagonal
+                    corner button until the visitor opens it; the options
+                    list and BookingForm are already in the DOM underneath. */}
+                <details className="booking-card">
+                  <summary
+                    className="booking-card-summary"
+                    aria-label={`${seeMore} — ${categoryName}`}
+                  >
+                    <span
+                      className="booking-card-media"
+                      aria-hidden="true"
+                      style={{ backgroundImage: `url(${category.image})` }}
+                    />
+                    <span className="booking-card-name">{categoryName}</span>
+                    <span className="booking-card-toggle" aria-hidden="true">
+                      <span className="booking-card-icon" />
+                    </span>
+                    <span className="sr-only">{seeMore}</span>
+                  </summary>
+                  <div className="booking-card-panel">
+                    <div>
+                      <ul className="diamonds">
+                        {category.options.map((option) => (
+                          <li key={option.id}>{loc(option.label, locale)}</li>
+                        ))}
+                      </ul>
+                      <BookingForm category={category} locale={locale} />
+                    </div>
+                  </div>
+                </details>
+              </Reveal>
+            );
+          })}
         </div>
       </section>
     </main>
