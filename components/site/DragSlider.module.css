@@ -1,0 +1,74 @@
+/*
+ * Scoped to DragSlider only. Deliberately card-agnostic — gap, item
+ * width, and all visual treatment belong to whatever renderItem() hands
+ * back (see styles/pages-redesign.css for the About/Sectors/sub-service
+ * card classes that ride this mechanism). Mirrors
+ * components/home/TeamSlider.module.css's viewport/track/staticGrid/hint
+ * shape so the two sliders behave identically to a user, just with
+ * different passengers.
+ */
+
+.viewport {
+  position: relative;
+  margin-top: 2.2rem;
+  overflow: hidden;
+  cursor: grab;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    rgba(0, 0, 0, 1) 3%,
+    rgba(0, 0, 0, 1) 97%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    rgba(0, 0, 0, 1) 3%,
+    rgba(0, 0, 0, 1) 97%,
+    transparent 100%
+  );
+}
+.viewport:active {
+  cursor: grabbing;
+}
+
+.track {
+  display: flex;
+  align-items: stretch;
+  gap: 1.3rem;
+  width: max-content;
+  padding: 0.6rem 6vw 1rem 5vw;
+  will-change: transform;
+}
+
+.item {
+  flex: 0 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.staticGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, max-content));
+  gap: 1.2rem;
+  margin-top: 2.2rem;
+  padding: 0 5vw;
+}
+
+.staticItem {
+  min-width: 0;
+}
+
+.hint {
+  position: relative;
+  margin: 1rem 5vw 0;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--zh-gold-600);
+  text-align: right;
+}
+
+@media (max-width: 720px) {
+  .hint { text-align: left; }
+}

@@ -40,6 +40,7 @@ function Band({
   image,
   alt,
   flip,
+  id,
 }: {
   locale: string;
   number: string;
@@ -52,9 +53,10 @@ function Band({
   image: string;
   alt: string;
   flip?: boolean;
+  id?: string;
 }) {
   return (
-    <section className={`chapter studio${flip ? " studio-flip" : ""}`}>
+    <section id={id} className={`chapter studio zhv-zone${flip ? " studio-flip" : ""}`}>
       <div className="firm-layout">
         <Reveal>
           <header className="firm-head">
@@ -200,7 +202,53 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
         </Reveal>
       </section>
 
-      <section className="chapter firm" id="firm">
+      <section className="pro-support" id="professional-support">
+        <div className="pro-support-layout">
+          <Reveal>
+            <div className="pro-support-copy">
+              <h2>
+                <span className="pro-support-serif">
+                  {locale === "es" ? "Soporte" : "Professional"}
+                </span>{" "}
+                <span className="pro-support-sans">
+                  {locale === "es" ? "profesional" : "Support"}
+                </span>
+              </h2>
+              <p className="pro-support-sub">
+                {locale === "es"
+                  ? "en la industria energética y más allá."
+                  : "in the energy industry and beyond."}
+              </p>
+              <p className="pro-support-body">
+                {locale === "es"
+                  ? "Presentamos el conjunto completo de servicios pensado para las exigencias del sector energético: desde la consultoría estratégica y la optimización operativa hasta la asesoría financiera. Con conocimiento de industria e insight de negocio, acompañamos a empresas impulsadas por la energía en mercados que no se detienen."
+                  : "We present our full suite of services designed to meet the complex demands of the petroleum sector — from strategic consulting and operational optimization to financial advisory. Backed by deep industry knowledge and business insight, our expertise helps energy-driven companies thrive in evolving markets."}
+              </p>
+              <div className="pro-support-actions">
+                <Link className="pro-support-btn pro-support-btn-dark" href="/contact">
+                  {locale === "es" ? "Contacto" : "Contact"}
+                </Link>
+                <Link className="pro-support-btn pro-support-btn-light" href="/about">
+                  {locale === "es" ? "La firma" : "Our company"}
+                </Link>
+              </div>
+            </div>
+          </Reveal>
+          <div className="pro-support-gallery" aria-hidden>
+            <figure>
+              <img src="/images/services/jet.png" alt="" />
+            </figure>
+            <figure>
+              <img src="/images/pillars/oil-energy.png" alt="" />
+            </figure>
+            <figure>
+              <img src="/images/hero/yacht.png" alt="" />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section className="chapter firm zhv-zone" id="firm">
         <div className="firm-layout">
           <Reveal>
             <header className="firm-head">
@@ -239,7 +287,7 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
         </div>
       </section>
 
-      <section className="chapter studio" id="services">
+      <section className="chapter studio zhv-zone" id="services">
         <div className="firm-layout">
           <Reveal>
             <header className="firm-head">
@@ -311,7 +359,7 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
         flip
       />
 
-      <section className="chapter studio">
+      <section className="chapter studio zhv-zone">
         <div className="firm-layout">
           <Reveal>
             <header className="firm-head">
@@ -368,22 +416,28 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
         image="/images/investment/handshake.svg"
         alt="Handshake over investment documents"
         flip
+        id="investment"
       />
 
-      <section className="chapter studio" id="compliance">
-        <div className="firm-layout compliance-note">
+      <section className="compliance-hero" id="compliance" aria-labelledby="compliance-title">
+        <div className="compliance-hero-flame" aria-hidden />
+        <div className="compliance-hero-inner">
           <Reveal>
-            <p className="firm-kicker">{line(compliance.title, locale)}</p>
-            {compliance.paragraphs.map((paragraph) => (
-              <p className="firm-prose" key={paragraph.en}>
-                {line(paragraph, locale)}
-              </p>
-            ))}
+            <p className="compliance-hero-kicker">{line(compliance.title, locale)}</p>
+            <h2 id="compliance-title" className="compliance-hero-title">
+              {line(compliance.hero.lead, locale)}
+            </h2>
+            <div className="compliance-hero-body">
+              {compliance.hero.clauses.map((clause) => (
+                <p key={clause.en}>{line(clause, locale)}</p>
+              ))}
+            </div>
+            <p className="compliance-hero-aside">{line(compliance.paragraphs[1], locale)}</p>
           </Reveal>
         </div>
       </section>
 
-      <section className="chapter studio" id="contact">
+      <section className="chapter studio zhv-zone" id="contact">
         <div className="firm-layout">
           <Reveal>
             <header className="firm-head">

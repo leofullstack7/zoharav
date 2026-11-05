@@ -2,6 +2,8 @@
 @import "lenis/dist/lenis.css";
 @import "./tokens.css";
 @import "./experience.css";
+@import "./pages-redesign.css";
+@import "./service-page.css";
 @import "./office-map.css";
 
 @theme inline {

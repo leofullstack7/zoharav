@@ -67,6 +67,75 @@ export const strategic: Service = {
   image: "/images/services/jet.svg",
   industries: ["manufacturing", "energy-utilities", "mining", "logistics", "financial", "public-sector"],
   faqs,
+  impactSlides: [
+    {
+      title: {
+        en: "Driving Measurable Operational Impact",
+        es: "Impacto operativo medible",
+      },
+      body: {
+        en: "Our operational transformation initiatives deliver 15–40% improvements in productivity, 20–35% reductions in operational costs, and 25–50% decreases in cycle times — creating sustainable competitive advantages. Ranges reflect prior advisory work; they are not a guarantee for any mandate.",
+        es: "Nuestras iniciativas de transformación operativa entregan mejoras de 15–40% en productividad, reducciones de 20–35% en costos operativos y disminuciones de 25–50% en tiempos de ciclo — creando ventajas competitivas sostenibles. Los rangos reflejan trabajo asesor previo; no son una garantía para ningún mandato.",
+      },
+      image: "/images/services/ops/hero-impact.jpg",
+      metrics: [
+        { value: "15–40%", label: { en: "Productivity", es: "Productividad" } },
+        { value: "20–35%", label: { en: "Cost reduction", es: "Reducción de costo" } },
+        { value: "25–50%", label: { en: "Cycle time", es: "Tiempo de ciclo" } },
+      ],
+    },
+    {
+      title: {
+        en: "Digital Transformation Enablement",
+        es: "Habilitación de la transformación digital",
+      },
+      body: {
+        en: "We guide the adoption of digital tools and automation to improve transparency, speed, and control across operations — as advisory. We do not sell or implement software.",
+        es: "Orientamos la adopción de herramientas digitales y automatización para mejorar transparencia, velocidad y control en la operación — como asesoría. No vendemos ni implementamos software.",
+      },
+      image: "/images/services/ops/hero-digital.jpg",
+    },
+    {
+      title: {
+        en: "Not just strategy. Implementation.",
+        es: "No solo estrategia. Implementación.",
+      },
+      body: {
+        en: "We go beyond the boardroom. Consultants work with the teams who have to run the plan, on site when the mandate requires it, until the result can be measured.",
+        es: "Vamos más allá de la sala de directorio. Los consultores trabajan con los equipos que tienen que ejecutar el plan, en campo cuando el mandato lo exige, hasta que el resultado se pueda medir.",
+      },
+      image: "/images/services/jet.png",
+    },
+  ],
+  pillars: [
+    {
+      id: "excellence",
+      title: { en: "Operational Excellence, Delivered", es: "Excelencia operativa, entregada" },
+      body: {
+        en: "The energy industry is being transformed by global demand shifts, sustainability pressures, and technological disruption. Our consulting team works closely with stakeholders to realign business strategies, improve operational resilience, and capitalize on emerging trends like energy diversification and digital integration.",
+        es: "La industria energética se transforma por cambios de demanda global, presión de sostenibilidad y disrupción tecnológica. Nuestro equipo trabaja con las partes interesadas para realinear estrategias, mejorar la resiliencia operativa y capitalizar tendencias como la diversificación energética y la integración digital.",
+      },
+      image: "/images/services/ops/pillars.png",
+    },
+    {
+      id: "process-scale",
+      title: { en: "Process Transformation at Scale", es: "Transformación de procesos a escala" },
+      body: {
+        en: "We redesign end-to-end processes using Lean and Six Sigma methodologies, eliminating inefficiencies and implementing digital tools that enable continuous improvement and real-time performance visibility across operations — as counsel, not as a technology vendor.",
+        es: "Rediseñamos procesos de extremo a extremo con metodologías Lean y Six Sigma, eliminando ineficiencias y orientando herramientas digitales que habilitan mejora continua y visibilidad del desempeño en tiempo real — como consejo, no como proveedor tecnológico.",
+      },
+      image: "/images/firm/office.png",
+    },
+    {
+      id: "digital-40",
+      title: { en: "Digital Operations & Industry 4.0", es: "Operaciones digitales e Industria 4.0" },
+      body: {
+        en: "Our digital transformation expertise helps organizations judge IoT, AI, and automation options to create intelligent, self-optimizing operations that respond to changing conditions and maximize asset utilization. We advise the roadmap. We do not build or sell the stack.",
+        es: "Nuestra experiencia en transformación digital ayuda a las organizaciones a juzgar opciones de IoT, IA y automatización para crear operaciones inteligentes que respondan a condiciones cambiantes y maximicen el uso de activos. Asesoramos la hoja de ruta. No construimos ni vendemos el stack.",
+      },
+      image: "/images/services/ops/hero-digital.jpg",
+    },
+  ],
   slides: [
     {
       title: { en: "Strategic insight you can act on", es: "Criterio estratégico que se puede ejecutar" },
@@ -280,42 +349,65 @@ export const strategic: Service = {
     {
       id: "lean",
       title: { en: "Process Optimization & Lean Operations", es: "Optimización de procesos y operaciones lean" },
-      tagline: { en: "Less waste. A clearer flow.", es: "Menos desperdicio. Un flujo más claro." },
+      tagline: { en: "Eliminating waste and maximizing value creation", es: "Eliminar desperdicio y maximizar la creación de valor" },
       hover: {
         en: "We work beside the teams who will keep the gain: lean methods, capability, and a habit of improvement that outlasts the engagement.",
         es: "Trabajamos junto a los equipos que van a conservar la mejora: métodos lean, capacidad y un hábito de mejora que dura más que el encargo.",
       },
       body: {
-        en: "We redesign end-to-end processes with Lean, Six Sigma, and constraint thinking, especially where energy and industrial operations lose time and material. The point is a leaner flow, not a layer of software.",
-        es: "Rediseñamos procesos de extremo a extremo con Lean, Six Sigma y pensamiento de restricciones, sobre todo donde las operaciones de energía e industria pierden tiempo y material. El punto es un flujo más limpio, no una capa de software.",
+        en: "Operational excellence begins with optimized processes. Our Process Optimization & Lean Operations practice applies proven methodologies — including Lean Manufacturing, Six Sigma, and Theory of Constraints — to systematically eliminate waste, reduce cycle times, and improve throughput across your operations.",
+        es: "La excelencia operativa comienza con procesos optimizados. Nuestra práctica de Optimización de procesos y operaciones lean aplica metodologías probadas — Lean Manufacturing, Six Sigma y Teoría de Restricciones — para eliminar desperdicio, reducir tiempos de ciclo y mejorar el throughput en la operación.",
       },
       bullets: [
-        { en: "Lean redesign and value-stream mapping", es: "Rediseño lean y mapa de cadena de valor" },
-        { en: "Six Sigma work on quality", es: "Trabajo Six Sigma sobre calidad" },
-        { en: "Bottlenecks and capacity", es: "Cuellos de botella y capacidad" },
-        { en: "Standard work people will actually use", es: "Trabajo estándar que la gente usará de verdad" },
+        { en: "Lean process redesign and value stream mapping", es: "Rediseño lean y mapa de cadena de valor" },
+        { en: "Bottleneck analysis and capacity optimization", es: "Análisis de cuellos de botella y optimización de capacidad" },
+        { en: "Six Sigma DMAIC projects for quality improvement", es: "Proyectos Six Sigma DMAIC para calidad" },
+        { en: "Standard work development and visual management", es: "Trabajo estándar y gestión visual" },
       ],
-      cta: { en: "Optimize Operations", es: "Optimizar la operación" },
+      cta: { en: "Optimize Your Operations", es: "Optimizar su operación" },
+      image: "/images/services/ops/lean.png",
+    },
+    {
+      id: "digital-ops",
+      title: { en: "Digital Transformation & Automation", es: "Transformación digital y automatización" },
+      tagline: { en: "Enabling intelligent, connected operations", es: "Habilitar operaciones inteligentes y conectadas" },
+      hover: {
+        en: "Industry 4.0 roadmaps, maturity assessment, and advisory on IoT, analytics, and automation — without selling the stack.",
+        es: "Hojas de ruta Industria 4.0, evaluación de madurez y asesoría sobre IoT, analítica y automatización — sin vender el stack.",
+      },
+      body: {
+        en: "Digital technologies are reshaping operational paradigms. Our Digital Transformation & Automation practice helps organizations harness Industry 4.0 technologies — including IoT, AI/ML, robotics, and advanced analytics — to create intelligent operations that self-optimize, predict failures, and adapt to changing conditions in real time. We advise the path. We do not implement or sell the technology.",
+        es: "Las tecnologías digitales reconfiguran los paradigmas operativos. Nuestra práctica de Transformación digital y automatización ayuda a las organizaciones a aprovechar tecnologías de Industria 4.0 — IoT, IA/ML, robótica y analítica avanzada — para crear operaciones inteligentes que se autooptimizan, predicen fallas y se adaptan en tiempo real. Asesoramos el camino. No implementamos ni vendemos la tecnología.",
+      },
+      bullets: [
+        { en: "Industry 4.0 roadmap and digital maturity assessment", es: "Hoja de ruta Industria 4.0 y madurez digital" },
+        { en: "IoT sensor networks and predictive analytics — advisory", es: "Redes IoT y analítica predictiva — asesoría" },
+        { en: "Robotic Process Automation (RPA) strategy counsel", es: "Consejo estratégico sobre RPA" },
+        { en: "Digital twin development and simulation modeling — advisory", es: "Gemelo digital y simulación — asesoría" },
+      ],
+      cta: { en: "Accelerate Digital Transformation", es: "Acelerar la transformación digital" },
+      image: "/images/services/ops/digital-supply.png",
     },
     {
       id: "supply-assets",
       title: { en: "Supply Chain & Asset Management", es: "Cadena de suministro y gestión de activos" },
-      tagline: { en: "Flow, inventory, and the life of the asset.", es: "Flujo, inventario y la vida del activo." },
+      tagline: { en: "Optimizing flows and maximizing asset value", es: "Optimizar flujos y maximizar el valor del activo" },
       hover: {
         en: "Logistics, inventory, suppliers, and asset reliability, treated as one system rather than four reports.",
         es: "Logística, inventario, proveedores y confiabilidad de activos, tratados como un solo sistema y no como cuatro reportes.",
       },
       body: {
-        en: "We advise on supply networks, sales and operations planning, working capital tied up in inventory, and the care of assets over their life — including maintenance strategy and spare parts. The client runs the chain. We help it see.",
-        es: "Asesoramos redes de suministro, la planeación de ventas y operaciones, el capital de trabajo atrapado en inventario y el cuidado de los activos a lo largo de su vida, incluida la estrategia de mantenimiento y los repuestos. El cliente opera la cadena. Nosotros le ayudamos a verla.",
+        en: "Effective supply chain and asset management are critical to operational performance. Our practice integrates supply chain optimization with asset lifecycle management, creating end-to-end visibility and control that reduces inventory costs, improves service levels, and maximizes asset utilization and reliability. The client runs the chain. We help it see.",
+        es: "Una cadena de suministro y gestión de activos eficaces son críticas para el desempeño operativo. Integramos optimización de cadena con ciclo de vida de activos, creando visibilidad y control de extremo a extremo que reduce costos de inventario, mejora niveles de servicio y maximiza utilización y confiabilidad. El cliente opera la cadena. Nosotros le ayudamos a verla.",
       },
       bullets: [
-        { en: "Network design and S&OP", es: "Diseño de red y S&OP" },
-        { en: "Inventory and working capital", es: "Inventario y capital de trabajo" },
-        { en: "Asset performance and maintenance strategy", es: "Desempeño de activos y estrategia de mantenimiento" },
-        { en: "Spare-parts and MRO logic", es: "Lógica de repuestos y MRO" },
+        { en: "Supply chain network optimization and S&OP", es: "Optimización de red y S&OP" },
+        { en: "Asset performance management and predictive maintenance", es: "Desempeño de activos y mantenimiento predictivo" },
+        { en: "Inventory optimization and working capital reduction", es: "Optimización de inventario y capital de trabajo" },
+        { en: "Spare parts optimization and MRO strategies", es: "Repuestos y estrategias MRO" },
       ],
-      cta: { en: "Optimize the Supply Chain", es: "Optimizar la cadena de suministro" },
+      cta: { en: "Optimize Your Supply Chain", es: "Optimizar su cadena de suministro" },
+      image: "/images/services/ops/digital-supply.png",
     },
     {
       id: "kpis",
@@ -336,6 +428,7 @@ export const strategic: Service = {
         { en: "Incentives aligned to the few numbers that matter", es: "Incentivos alineados a los pocos números que importan" },
       ],
       cta: { en: "Build the Performance System", es: "Construir el sistema de desempeño" },
+      image: "/images/services/ops/hero-digital.jpg",
     },
     {
       id: "risk-compliance",
@@ -356,6 +449,7 @@ export const strategic: Service = {
         { en: "ISO 14001 and ISO 45001 readiness — advisory, not certification", es: "Preparación para ISO 14001 e ISO 45001: asesoría, no certificación" },
       ],
       cta: { en: "Strengthen Risk Management", es: "Fortalecer la gestión de riesgo" },
+      image: "/images/firm/office.png",
     },
   ],
 };

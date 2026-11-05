@@ -71,6 +71,23 @@ export const compliance = {
     en: "Compliance Statement",
     es: "Declaración de cumplimiento",
   } satisfies Localized,
+  /** Structured hero copy — same legal wording, clearer reading order. */
+  hero: {
+    lead: {
+      en: "Zoharav is a business consulting firm.",
+      es: "Zoharav es una firma de consultoría empresarial.",
+    } satisfies Localized,
+    clauses: [
+      {
+        en: "We do not engage in the sale, distribution, supply, marketing, trading, or brokerage of petroleum, gas, or energy products.",
+        es: "No participamos en la venta, distribución, suministro, comercialización, negociación ni intermediación de petróleo, gas o productos energéticos.",
+      },
+      {
+        en: "We do not participate in any activities involving the exploration, extraction, refining, or transportation of petroleum or gas.",
+        es: "Tampoco participamos en actividades de exploración, extracción, refinación o transporte de petróleo o gas.",
+      },
+    ] satisfies Localized[],
+  },
   paragraphs: [
     {
       en: "Zoharav is a business consulting firm. We do not engage in the sale, distribution, supply, marketing, trading, or brokerage of petroleum, gas, or energy products. Furthermore, we do not participate in any activities involving the exploration, extraction, refining, or transportation of petroleum or gas.",

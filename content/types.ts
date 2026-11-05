@@ -33,6 +33,8 @@ export type SubService = {
   body: Localized;
   bullets: Localized[];
   cta: Localized;
+  /** Optional modal / rail image for the unified service page. */
+  image?: string;
 };
 
 export type MethodPhase = {
@@ -57,6 +59,20 @@ export type FaqItem = {
   answer: Localized;
 };
 
+export type ServicePillar = {
+  id: string;
+  title: Localized;
+  body: Localized;
+  image: string;
+};
+
+export type ServiceImpactSlide = {
+  title: Localized;
+  body: Localized;
+  image: string;
+  metrics?: { value: string; label: Localized }[];
+};
+
 export type Service = {
   slug: ServiceSlug;
   number: string;
@@ -70,4 +86,8 @@ export type Service = {
   industries: SectorId[];
   faqs: FaqItem[];
   slides?: { title: Localized; body: Localized }[];
+  /** Optional trio of editorial pillars for the unified service page. */
+  pillars?: ServicePillar[];
+  /** Optional full-bleed impact / enablement carousel slides. */
+  impactSlides?: ServiceImpactSlide[];
 };

@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
-import { Reveal } from "@/components/motion/Reveal";
+import { ServiceExperience } from "@/components/services/ServiceExperience";
 import { getService, services } from "@/content/services";
-import { Link } from "@/i18n/navigation";
-import { loc, locParagraphs } from "@/lib/i18n/loc";
+import { loc } from "@/lib/i18n/loc";
 import { getSiteImagePhoto } from "@/lib/images/getSiteImage";
 import { buildPageMetadata } from "@/lib/seo";
 import { setRequestLocale } from "next-intl/server";
@@ -40,48 +38,7 @@ export default async function ServicePage({
   setRequestLocale(locale);
   const service = getService(slug);
   if (!service) notFound();
-  const heroPhoto = await getSiteImagePhoto(`services.${service.slug}.cover`);
+  const coverPhoto = await getSiteImagePhoto(`services.${service.slug}.cover`);
 
-  return (
-    <main id="content">
-      <section className="page-hero">
-        <ArtOverPhoto photoUrl={heroPhoto} artSrc={service.image} priority sizes="100vw" />
-        <div className="veil" />
-        <div className="copy">
-          <h1>{loc(service.heroTitle, locale)}</h1>
-          <p className="hero-lede">{loc(service.heroIntro, locale)}</p>
-          <div className="hero-actions">
-            <Link className="btn-gold" href="/booking">
-              {locale === "es" ? "Reservar consulta" : "Book a consultation"} →
-            </Link>
-          </div>
-        </div>
-      </section>
-      <section className="panel">
-        <div className="subgrid">
-          {service.subServices.map((item, index) => (
-            <Reveal delay={Math.min(index, 4) * 60} key={item.id}>
-              <article id={item.id}>
-                <p className="kicker">{loc(item.tagline, locale)}</p>
-                <h2>
-                  <Link href={`/services/${service.slug}/${item.id}`}>{loc(item.title, locale)}</Link>
-                </h2>
-                {locParagraphs(item.body, locale).map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
-                ))}
-                <ul className="diamonds">
-                  {item.bullets.map((bullet) => (
-                    <li key={bullet.en}>{loc(bullet, locale)}</li>
-                  ))}
-                </ul>
-                <Link className="text-link as-button" href={`/services/${service.slug}/${item.id}`}>
-                  {locale === "es" ? "Ver ficha completa" : "View full brief"} →
-                </Link>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-    </main>
-  );
+  return <ServiceExperience service={service} locale={locale} coverPhoto={coverPhoto} />;
 }

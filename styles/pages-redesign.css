@@ -1,0 +1,821 @@
+/* =====================================================================
+   About / Sectors / Sub-service template redesign.
+
+   Replaces the previous pass on these three pages, which the owner
+   rejected outright: light/paper `.soft-card` boxes ("cuadros blancos
+   que no me gustan"), disproportionate cards, everything left-aligned
+   and flat, no real photography, no sliders, no hover interaction. None
+   of that vocabulary is reused here. The dark-glass card language below
+   mirrors `.booking-card` (styles/experience.css, ~line 2153) and the
+   admin CRM board (styles/admin.css) instead — semi-transparent near-
+   black panels, backdrop-filter blur, a metallic silver gradient
+   hairline/accent, lift-on-hover. `.soft-card` itself is untouched and
+   still used by Insights / Global Presence's fallback — out of scope.
+
+   Kept from experience.css and reused as-is, not redefined: `.panel`,
+   `.eyebrow`, `.kicker`, `.body`, `.btn-gold`, `.text-link`,
+   `.hero-actions`, `.hero-lede`, `.stat-row`, `.firm-layout`,
+   `.firm-head`, `.firm-kicker`, `.reveal`, `.art-over-photo-*`.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   Shared: dark-glass card
+   --------------------------------------------------------------------- */
+.gcard {
+  position: relative;
+  border: 1px solid rgba(186, 198, 214, 0.18);
+  border-radius: var(--zh-radius);
+  background: linear-gradient(165deg, rgba(23, 23, 28, 0.86), rgba(7, 7, 10, 0.92));
+  backdrop-filter: blur(14px) saturate(130%);
+  color: var(--zh-cream);
+  overflow: hidden;
+  transition: transform 0.5s var(--zh-ease), border-color 0.4s var(--zh-ease), box-shadow 0.4s var(--zh-ease);
+}
+.gcard::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--zh-gold-gradient);
+  background-size: 220% 100%;
+  opacity: 0;
+  transition: opacity 0.4s ease, background-position 0.8s var(--zh-ease);
+}
+.gcard:hover,
+.gcard:focus-within {
+  transform: translateY(-7px);
+  border-color: rgba(197, 208, 220, 0.45);
+  box-shadow: var(--zh-shadow);
+}
+.gcard:hover::before,
+.gcard:focus-within::before {
+  opacity: 1;
+  background-position: 100% 50%;
+}
+a.gcard {
+  text-decoration: none;
+  display: block;
+}
+
+/* ---------------------------------------------------------------------
+   Shared: asymmetric split hero (About, Sectors, sub-service template)
+   Large offset typography cutting across a confidently-sized real photo
+   instead of a centered headline over a dimmed backdrop — the owner's
+   explicit complaint about the previous page-hero treatment.
+   --------------------------------------------------------------------- */
+.split-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 88vh;
+  overflow: hidden;
+  background: var(--zh-black);
+  color: var(--zh-cream);
+}
+.split-hero-media {
+  position: relative;
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  min-height: inherit;
+}
+.split-hero-media img {
+  object-fit: cover;
+}
+.split-hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--zh-black) 0%, rgba(7, 7, 10, 0.5) 24%, transparent 52%);
+}
+.split-hero--reverse .split-hero-media {
+  grid-column: 1 / 2;
+}
+.split-hero--reverse .split-hero-media::after {
+  background: linear-gradient(270deg, var(--zh-black) 0%, rgba(7, 7, 10, 0.5) 24%, transparent 52%);
+}
+.split-hero-copy {
+  position: relative;
+  z-index: 2;
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  align-self: end;
+  padding: clamp(6rem, 15vw, 10.5rem) 6vw 4.5rem;
+  max-width: 66rem;
+}
+.split-hero--reverse .split-hero-copy {
+  justify-self: end;
+  text-align: right;
+}
+.split-hero-title {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  text-transform: uppercase;
+  line-height: 0.94;
+  letter-spacing: 0.02em;
+  font-size: clamp(2.8rem, 7.4vw, 6.6rem);
+}
+.split-hero-title span {
+  display: block;
+}
+.split-hero-title .is-accent {
+  margin-left: clamp(0.6rem, 7vw, 5.2rem);
+  background-image: var(--zh-gold-gradient);
+  background-size: 220% 100%;
+  background-position: 30% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 6px 28px rgba(0, 0, 0, 0.55));
+}
+.split-hero--reverse .split-hero-title .is-accent {
+  margin-left: 0;
+  margin-right: clamp(0.6rem, 7vw, 5.2rem);
+}
+.split-hero-title--offer {
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+}
+.split-hero-count {
+  margin: 0.9rem 0 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--zh-gold-400);
+}
+.split-hero .hero-lede {
+  margin-top: 1.1rem;
+}
+.split-hero .hero-actions {
+  justify-content: flex-start;
+}
+.split-hero--reverse .hero-actions {
+  justify-content: flex-end;
+}
+
+@media (max-width: 860px) {
+  .split-hero {
+    grid-template-columns: 1fr;
+    min-height: 76vh;
+  }
+  .split-hero-media,
+  .split-hero--reverse .split-hero-media {
+    grid-column: 1 / 2;
+  }
+  .split-hero-media::after,
+  .split-hero--reverse .split-hero-media::after {
+    background: linear-gradient(0deg, var(--zh-black) 4%, rgba(7, 7, 10, 0.4) 46%, transparent 72%);
+  }
+  .split-hero-copy,
+  .split-hero--reverse .split-hero-copy {
+    justify-self: stretch;
+    text-align: left;
+    padding: 5.5rem 6vw 3rem;
+  }
+  .split-hero-title .is-accent,
+  .split-hero--reverse .split-hero-title .is-accent {
+    margin-left: 10vw;
+    margin-right: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Shared: breadcrumb as a small floating glass pill, not a plain line
+   of text (replaces the old `.crumbs` rule that used to live in
+   experience.css, now fully self-contained here).
+   --------------------------------------------------------------------- */
+.pill-crumbs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.4rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(186, 198, 214, 0.22);
+  border-radius: 999px;
+  background: rgba(10, 10, 13, 0.55);
+  backdrop-filter: blur(10px);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--zh-muted);
+}
+.pill-crumbs a {
+  color: var(--zh-gold-200);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+.pill-crumbs a:hover,
+.pill-crumbs a:focus-visible {
+  color: #fff;
+  border-color: var(--zh-gold-200);
+}
+.pill-crumbs span[aria-hidden] { color: var(--zh-gold-800); }
+.pill-crumbs [aria-current] { color: var(--zh-cream); }
+
+/* =======================================================================
+   ABOUT (app/[locale]/(site)/about/page.tsx)
+   ======================================================================= */
+
+/* Mission / vision: offset two-column moment — photo on one side bleeding
+   toward the edge, copy staggered vertically on the other, never both
+   center-aligned. */
+.about-mission {
+  padding-top: 5.5rem;
+}
+.about-mission-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+.about-mission-media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid rgba(186, 198, 214, 0.18);
+}
+.about-mission-media img {
+  object-fit: cover;
+  transition: transform 1.2s var(--zh-ease);
+}
+.about-mission-media:hover img {
+  transform: scale(1.04);
+}
+.about-mission-copy {
+  padding-top: clamp(0, 6vw, 3.2rem);
+}
+.about-mission-intro {
+  max-width: var(--zh-measure);
+}
+.about-mission-cols {
+  display: grid;
+  gap: 2.4rem;
+  margin-top: 2.6rem;
+}
+.about-mission-col {
+  position: relative;
+  padding-left: 1.6rem;
+  border-left: 1px solid rgba(186, 198, 214, 0.28);
+}
+.about-mission-col--vision {
+  margin-right: 10%;
+}
+.about-mission-col--mission {
+  margin-left: 14%;
+}
+.about-mission-col h2 {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background-image: var(--zh-gold-gradient);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.about-mission-col p {
+  margin: 0;
+  color: var(--zh-muted);
+  max-width: 30rem;
+}
+
+@media (max-width: 860px) {
+  .about-mission-grid {
+    grid-template-columns: 1fr;
+  }
+  .about-mission-col--vision,
+  .about-mission-col--mission {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Values: draggable numbered-card slider */
+.about-values {
+  padding-top: 3.4rem;
+}
+.value-slide {
+  width: clamp(240px, 26vw, 300px);
+  padding: 1.9rem 1.7rem 2.1rem;
+  display: flex;
+  flex-direction: column;
+}
+.value-slide-num {
+  display: block;
+  margin-bottom: 1.1rem;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 2.6rem;
+  line-height: 1;
+  background-image: var(--zh-gold-gradient);
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: background-position 0.7s var(--zh-ease);
+}
+.gcard:hover .value-slide-num {
+  background-position: 100% 50%;
+}
+.value-slide h3 {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.3rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.value-slide p {
+  margin: 0;
+  color: var(--zh-muted);
+  line-height: 1.55;
+}
+
+/* Stats: bold large-number band over a photo backdrop, not plain text on
+   black. */
+.about-stats {
+  position: relative;
+  padding: 5.5rem 6vw;
+  overflow: hidden;
+  isolation: isolate;
+}
+.about-stats-media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+.about-stats-media img {
+  object-fit: cover;
+  filter: saturate(0.5) brightness(0.34) contrast(1.08);
+}
+.about-stats-veil {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(7, 7, 10, 0.55) 0%, rgba(7, 7, 10, 0.88) 100%);
+}
+.about-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.about-stat {
+  text-align: center;
+  padding: 1rem;
+}
+.about-stat strong {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  line-height: 1;
+  background-image: var(--zh-gold-gradient);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.about-stat p {
+  margin: 0.6rem 0 0;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: #ddd4c4;
+}
+
+@media (max-width: 640px) {
+  .about-stats-row {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* =======================================================================
+   SECTORS (app/[locale]/(site)/sectors/page.tsx)
+   ======================================================================= */
+
+.sectors-intro-panel {
+  padding-top: 4.5rem;
+  padding-bottom: 3rem;
+}
+.sectors-intro-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.65fr) minmax(0, 1.35fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+.sectors-intro-grid .kicker {
+  font-size: 0.78rem;
+}
+.sector-intro {
+  max-width: 42rem;
+}
+.sector-intro + .sector-intro {
+  margin-top: 1rem;
+}
+
+@media (max-width: 760px) {
+  .sectors-intro-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* A full-bleed, confidently-sized photo moment between the intro copy
+   and the carousel — not subdued, a real visual beat. */
+.sectors-spotlight {
+  position: relative;
+  min-height: 46vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  color: var(--zh-cream);
+}
+.sectors-spotlight-media {
+  position: absolute;
+  inset: 0;
+}
+.sectors-spotlight-media img {
+  object-fit: cover;
+}
+.sectors-spotlight-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, rgba(7, 7, 10, 0.92) 0%, rgba(7, 7, 10, 0.55) 48%, rgba(7, 7, 10, 0.25) 100%);
+}
+.sectors-spotlight-copy {
+  position: relative;
+  z-index: 1;
+  padding: 3.4rem 6vw;
+  max-width: 44rem;
+}
+.sectors-spotlight-copy h2 {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: clamp(1.9rem, 3.6vw, 3rem);
+  line-height: 1.08;
+}
+
+/* Spotlight carousel — dark glass cards replacing the old vertical stack
+   of identical left-aligned .soft-card sector tiles. */
+.sectors-carousel {
+  padding-top: 4rem;
+}
+.sector-slide {
+  width: clamp(280px, 32vw, 360px);
+  min-height: 24rem;
+  padding: 1.9rem 1.8rem 2rem;
+  display: flex;
+  flex-direction: column;
+  color: var(--zh-gold-400);
+}
+.sector-slide-mark {
+  width: 2.6rem;
+  height: 2.6rem;
+  opacity: 0.85;
+  transition: color 0.4s ease, transform 0.5s var(--zh-ease);
+}
+.gcard.sector-slide:hover .sector-slide-mark {
+  color: #fff;
+  transform: scale(1.1) rotate(-6deg);
+}
+.sector-slide-index {
+  margin-top: auto;
+  padding-top: 1rem;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: var(--zh-gold-600);
+}
+.sector-slide h3 {
+  margin: 1.1rem 0 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.4rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--zh-cream);
+}
+.sector-slide > p {
+  margin: 0;
+  color: var(--zh-muted);
+  line-height: 1.55;
+  flex: 1;
+}
+.sector-slide-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(186, 198, 214, 0.16);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s var(--zh-ease), transform 0.4s var(--zh-ease);
+}
+.gcard.sector-slide:hover .sector-slide-links,
+.gcard.sector-slide:focus-within .sector-slide-links {
+  opacity: 1;
+  transform: translateY(0);
+}
+.sector-slide-link {
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--zh-gold-200);
+  text-decoration: none;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid rgba(186, 198, 214, 0.28);
+  border-radius: 999px;
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+.sector-slide-link:hover,
+.sector-slide-link:focus-visible {
+  color: #fff;
+  border-color: var(--zh-gold-200);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* =======================================================================
+   SUB-SERVICE TEMPLATE
+   (app/[locale]/(site)/services/[slug]/[item]/page.tsx — shared by all
+   44 sub-service pages)
+   ======================================================================= */
+
+.offer-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+.offer-main .offer-standfirst {
+  max-width: 44rem;
+}
+.offer-body {
+  margin-top: 2rem;
+}
+.offer-body p {
+  max-width: 42rem;
+}
+.offer-body p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 3.6rem;
+  line-height: 0.8;
+  margin: 0.15em 0.1em 0 0;
+  background-image: var(--zh-gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.offer-sidebar {
+  display: grid;
+  gap: 1.3rem;
+  position: sticky;
+  top: calc(var(--zh-header-height) + 1.5rem);
+}
+.offer-fact {
+  padding: 1.6rem 1.6rem 1.8rem;
+}
+.offer-fact .kicker {
+  margin: 0 0 0.6rem;
+}
+.offer-fact-line {
+  margin: 0.2rem 0 0;
+  color: var(--zh-cream);
+}
+.offer-fact-sub {
+  margin: 0.3rem 0 0;
+  color: var(--zh-muted);
+  font-size: 0.9rem;
+}
+.offer-fact-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+.offer-fact-chip {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--zh-gold-200);
+  text-decoration: none;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid rgba(186, 198, 214, 0.28);
+  border-radius: 999px;
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+.offer-fact-chip:hover,
+.offer-fact-chip:focus-visible {
+  color: #fff;
+  border-color: var(--zh-gold-200);
+  background: rgba(255, 255, 255, 0.06);
+}
+.offer-quote {
+  padding: 1.7rem 1.6rem;
+}
+.offer-quote blockquote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: var(--zh-cream);
+}
+.offer-quote blockquote::before {
+  content: "“";
+  display: block;
+  font-size: 2.6rem;
+  line-height: 0.6;
+  margin-bottom: 0.4rem;
+  background-image: var(--zh-gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (max-width: 960px) {
+  .offer-layout {
+    grid-template-columns: 1fr;
+  }
+  .offer-sidebar {
+    position: static;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .offer-sidebar {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Interactive bullet grid — replaces the plain <li> list. */
+.offer-coverage {
+  padding-top: 3rem;
+}
+.offer-bullet-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1.6rem;
+}
+.offer-bullet-card {
+  padding: 1.4rem 1.5rem 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+.offer-bullet-num {
+  flex: none;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 1.5rem;
+  line-height: 1;
+  background-image: var(--zh-gold-gradient);
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: background-position 0.6s var(--zh-ease);
+}
+.offer-bullet-card:hover .offer-bullet-num {
+  background-position: 100% 50%;
+}
+.offer-bullet-card p {
+  margin: 0;
+  line-height: 1.55;
+  color: var(--zh-cream);
+}
+
+@media (max-width: 760px) {
+  .offer-bullet-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Methodology — draggable phase slider instead of a static grid. */
+.offer-method-section {
+  padding-top: 3rem;
+}
+.offer-method-intro {
+  max-width: var(--zh-measure);
+  margin-top: 0.4rem;
+  color: var(--zh-muted);
+}
+.offer-phase-card {
+  width: clamp(230px, 24vw, 280px);
+  padding: 1.7rem 1.5rem 1.9rem;
+}
+.offer-phase-step {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 2.1rem;
+  background-image: var(--zh-gold-gradient);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.offer-phase-card strong {
+  display: block;
+  margin: 0.7rem 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--zh-cream);
+}
+.offer-phase-card p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--zh-muted);
+}
+
+/* Sibling sub-services — a thumbnail rail instead of a plain link grid. */
+.offer-siblings-section {
+  padding-top: 3rem;
+}
+.offer-sibling-card {
+  position: relative;
+  width: clamp(240px, 26vw, 300px);
+  color: var(--zh-cream);
+}
+.offer-sibling-media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+}
+.offer-sibling-media img {
+  object-fit: cover;
+  filter: saturate(0.75) brightness(0.62);
+  transition: transform 0.9s var(--zh-ease), filter 0.5s ease;
+}
+.offer-sibling-card:hover .offer-sibling-media img {
+  transform: scale(1.06);
+  filter: saturate(0.95) brightness(0.8);
+}
+.offer-sibling-copy {
+  padding: 1.1rem 1.3rem 1.4rem;
+}
+.offer-sibling-copy strong {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.offer-sibling-copy span {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.84rem;
+  color: var(--zh-muted);
+}
+
+.offer-cta-section {
+  padding-top: 2.5rem;
+  padding-bottom: 5rem;
+}
+
+/* ---------------------------------------------------------------------
+   Reduced motion: disable hover transforms' lift/scale across every
+   class introduced above (the transitions themselves are triggered by
+   user interaction, not autoplay, but a reduced-motion visitor still
+   should not get the translate/scale sweep).
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .gcard,
+  .gcard::before,
+  .about-mission-media img,
+  .value-slide-num,
+  .sector-slide-mark,
+  .sector-slide-links,
+  .offer-bullet-num,
+  .offer-sibling-media img {
+    transition: none !important;
+  }
+  .gcard:hover,
+  .gcard:focus-within {
+    transform: none;
+  }
+  .about-mission-media:hover img,
+  .gcard.sector-slide:hover .sector-slide-mark,
+  .offer-sibling-card:hover .offer-sibling-media img {
+    transform: none;
+  }
+}

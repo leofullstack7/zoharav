@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ArtOverPhoto } from "@/components/site/ArtOverPhoto";
 import { Monogram } from "@/components/brand/Monogram";
 import { navigation } from "@/content/navigation";
@@ -11,15 +11,17 @@ import { loc } from "@/lib/i18n/loc";
 
 type ServiceCoverPayload = Record<string, { photoUrl: string | null; art: string }>;
 
+const emptySubscribe = () => () => {};
+
 export function Header({ locale }: { locale: string }) {
   const pathname = usePathname();
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const [solid, setSolid] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const [mega, setMega] = useState(false);
   const [activeService, setActiveService] = useState(services[0].slug);
   const [mobileGroup, setMobileGroup] = useState<string | null>(null);
-  const [ready, setReady] = useState(false);
   const [serviceCovers, setServiceCovers] = useState<ServiceCoverPayload>({});
   const closeTimer = useRef<number | null>(null);
   const service = services.find((item) => item.slug === activeService) ?? services[0];
@@ -73,10 +75,6 @@ export function Header({ locale }: { locale: string }) {
   }, []);
 
   useEffect(() => {
-    setReady(true);
-  }, []);
-
-  useEffect(() => {
     setOpen(false);
     setMega(false);
   }, [pathname]);
@@ -102,7 +100,7 @@ export function Header({ locale }: { locale: string }) {
               >
                 <button
                   type="button"
-                  className={ready && pathname.startsWith("/services") ? "is-active" : ""}
+                  className={mounted && pathname.startsWith("/services") ? "is-active" : undefined}
                   aria-expanded={mega}
                   onClick={() => setMega((value) => !value)}
                 >
@@ -119,27 +117,33 @@ export function Header({ locale }: { locale: string }) {
                 >
                   <div className="mega-side">
                     {services.map((entry) => (
-                      <button
+                      <Link
                         key={entry.slug}
-                        type="button"
-                        className={entry.slug === service.slug ? "is-on" : ""}
+                        href={`/services/${entry.slug}`}
+                        className={entry.slug === service.slug ? "is-on" : undefined}
                         onMouseEnter={() => setActiveService(entry.slug)}
                         onFocus={() => setActiveService(entry.slug)}
-                        onClick={() => setActiveService(entry.slug)}
+                        onClick={() => setMega(false)}
                       >
                         {loc(entry.name, locale)}
-                      </button>
+                      </Link>
                     ))}
                   </div>
                   <div className="mega-list">
                     {service.subServices.map((sub) => (
-                      <Link key={sub.id} href={`/services/${service.slug}/${sub.id}`}>
+                      <Link
+                        key={sub.id}
+                        href={`/services/${service.slug}#${sub.id}`}
+                        onClick={() => setMega(false)}
+                      >
                         {loc(sub.title, locale)}
                       </Link>
                     ))}
-                    <p>{loc(service.cardLine, locale)}</p>
+                    <Link className="mega-line-link" href={`/services/${service.slug}`} onClick={() => setMega(false)}>
+                      {loc(service.cardLine, locale)}
+                    </Link>
                   </div>
-                  <Link className="mega-shot" href={`/services/${service.slug}`}>
+                  <Link className="mega-shot" href={`/services/${service.slug}`} onClick={() => setMega(false)}>
                     <ArtOverPhoto
                       photoUrl={serviceCovers[service.slug]?.photoUrl ?? null}
                       artSrc={serviceCovers[service.slug]?.art ?? service.image}
@@ -150,7 +154,11 @@ export function Header({ locale }: { locale: string }) {
                 </div>
               </div>
             ) : (
-              <Link key={item.id} href={item.href} className={ready && pathname === item.href ? "is-active" : ""}>
+              <Link
+                key={item.id}
+                href={item.href}
+                className={mounted && pathname === item.href ? "is-active" : undefined}
+              >
                 {loc(item.label, locale)}
               </Link>
             ),
@@ -184,12 +192,21 @@ export function Header({ locale }: { locale: string }) {
                   <div>
                     {services.map((entry) => (
                       <div key={entry.slug}>
-                        <button type="button" onClick={() => setMobileGroup(entry.slug)}>
-                          {loc(entry.name, locale)}
-                        </button>
+                        <div className="mobile-service-row">
+                          <Link href={`/services/${entry.slug}`} onClick={() => setOpen(false)}>
+                            {loc(entry.name, locale)}
+                          </Link>
+                          <button type="button" onClick={() => setMobileGroup(entry.slug)} aria-label="Subservices">
+                            {mobileGroup === entry.slug ? "−" : "+"}
+                          </button>
+                        </div>
                         {mobileGroup === entry.slug
                           ? entry.subServices.map((sub) => (
-                              <Link key={sub.id} href={`/services/${entry.slug}/${sub.id}`}>
+                              <Link
+                                key={sub.id}
+                                href={`/services/${entry.slug}#${sub.id}`}
+                                onClick={() => setOpen(false)}
+                              >
                                 {loc(sub.title, locale)}
                               </Link>
                             ))
