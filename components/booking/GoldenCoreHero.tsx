@@ -15,9 +15,10 @@ export function GoldenCoreHero({ children }: { children: ReactNode }) {
     let inst: GoldenCoreInstance | undefined;
     let alive = true;
 
-    import(/* webpackIgnore: true */ "/esfera.js").then((mod: GoldenCoreModule) => {
+    const sphereSrc = "/esfera.js";
+    void import(/* webpackIgnore: true */ sphereSrc).then((mod) => {
       if (!alive || !heroRef.current) return;
-      inst = mod.init(heroRef.current);
+      inst = (mod as GoldenCoreModule).init(heroRef.current);
     });
 
     return () => {
