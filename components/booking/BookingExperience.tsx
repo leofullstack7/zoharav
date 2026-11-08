@@ -49,7 +49,7 @@ export function BookingExperience({
 }: {
   locale: string;
   categories: BookingCategory[];
-  photos: Record<string, string>;
+  photos: Record<string, string | null>;
 }) {
   const es = locale === "es";
   const [stage, setStage] = useState<Stage>("grid");
