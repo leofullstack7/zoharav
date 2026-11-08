@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { services } from "@/content/services";
 import { query } from "@/lib/db/client";
+import { getImageSlot, isRasterPath } from "@/lib/images/slots";
 
 /**
  * Public, read-only: for each of the six service lines, the raw admin
@@ -17,9 +18,19 @@ import { query } from "@/lib/db/client";
  * already-public fallback SVG — nothing sensitive.
  */
 export async function GET() {
+  const coverFor = (slug: string, uploaded: string | null = null) => {
+    const slot = getImageSlot(`services.${slug}.cover`);
+    const fallback = slot && isRasterPath(slot.fallback) ? slot.fallback : null;
+    const service = services.find((item) => item.slug === slug);
+    return {
+      photoUrl: uploaded || fallback,
+      art: service?.image ?? fallback ?? "",
+    };
+  };
+
   const fallbackPayload = () => {
     const payload: Record<string, { photoUrl: string | null; art: string }> = {};
-    for (const service of services) payload[service.slug] = { photoUrl: null, art: service.image };
+    for (const service of services) payload[service.slug] = coverFor(service.slug);
     return payload;
   };
 
@@ -31,10 +42,7 @@ export async function GET() {
 
     const payload: Record<string, { photoUrl: string | null; art: string }> = {};
     for (const service of services) {
-      payload[service.slug] = {
-        photoUrl: bySlot.get(`services.${service.slug}.cover`) ?? null,
-        art: service.image,
-      };
+      payload[service.slug] = coverFor(service.slug, bySlot.get(`services.${service.slug}.cover`) ?? null);
     }
 
     return NextResponse.json(payload, { status: 200, headers: { "Cache-Control": "no-store" } });

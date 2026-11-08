@@ -40,9 +40,10 @@ export function revalidateSiteImage(slotKey: string): void {
 
   if (slotKey.startsWith("home.") || slotKey.startsWith("team.")) {
     addPage("/");
-  } else if (slotKey === "about.hero") {
+    if (slotKey.startsWith("team.")) addPage("/about");
+  } else if (slotKey.startsWith("about.")) {
     addPage("/about");
-  } else if (slotKey === "booking.hero") {
+  } else if (slotKey.startsWith("booking.")) {
     addPage("/booking");
   } else if (slotKey === "contact.hero") {
     addPage("/contact");
@@ -50,7 +51,7 @@ export function revalidateSiteImage(slotKey: string): void {
     addPage("/faq");
   } else if (slotKey === "legal.hero") {
     for (const doc of legalDocIds) addPage(`/legal/${doc}`);
-  } else if (slotKey === "sectors.hero") {
+  } else if (slotKey.startsWith("sectors.")) {
     addPage("/sectors");
   } else if (slotKey === "services-index.hero") {
     addPage("/services");

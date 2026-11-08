@@ -77,7 +77,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </Reveal>
       </section>
 
-      <section className="panel about-mission">
+      <section className="panel about-mission" id="mission">
         <div className="about-mission-grid">
           <Reveal className="about-mission-media">
             <Image
@@ -119,25 +119,24 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           </Reveal>
         </div>
         <DragSlider
-          items={values}
-          getKey={(value) => value.id}
           ariaLabel={es ? "Valores de la firma" : "Firm values"}
           hint={es ? "Arrastra para explorar" : "Drag to explore"}
-          renderItem={(value, index) => (
-            <article className="gcard value-slide">
+        >
+          {values.map((value, index) => (
+            <article className="gcard value-slide" key={value.id}>
               <span className="value-slide-num" aria-hidden="true">
                 {String(index + 1).padStart(2, "0")}
               </span>
               <h3>{loc(value.title, locale)}</h3>
               <p>{loc(value.line, locale)}</p>
             </article>
-          )}
-        />
+          ))}
+        </DragSlider>
       </section>
 
       <TeamSlider locale={locale} photos={teamPhotos} />
 
-      <section className="about-stats">
+      <section className="about-stats" id="stats">
         <div className="about-stats-media">
           <Image src={statsPhoto} alt="" aria-hidden fill sizes="100vw" />
         </div>

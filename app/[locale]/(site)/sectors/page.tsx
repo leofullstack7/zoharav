@@ -8,7 +8,7 @@ import { getService } from "@/content/services";
 import { sectors, sectorsCopy } from "@/content/sectors";
 import { Link } from "@/i18n/navigation";
 import { loc } from "@/lib/i18n/loc";
-import { getSiteImage, getSiteImagePhoto } from "@/lib/images/getSiteImage";
+import { getSiteImage, getSiteImagePhoto, getSiteImagePhotos } from "@/lib/images/getSiteImage";
 import { buildPageMetadata } from "@/lib/seo";
 import { setRequestLocale } from "next-intl/server";
 
@@ -48,9 +48,10 @@ export default async function SectorsPage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   setRequestLocale(locale);
   const es = locale === "es";
-  const [heroPhoto, spotlightPhoto] = await Promise.all([
+  const [heroPhoto, spotlightPhoto, cardPhotos] = await Promise.all([
     getSiteImagePhoto("sectors.hero"),
     getSiteImage("sectors.spotlight"),
+    getSiteImagePhotos(sectors.map((sector) => `sectors.card.${sector.id}`)),
   ]);
 
   return (
@@ -114,12 +115,14 @@ export default async function SectorsPage({ params }: { params: Promise<{ locale
           </Reveal>
         </div>
         <DragSlider
-          items={sectors}
-          getKey={(sector) => sector.id}
           ariaLabel={es ? "Sectores asesorados" : "Sectors advised"}
           hint={es ? "Arrastra para explorar" : "Drag to explore"}
-          renderItem={(sector, index) => (
-            <article className="gcard sector-slide">
+        >
+          {sectors.map((sector, index) => (
+            <article className="gcard sector-slide" key={sector.id}>
+              <div className="sector-slide-photo">
+                <Image src={cardPhotos[`sectors.card.${sector.id}`] ?? sector.image} alt="" fill sizes="360px" />
+              </div>
               <SectorMark id={sector.id} />
               <h3>{loc(sector.name, locale)}</h3>
               <p>{loc(sector.summary, locale)}</p>
@@ -138,8 +141,8 @@ export default async function SectorsPage({ params }: { params: Promise<{ locale
                 {String(index + 1).padStart(2, "0")} / {String(sectors.length).padStart(2, "0")}
               </span>
             </article>
-          )}
-        />
+          ))}
+        </DragSlider>
       </section>
     </main>
   );

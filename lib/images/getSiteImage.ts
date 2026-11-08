@@ -1,7 +1,7 @@
 import "server-only";
 import { unstable_cache } from "next/cache";
 import { query } from "@/lib/db/client";
-import { getImageSlot, IMAGE_SLOTS } from "./slots";
+import { getImageSlot, IMAGE_SLOTS, isRasterPath } from "./slots";
 
 /**
  * Single shared cache tag for every `site_images` read. The admin upload
@@ -59,14 +59,16 @@ export async function getSiteImage(slotKey: string): Promise<string> {
  * second layer.
  */
 export async function getSiteImagePhoto(slotKey: string): Promise<string | null> {
-  if (!getImageSlot(slotKey)) {
+  const slot = getImageSlot(slotKey);
+  if (!slot) {
     throw new Error(`getSiteImagePhoto: unknown image slot "${slotKey}". Add it to lib/images/slots.ts first.`);
   }
+  const rasterFallback = isRasterPath(slot.fallback) ? slot.fallback : null;
   try {
-    return await fetchImageUrl(slotKey);
+    return (await fetchImageUrl(slotKey)) || rasterFallback;
   } catch (err) {
     console.error(`getSiteImagePhoto: failed to resolve "${slotKey}".`, err);
-    return null;
+    return rasterFallback;
   }
 }
 

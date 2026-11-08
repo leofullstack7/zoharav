@@ -544,7 +544,7 @@
 
 @media (max-width: 980px) {
   .svc-pillar-grid,
-  .svc-method-grid { grid-template-columns: 1fr; }
+  .svc-method-grid { grid-template-columns: minmax(0, 1fr); }
   .svc-modal-panel { grid-template-columns: 1fr; }
   .svc-modal-media { min-height: 220px; }
   .svc-modal-bullets { grid-template-columns: 1fr; }

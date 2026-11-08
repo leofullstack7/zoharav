@@ -18,14 +18,12 @@ import { loc } from "@/lib/i18n/loc";
 
 const line = (value: { en: string; es: string }, locale: string) => loc(value, locale);
 
-function heroTitle(text: string) {
+function folioTitle(text: string) {
   const words = text.replace(/\s+/g, " ").trim().split(" ");
-  const mark = words.slice(-2).join(" ");
-  const rest = words.slice(0, -2);
-  const small = rest[0] ?? "";
-  const heroWord = rest[1] ?? "";
-  const bridge = rest.slice(2).join(" ");
-  return { small, heroWord, bridge, mark };
+  return {
+    lead: words.slice(0, 2).join(" "),
+    trail: words.slice(2).join(" "),
+  };
 }
 
 function Band({
@@ -41,6 +39,7 @@ function Band({
   alt,
   flip,
   id,
+  photoUrl,
 }: {
   locale: string;
   number: string;
@@ -54,6 +53,7 @@ function Band({
   alt: string;
   flip?: boolean;
   id?: string;
+  photoUrl?: string | null;
 }) {
   return (
     <section id={id} className={`chapter studio zhv-zone${flip ? " studio-flip" : ""}`}>
@@ -83,7 +83,7 @@ function Band({
               </Link>
             </div>
           </Reveal>
-          <LiveFrame src={image} alt={alt} />
+          <LiveFrame src={image} alt={alt} photoUrl={photoUrl} />
         </div>
       </div>
     </section>
@@ -92,7 +92,7 @@ function Band({
 
 export function HomeExperience({ locale, images }: { locale: string; images: HomeImages }) {
   const slide = banners.mandato;
-  const title = heroTitle(line(slide.title, locale));
+  const title = folioTitle(line(slide.title, locale));
   const heroRef = useRef<HTMLDivElement>(null);
   const sunRef = useRef<HTMLDivElement>(null);
 
@@ -127,7 +127,7 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
 
   return (
     <div className="home-stage">
-      <section className="hero hero-mandato" ref={heroRef}>
+      <section className="hero hero-mandato hero-folio" ref={heroRef}>
         <div className="hero-wash" aria-hidden>
           <ArtOverPhoto photoUrl={images.hero} artSrc="/images/hero/yacht.svg" priority sizes="100vw" />
         </div>
@@ -137,13 +137,12 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
         </div>
         <div className="hero-shade" />
         <div className="hero-copy">
-          <p className="eyebrow">{line(slide.eyebrow, locale)}</p>
-          <h1>
-            <span className="hero-small">{title.small}</span>
-            <span className="hero-word">{title.heroWord}</span>
-            {title.bridge ? <span className="hero-bridge">{title.bridge}</span> : null}
-            <span className="hero-mark">{title.mark}</span>
+          <p className="hero-folio-kicker">{line(slide.eyebrow, locale)}</p>
+          <h1 className="hero-folio-title">
+            <em>{title.lead}</em>
+            {title.trail ? <span>{title.trail}</span> : null}
           </h1>
+          <i className="hero-folio-rule" aria-hidden />
           <p className="hero-lede">{line(slide.lede, locale)}</p>
           <div className="hero-actions">
             <Link className="btn-gold" href="/booking">
@@ -236,13 +235,13 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
           </Reveal>
           <div className="pro-support-gallery" aria-hidden>
             <figure>
-              <img src="/images/services/jet.png" alt="" />
+              <img src={images.proSupport[0] ?? "/images/services/jet.png"} alt="" />
             </figure>
             <figure>
-              <img src="/images/pillars/oil-energy.png" alt="" />
+              <img src={images.proSupport[1] ?? "/images/pillars/oil-energy.png"} alt="" />
             </figure>
             <figure>
-              <img src="/images/hero/yacht.png" alt="" />
+              <img src={images.proSupport[2] ?? "/images/hero/yacht.png"} alt="" />
             </figure>
           </div>
         </div>
@@ -299,7 +298,11 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
             </header>
           </Reveal>
           <div className="studio-main studio-services">
-            <LiveFrame src="/images/services/jet.svg" alt="Two advisors walking toward a private jet at sunset" />
+            <LiveFrame
+              src="/images/services/jet.svg"
+              alt="Two advisors walking toward a private jet at sunset"
+              photoUrl={images.servicesFrame}
+            />
             <ol className="studio-rows">
               {homeServiceCards.map((card, index) => (
                 <li key={card.id}>
@@ -343,6 +346,8 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
         cta={locale === "es" ? "Ver la asesoría" : "View the advisory"}
         image="/images/hero/yacht.svg"
         alt="Energy infrastructure at golden hour"
+        photoUrl={images.oil}
+        id="oil"
       />
 
       <Band
@@ -356,7 +361,9 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
         cta={locale === "es" ? "Ver minería" : "View mining"}
         image="/images/mining/emeralds.svg"
         alt="Gold and faceted emeralds on dark stone"
+        photoUrl={images.mining}
         flip
+        id="mining"
       />
 
       <section className="chapter studio zhv-zone">
@@ -402,6 +409,8 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
         cta={locale === "es" ? "Ver sostenibilidad" : "View sustainability"}
         image="/images/sustainability/plant.svg"
         alt="Hands holding soil and a young plant"
+        photoUrl={images.sustainability}
+        id="sustainability-home"
       />
 
       <Band
@@ -415,6 +424,7 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
         cta={locale === "es" ? "Ver inversión" : "View investment"}
         image="/images/investment/handshake.svg"
         alt="Handshake over investment documents"
+        photoUrl={images.investment}
         flip
         id="investment"
       />

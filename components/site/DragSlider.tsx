@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Children, useEffect, useRef, useState, type ReactNode } from "react";
 import { Reveal } from "@/components/motion/Reveal";
 import { gsap, loadDraggable, prefersReducedMotion } from "@/lib/motion";
 import styles from "./DragSlider.module.css";
@@ -29,25 +29,22 @@ type DraggableInstance = ReturnType<Awaited<ReturnType<typeof loadDraggable>>["c
  * exact same cards in a plain static grid instead — never a JS-gated
  * empty slider.
  */
-export function DragSlider<T>({
-  items,
-  getKey,
-  renderItem,
+export function DragSlider({
+  children,
   ariaLabel,
   hint,
   autoplayDuration = 42,
   className = "",
   gridClassName = "",
 }: {
-  items: readonly T[];
-  getKey: (item: T, index: number) => string;
-  renderItem: (item: T, index: number) => ReactNode;
+  children: ReactNode;
   ariaLabel: string;
   hint?: string;
   autoplayDuration?: number;
   className?: string;
   gridClassName?: string;
 }) {
+  const slides = Children.toArray(children);
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [reduced, setReduced] = useState(true);
@@ -146,9 +143,9 @@ export function DragSlider<T>({
   if (reduced) {
     return (
       <div className={`${styles.staticGrid} ${gridClassName}`} role="list" aria-label={ariaLabel}>
-        {items.map((item, i) => (
-          <div className={styles.staticItem} role="listitem" key={getKey(item, i)}>
-            {renderItem(item, i)}
+        {slides.map((slide, i) => (
+          <div className={styles.staticItem} role="listitem" key={i}>
+            {slide}
           </div>
         ))}
       </div>
@@ -159,9 +156,9 @@ export function DragSlider<T>({
     <Reveal>
       <div className={`${styles.viewport} ${className}`} ref={viewportRef} role="list" aria-label={ariaLabel}>
         <div className={styles.track} ref={trackRef}>
-          {items.map((item, i) => (
-            <div className={styles.item} role="listitem" key={getKey(item, i)}>
-              {renderItem(item, i)}
+          {slides.map((slide, i) => (
+            <div className={styles.item} role="listitem" key={i}>
+              {slide}
             </div>
           ))}
         </div>

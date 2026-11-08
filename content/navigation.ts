@@ -49,7 +49,7 @@ export const homePillars = [
       en: "Exploration & Production Advisory. Development Advisory. Strategic Partnerships.",
       es: "Asesoría en exploración y producción. Asesoría en desarrollo. Alianzas estratégicas.",
     },
-    image: "/images/pillars/oil-energy.svg",
+    image: "/images/pillars/oil-energy.png",
     icon: "derrick",
   },
   {
@@ -60,7 +60,7 @@ export const homePillars = [
       en: "Gold, Emeralds & Strategic Minerals. Sustainable Growth.",
       es: "Oro, esmeraldas y minerales estratégicos. Crecimiento sostenible.",
     },
-    image: "/images/pillars/mining.svg",
+    image: "/images/mining/emeralds.png",
     icon: "gem",
   },
   {
@@ -71,7 +71,7 @@ export const homePillars = [
       en: "Global Opportunities. Local Expertise.",
       es: "Oportunidades globales. Criterio local.",
     },
-    image: "/images/pillars/investment.svg",
+    image: "/images/investment/handshake.png",
     icon: "chart",
   },
   {
@@ -82,7 +82,7 @@ export const homePillars = [
       en: "People. Environment. Long-Term Value.",
       es: "Personas. Entorno. Valor de largo plazo.",
     },
-    image: "/images/pillars/sustainability.svg",
+    image: "/images/sustainability/plant.png",
     icon: "leaf",
   },
 ] as const;

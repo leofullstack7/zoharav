@@ -5,29 +5,53 @@ import { team } from "@/content/team";
 import { getSiteImagePhoto, getSiteImagePhotos } from "./getSiteImage";
 
 /**
- * Consolidated, home-page-shaped bundle of every raw admin photo (or
- * null) the home page composites via ArtOverPhoto. Resolved server-side
- * in app/[locale]/(site)/page.tsx and passed down as a plain prop into
- * the client component tree (HomeExperience -> LiveFrame / TeamSlider) —
- * none of those client components talk to the database themselves, which
- * keeps the home page's first paint fast (no client-side blocking fetch)
- * while still picking up a fresh upload immediately via
- * lib/images/revalidateSiteImage.ts forcing a re-render of "/" and "/es".
+ * Consolidated, home-page-shaped bundle of every admin photo (or raster
+ * fallback) the home page composites. Resolved server-side in
+ * app/[locale]/(site)/page.tsx and passed into HomeExperience.
  */
 export type HomeImages = {
   hero: string | null;
   firm: string | null;
   contactFrame: string | null;
+  proSupport: [string | null, string | null, string | null];
+  servicesFrame: string | null;
+  oil: string | null;
+  mining: string | null;
+  sustainability: string | null;
+  investment: string | null;
   serviceCovers: Record<string, string | null>;
   officeCovers: Record<string, string | null>;
   teamPhotos: Record<string, string | null>;
 };
 
 export async function getHomeImages(): Promise<HomeImages> {
-  const [hero, firm, contactFrame, serviceCovers, officeCovers, teamPhotos] = await Promise.all([
+  const [
+    hero,
+    firm,
+    contactFrame,
+    pro1,
+    pro2,
+    pro3,
+    servicesFrame,
+    oil,
+    mining,
+    sustainability,
+    investment,
+    serviceCovers,
+    officeCovers,
+    teamPhotos,
+  ] = await Promise.all([
     getSiteImagePhoto("home.hero"),
     getSiteImagePhoto("home.firm"),
     getSiteImagePhoto("home.contact-frame"),
+    getSiteImagePhoto("home.pro-support-1"),
+    getSiteImagePhoto("home.pro-support-2"),
+    getSiteImagePhoto("home.pro-support-3"),
+    getSiteImagePhoto("home.services-frame"),
+    getSiteImagePhoto("home.oil"),
+    getSiteImagePhoto("home.mining"),
+    getSiteImagePhoto("home.sustainability"),
+    getSiteImagePhoto("home.investment"),
     getSiteImagePhotos(services.map((service) => `services.${service.slug}.cover`)),
     getSiteImagePhotos(activeOffices.map((office) => `offices.${office.id}.cover`)),
     getSiteImagePhotos(team.map((member) => `team.${member.id}.photo`)),
@@ -52,6 +76,12 @@ export async function getHomeImages(): Promise<HomeImages> {
     hero,
     firm,
     contactFrame,
+    proSupport: [pro1, pro2, pro3],
+    servicesFrame,
+    oil,
+    mining,
+    sustainability,
+    investment,
     serviceCovers: serviceCoversBySlug,
     officeCovers: officeCoversById,
     teamPhotos: teamPhotosById,

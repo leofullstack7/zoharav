@@ -7,12 +7,12 @@ const faqs: FaqItem[] = [
     service: "strategic-operational-consulting",
     showOnHome: false,
     question: {
-      en: "Do you implement automation, software, or digital programs?",
-      es: "¿Implementan automatización, software o programas digitales?",
+      en: "How do you work with industrial operations?",
+      es: "¿Cómo trabajan con operaciones industriales?",
     },
     answer: {
-      en: "No. Operational consulting at Zoharav covers process, supply chain, asset performance, indicators, and risk — including environmental and safety management systems. We do not sell technology implementation.",
-      es: "No. La consultoría operativa de Zoharav cubre procesos, cadena de suministro, desempeño de activos, indicadores y riesgo, incluidos los sistemas de gestión ambiental y de seguridad. No vendemos implementación tecnológica.",
+      en: "Operational consulting covers process, supply chain, asset performance, indicators, and risk — including environmental and safety management. The work sits inside plants and fields that already run with advanced industrial systems. We counsel the operating model. The client keeps the plant and the tools that run it.",
+      es: "La consultoría operativa cubre procesos, cadena de suministro, desempeño de activos, indicadores y riesgo, incluidos los sistemas de gestión ambiental y de seguridad. El trabajo ocurre en plantas y campos que ya corren con sistemas industriales avanzados. Asesoramos el modelo operativo. El cliente conserva la planta y las herramientas con las que opera.",
     },
   },
   {
@@ -64,7 +64,7 @@ export const strategic: Service = {
     en: "Corporate strategy, market intelligence, partnerships, and the operating work that makes them real: lean processes, supply and assets, indicators, and risk. For natural resources and the industries around them.",
     es: "Estrategia corporativa, inteligencia de mercado, alianzas y el trabajo operativo que las vuelve reales: procesos lean, suministro y activos, indicadores y riesgo. Para los recursos naturales y las industrias que los rodean.",
   },
-  image: "/images/services/jet.svg",
+  image: "/images/services/jet.png",
   industries: ["manufacturing", "energy-utilities", "mining", "logistics", "financial", "public-sector"],
   faqs,
   impactSlides: [
@@ -86,12 +86,12 @@ export const strategic: Service = {
     },
     {
       title: {
-        en: "Digital Transformation Enablement",
-        es: "Habilitación de la transformación digital",
+        en: "Industrial performance a board can read",
+        es: "Desempeño industrial que un directorio puede leer",
       },
       body: {
-        en: "We guide the adoption of digital tools and automation to improve transparency, speed, and control across operations — as advisory. We do not sell or implement software.",
-        es: "Orientamos la adopción de herramientas digitales y automatización para mejorar transparencia, velocidad y control en la operación — como asesoría. No vendemos ni implementamos software.",
+        en: "The numbers of the plant, the field, and the chain, read so a director can decide. The work respects the industrial systems the operation already runs on.",
+        es: "Los números de la planta, el campo y la cadena, leídos para que un director pueda decidir. El trabajo respeta los sistemas industriales con los que la operación ya corre.",
       },
       image: "/images/services/ops/hero-digital.jpg",
     },
@@ -112,8 +112,8 @@ export const strategic: Service = {
       id: "excellence",
       title: { en: "Operational Excellence, Delivered", es: "Excelencia operativa, entregada" },
       body: {
-        en: "The energy industry is being transformed by global demand shifts, sustainability pressures, and technological disruption. Our consulting team works closely with stakeholders to realign business strategies, improve operational resilience, and capitalize on emerging trends like energy diversification and digital integration.",
-        es: "La industria energética se transforma por cambios de demanda global, presión de sostenibilidad y disrupción tecnológica. Nuestro equipo trabaja con las partes interesadas para realinear estrategias, mejorar la resiliencia operativa y capitalizar tendencias como la diversificación energética y la integración digital.",
+        en: "The energy industry is being rewritten by demand, capital, and sustainability. Our consulting team works with stakeholders to realign strategy, strengthen operating resilience, and judge diversification with the same care as a producing asset.",
+        es: "La industria energética se reescribe por la demanda, el capital y la sostenibilidad. Nuestro equipo trabaja con las partes interesadas para realinear la estrategia, fortalecer la resiliencia operativa y juzgar la diversificación con el mismo cuidado que un activo en producción.",
       },
       image: "/images/services/ops/pillars.png",
     },
@@ -121,17 +121,17 @@ export const strategic: Service = {
       id: "process-scale",
       title: { en: "Process Transformation at Scale", es: "Transformación de procesos a escala" },
       body: {
-        en: "We redesign end-to-end processes using Lean and Six Sigma methodologies, eliminating inefficiencies and implementing digital tools that enable continuous improvement and real-time performance visibility across operations — as counsel, not as a technology vendor.",
-        es: "Rediseñamos procesos de extremo a extremo con metodologías Lean y Six Sigma, eliminando ineficiencias y orientando herramientas digitales que habilitan mejora continua y visibilidad del desempeño en tiempo real — como consejo, no como proveedor tecnológico.",
+        en: "We redesign end-to-end processes using Lean and Six Sigma methodologies, so waste leaves the system and the operation can see its own performance in time to act.",
+        es: "Rediseñamos procesos de extremo a extremo con metodologías Lean y Six Sigma, para que el desperdicio salga del sistema y la operación vea su propio desempeño a tiempo de actuar.",
       },
       image: "/images/firm/office.png",
     },
     {
       id: "digital-40",
-      title: { en: "Digital Operations & Industry 4.0", es: "Operaciones digitales e Industria 4.0" },
+      title: { en: "Industrial operations, as they actually run", es: "La operación industrial, como de verdad corre" },
       body: {
-        en: "Our digital transformation expertise helps organizations judge IoT, AI, and automation options to create intelligent, self-optimizing operations that respond to changing conditions and maximize asset utilization. We advise the roadmap. We do not build or sell the stack.",
-        es: "Nuestra experiencia en transformación digital ayuda a las organizaciones a juzgar opciones de IoT, IA y automatización para crear operaciones inteligentes que respondan a condiciones cambiantes y maximicen el uso de activos. Asesoramos la hoja de ruta. No construimos ni vendemos el stack.",
+        en: "The mandate sits inside plants and fields that already use advanced industrial systems. We work with that reality: control, reliability, utilization, the shift. The advice is how the operation should be run and measured. The tools stay with the client.",
+        es: "El mandato ocurre en plantas y campos que ya usan sistemas industriales avanzados. Trabajamos con esa realidad: control, confiabilidad, utilización, el turno. El consejo es cómo se debe correr y medir la operación. Las herramientas quedan con el cliente.",
       },
       image: "/images/services/ops/hero-digital.jpg",
     },
@@ -255,8 +255,8 @@ export const strategic: Service = {
         es: "Ya sea un reposicionamiento, un rediseño operativo o una renovación, el método existe para que el cambio alcance su propósito.",
       },
       body: {
-        en: "We work with chief executives on transformation strategies that improve position and resilience in resource and industrial markets. The age is not an excuse to sell technology. The work is the strategy and the change itself.",
-        es: "Trabajamos con la alta dirección en estrategias de transformación que mejoran la posición y la resiliencia en mercados de recursos e industria. La época no es una excusa para vender tecnología. El trabajo es la estrategia y el cambio mismo.",
+        en: "We work with chief executives on transformation strategies that improve position and resilience in resource and industrial markets. The work is the strategy and the change itself.",
+        es: "Trabajamos con la alta dirección en estrategias de transformación que mejoran la posición y la resiliencia en mercados de recursos e industria. El trabajo es la estrategia y el cambio mismo.",
       },
       bullets: [
         { en: "Business architectures that can last", es: "Arquitecturas de negocio que pueden durar" },
@@ -369,23 +369,23 @@ export const strategic: Service = {
     },
     {
       id: "digital-ops",
-      title: { en: "Digital Transformation & Automation", es: "Transformación digital y automatización" },
-      tagline: { en: "Enabling intelligent, connected operations", es: "Habilitar operaciones inteligentes y conectadas" },
+      title: { en: "Industrial Performance & Reliability", es: "Desempeño industrial y confiabilidad" },
+      tagline: { en: "Plants and fields that hold their numbers.", es: "Plantas y campos que sostienen sus números." },
       hover: {
-        en: "Industry 4.0 roadmaps, maturity assessment, and advisory on IoT, analytics, and automation — without selling the stack.",
-        es: "Hojas de ruta Industria 4.0, evaluación de madurez y asesoría sobre IoT, analítica y automatización — sin vender el stack.",
+        en: "Throughput, reliability, and the operating model of industrial assets — counsel inside the way modern industry actually runs.",
+        es: "Throughput, confiabilidad y el modelo operativo de los activos industriales: consejo dentro de cómo corre de verdad la industria moderna.",
       },
       body: {
-        en: "Digital technologies are reshaping operational paradigms. Our Digital Transformation & Automation practice helps organizations harness Industry 4.0 technologies — including IoT, AI/ML, robotics, and advanced analytics — to create intelligent operations that self-optimize, predict failures, and adapt to changing conditions in real time. We advise the path. We do not implement or sell the technology.",
-        es: "Las tecnologías digitales reconfiguran los paradigmas operativos. Nuestra práctica de Transformación digital y automatización ayuda a las organizaciones a aprovechar tecnologías de Industria 4.0 — IoT, IA/ML, robótica y analítica avanzada — para crear operaciones inteligentes que se autooptimizan, predicen fallas y se adaptan en tiempo real. Asesoramos el camino. No implementamos ni vendemos la tecnología.",
+        en: "Resource and industrial companies run complex plants, fields, and mills. That environment is already high-spec: process control, industrial systems, disciplined maintenance. We advise the operating model that makes it produce — reliability, throughput, cost, and safety — so leadership can see the asset as a system. The client owns the plant and the tools. We counsel how the operation is run.",
+        es: "Las compañías de recursos e industria operan plantas, campos y molinos complejos. Ese entorno ya es de alta especificación: control de proceso, sistemas industriales, mantenimiento disciplinado. Asesoramos el modelo operativo que lo hace producir — confiabilidad, throughput, costo y seguridad — para que la dirección vea el activo como un sistema. El cliente es dueño de la planta y de las herramientas. Nosotros aconsejamos cómo se corre la operación.",
       },
       bullets: [
-        { en: "Industry 4.0 roadmap and digital maturity assessment", es: "Hoja de ruta Industria 4.0 y madurez digital" },
-        { en: "IoT sensor networks and predictive analytics — advisory", es: "Redes IoT y analítica predictiva — asesoría" },
-        { en: "Robotic Process Automation (RPA) strategy counsel", es: "Consejo estratégico sobre RPA" },
-        { en: "Digital twin development and simulation modeling — advisory", es: "Gemelo digital y simulación — asesoría" },
+        { en: "Reliability and throughput of industrial assets", es: "Confiabilidad y throughput de activos industriales" },
+        { en: "Operating cadence in plants, fields, and mills", es: "Ritmo operativo en plantas, campos y molinos" },
+        { en: "Maintenance strategy and asset utilization", es: "Estrategia de mantenimiento y utilización de activos" },
+        { en: "Performance a board can review with industrial discipline", es: "Desempeño que un directorio puede revisar con disciplina industrial" },
       ],
-      cta: { en: "Accelerate Digital Transformation", es: "Acelerar la transformación digital" },
+      cta: { en: "Review the operating model", es: "Revisar el modelo operativo" },
       image: "/images/services/ops/digital-supply.png",
     },
     {
@@ -402,7 +402,7 @@ export const strategic: Service = {
       },
       bullets: [
         { en: "Supply chain network optimization and S&OP", es: "Optimización de red y S&OP" },
-        { en: "Asset performance management and predictive maintenance", es: "Desempeño de activos y mantenimiento predictivo" },
+        { en: "Asset performance and maintenance strategy", es: "Desempeño de activos y estrategia de mantenimiento" },
         { en: "Inventory optimization and working capital reduction", es: "Optimización de inventario y capital de trabajo" },
         { en: "Spare parts optimization and MRO strategies", es: "Repuestos y estrategias MRO" },
       ],
@@ -418,8 +418,8 @@ export const strategic: Service = {
         es: "Un conjunto breve de indicadores, un ritmo e incentivos que apuntan a la estrategia y no al ruido.",
       },
       body: {
-        en: "We help design the performance architecture: which indicators matter, how they cascade, and how management reviews them. The deliverable is a way of managing. It is not a dashboard product.",
-        es: "Ayudamos a diseñar la arquitectura del desempeño: qué indicadores importan, cómo se despliegan y cómo la dirección los revisa. El entregable es una forma de gestionar. No es un producto de tableros.",
+        en: "We help design the performance architecture: which indicators matter, how they cascade, and how management reviews them. The deliverable is a way of managing, using the numbers the industrial operation already produces.",
+        es: "Ayudamos a diseñar la arquitectura del desempeño: qué indicadores importan, cómo se despliegan y cómo la dirección los revisa. El entregable es una forma de gestionar, con los números que la operación industrial ya produce.",
       },
       bullets: [
         { en: "Indicator architecture", es: "Arquitectura de indicadores" },

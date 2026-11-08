@@ -20,7 +20,7 @@ export const bookingCategories: BookingCategory[] = [
       en: "Strategic & Operational Consulting",
       es: "Consultoría estratégica y operativa",
     },
-    image: "/images/services/strategic-operational.jpg",
+    image: "/images/services/ops/hero-impact.jpg",
     options: [
       { id: "business-strategy", label: { en: "Business Strategy & Transformation", es: "Estrategia de negocio y transformación" } },
       { id: "energy-industrial", label: { en: "Energy & Industrial Strategy", es: "Estrategia energética e industrial" } },
@@ -37,7 +37,7 @@ export const bookingCategories: BookingCategory[] = [
       en: "Investment & Financial Advisory",
       es: "Asesoría de inversión y finanzas",
     },
-    image: "/images/services/investment.jpg",
+    image: "/images/investment/handshake.png",
     options: [
       { id: "valuation", label: { en: "Valuation & Financial Modeling", es: "Valoración y modelación financiera" } },
       { id: "capital", label: { en: "Capital Raising (Debt & Equity)", es: "Levantamiento de capital (deuda y equity)" } },
@@ -52,7 +52,7 @@ export const bookingCategories: BookingCategory[] = [
   {
     id: "energy-transition",
     name: { en: "Energy Transition", es: "Transición energética" },
-    image: "/images/services/energy-transition.jpg",
+    image: "/images/editorial/wind.jpg",
     options: [
       { id: "decarbonization", label: { en: "Decarbonization Strategy", es: "Estrategia de descarbonización" } },
       { id: "og-transition", label: { en: "Oil & Gas Transition Advisory", es: "Asesoría de transición en petróleo y gas" } },
@@ -64,7 +64,7 @@ export const bookingCategories: BookingCategory[] = [
   {
     id: "oil-and-energy",
     name: { en: "Oil & Energy", es: "Petróleo y energía" },
-    image: "/images/services/oil-and-energy.jpg",
+    image: "/images/sectors/oil-gas.jpg",
     options: [
       { id: "ep", label: { en: "Exploration & Production Advisory", es: "Asesoría en exploración y producción" } },
       { id: "infrastructure", label: { en: "Infrastructure & Logistics", es: "Infraestructura y logística" } },
@@ -75,7 +75,7 @@ export const bookingCategories: BookingCategory[] = [
   {
     id: "mining-natural-resources",
     name: { en: "Mining & Natural Resources", es: "Minería y recursos naturales" },
-    image: "/images/services/mining.jpg",
+    image: "/images/sectors/mining.jpg",
     options: [
       { id: "gold", label: { en: "Gold & Precious Metals", es: "Oro y metales preciosos" } },
       { id: "emeralds", label: { en: "Emeralds & Gemstones", es: "Esmeraldas y gemas" } },
@@ -87,7 +87,7 @@ export const bookingCategories: BookingCategory[] = [
   {
     id: "sustainability-esg",
     name: { en: "Sustainability & ESG", es: "Sostenibilidad y ESG" },
-    image: "/images/services/sustainability.jpg",
+    image: "/images/sustainability/plant.png",
     options: [
       { id: "esg", label: { en: "ESG Strategy", es: "Estrategia ESG" } },
       { id: "net-zero", label: { en: "Net-Zero Roadmap", es: "Hoja de ruta de cero neto" } },

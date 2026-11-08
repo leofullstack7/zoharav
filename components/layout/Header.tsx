@@ -22,6 +22,7 @@ export function Header({ locale }: { locale: string }) {
   const [mega, setMega] = useState(false);
   const [activeService, setActiveService] = useState(services[0].slug);
   const [mobileGroup, setMobileGroup] = useState<string | null>(null);
+  const [mobileSub, setMobileSub] = useState<string | null>(null);
   const [serviceCovers, setServiceCovers] = useState<ServiceCoverPayload>({});
   const closeTimer = useRef<number | null>(null);
   const service = services.find((item) => item.slug === activeService) ?? services[0];
@@ -77,13 +78,32 @@ export function Header({ locale }: { locale: string }) {
   useEffect(() => {
     setOpen(false);
     setMega(false);
+    setMobileGroup(null);
+    setMobileSub(null);
   }, [pathname]);
+
+  // Lock page scroll while the full-screen mobile menu is open, hide the
+  // floating widgets that would otherwise sit on top of it, and let Escape
+  // close it.
+  useEffect(() => {
+    if (!open) return;
+    const root = document.documentElement;
+    root.classList.add("menu-open");
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      root.classList.remove("menu-open");
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   return (
     <>
       <header className={`site-header${solid || mega ? " is-solid" : ""}${hidden && !open && !mega ? " is-hidden" : ""}`}>
         <Link href="/" className="brand">
-          <Monogram />
+          <Monogram priority />
           <span>
             <span className="brand-name">{site.name}</span>
             <span className="brand-sub">{site.descriptor}</span>
@@ -177,7 +197,11 @@ export function Header({ locale }: { locale: string }) {
           aria-label={open ? (locale === "es" ? "Cerrar menú" : "Close menu") : locale === "es" ? "Abrir menú" : "Open menu"}
           onClick={() => setOpen((v) => !v)}
         >
-          {open ? "×" : "☰"}
+          <span className={`menu-icon${open ? " is-open" : ""}`} aria-hidden>
+            <i />
+            <i />
+            <i />
+          </span>
         </button>
       </header>
       {open ? (
@@ -185,8 +209,17 @@ export function Header({ locale }: { locale: string }) {
           {navigation.map((item) =>
             item.id === "services" ? (
               <div key={item.id} className="mobile-services">
-                <button type="button" onClick={() => setMobileGroup((value) => (value ? null : services[0].slug))}>
+                <button
+                  type="button"
+                  className="mobile-services-toggle"
+                  aria-expanded={Boolean(mobileGroup)}
+                  onClick={() => {
+                    setMobileGroup((value) => (value ? null : services[0].slug));
+                    setMobileSub(null);
+                  }}
+                >
                   {loc(item.label, locale)}
+                  <span aria-hidden>{mobileGroup ? "−" : "+"}</span>
                 </button>
                 {mobileGroup ? (
                   <div>
@@ -196,11 +229,16 @@ export function Header({ locale }: { locale: string }) {
                           <Link href={`/services/${entry.slug}`} onClick={() => setOpen(false)}>
                             {loc(entry.name, locale)}
                           </Link>
-                          <button type="button" onClick={() => setMobileGroup(entry.slug)} aria-label="Subservices">
-                            {mobileGroup === entry.slug ? "−" : "+"}
+                          <button
+                            type="button"
+                            aria-expanded={mobileSub === entry.slug}
+                            onClick={() => setMobileSub((value) => (value === entry.slug ? null : entry.slug))}
+                            aria-label={locale === "es" ? "Subservicios" : "Subservices"}
+                          >
+                            {mobileSub === entry.slug ? "−" : "+"}
                           </button>
                         </div>
-                        {mobileGroup === entry.slug
+                        {mobileSub === entry.slug
                           ? entry.subServices.map((sub) => (
                               <Link
                                 key={sub.id}
@@ -217,12 +255,17 @@ export function Header({ locale }: { locale: string }) {
                 ) : null}
               </div>
             ) : (
-              <Link key={item.id} href={item.href}>
+              <Link key={item.id} href={item.href} onClick={() => setOpen(false)}>
                 {loc(item.label, locale)}
               </Link>
             ),
           )}
-          <Link href="/booking">{locale === "es" ? "Reservar consulta" : "Book a consultation"}</Link>
+          <Link href="/booking" className="mobile-cta" onClick={() => setOpen(false)}>
+            {locale === "es" ? "Reservar consulta" : "Book a consultation"}
+          </Link>
+          <Link href="/" locale={locale === "es" ? "en" : "es"} className="mobile-lang" onClick={() => setOpen(false)}>
+            {locale === "es" ? "English" : "Español"}
+          </Link>
         </div>
       ) : null}
     </>

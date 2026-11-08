@@ -3,7 +3,7 @@ import { getPathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { site } from "@/content/site";
 
-const DEFAULT_OG_IMAGE = "/images/firm/office.svg";
+const DEFAULT_OG_IMAGE = "/images/firm/office.png";
 
 /** Trims to a sentence boundary near `max` chars without inventing new copy. */
 export function trimCopy(text: string, max = 160): string {

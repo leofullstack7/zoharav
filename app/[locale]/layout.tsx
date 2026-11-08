@@ -83,7 +83,7 @@ function organizationJsonLd() {
     "@type": "Organization",
     name: site.name,
     url: site.url,
-    logo: `${site.url}/brand/monogram.svg`,
+    logo: `${site.url}/brand/mark.png`,
     description: site.seo.description.en,
     ...(site.email ? { email: site.email } : {}),
     ...(sameAs.length ? { sameAs } : {}),

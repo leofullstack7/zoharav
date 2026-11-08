@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/lib/auth/requireAdmin";
 import { query } from "@/lib/db/client";
-import { groupImageSlotsByPage } from "@/lib/images/slots";
+import { groupImageSlotsByPage, previewForSlot, previewHrefForPage } from "@/lib/images/slots";
 
 /**
  * Admin-only: list every image slot grouped by page, each joined with its
@@ -29,15 +29,20 @@ export async function GET() {
 
     const groups = groupImageSlotsByPage().map(({ page, slots }) => ({
       page,
+      href: previewHrefForPage(page),
       slots: slots.map((slot) => {
         const row = rowsByKey.get(slot.key);
+        const preview = previewForSlot(slot);
         return {
           key: slot.key,
           label: slot.label,
           recommendedWidth: slot.recommendedWidth,
           recommendedHeight: slot.recommendedHeight,
           imageUrl: row?.image_url ?? null,
+          fallback: slot.fallback || null,
           updatedAt: row?.updated_at ?? null,
+          href: preview.href,
+          anchor: preview.anchor ?? null,
         };
       }),
     }));

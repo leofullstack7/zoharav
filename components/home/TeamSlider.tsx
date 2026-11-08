@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Monogram } from "@/components/brand/Monogram";
 import { Reveal } from "@/components/motion/Reveal";
 import { team, type TeamMember } from "@/content/team";
 import { gsap, loadDraggable, prefersReducedMotion } from "@/lib/motion";
@@ -15,7 +14,6 @@ const copy = {
   kicker: { en: "The people in the room", es: "Quiénes están en la mesa" },
   title: { en: "Our Team", es: "Nuestro equipo" },
   hint: { en: "Drag to explore the desk", es: "Arrastra para recorrer la mesa" },
-  openSeat: { en: "Open Seat", es: "Vacante" },
 };
 
 function initials(name: string) {
@@ -37,30 +35,28 @@ function TeamCard({
   locale: string;
   photoUrl?: string | null;
 }) {
-  const displayName = member.placeholder ? loc(copy.openSeat, locale) : member.name;
+  const portrait = photoUrl || member.image;
   return (
     <article className={styles.card}>
       <div className={styles.portrait}>
-        {photoUrl ? (
-          // A real admin-uploaded photo exists for this seat — show it
-          // plainly (no SVG art ever existed for team portraits, so there
-          // is nothing to layer it behind, unlike the rest of the site's
-          // ArtOverPhoto treatment).
-          <Image src={photoUrl} alt={displayName} fill sizes="200px" style={{ objectFit: "cover" }} />
+        {portrait ? (
+          <Image
+            src={portrait}
+            alt={member.name}
+            fill
+            sizes="220px"
+            style={{ objectFit: "cover", objectPosition: "50% 12%" }}
+          />
         ) : (
           <>
             <span className={styles.portraitSheen} aria-hidden />
-            {member.placeholder ? (
-              <Monogram className={styles.monogram} />
-            ) : (
-              <span className={styles.initials} aria-hidden>
-                {initials(member.name)}
-              </span>
-            )}
+            <span className={styles.initials} aria-hidden>
+              {initials(member.name)}
+            </span>
           </>
         )}
       </div>
-      <h3 className={styles.name}>{displayName}</h3>
+      <h3 className={styles.name}>{member.name}</h3>
       <p className={styles.role}>{loc(member.role, locale)}</p>
     </article>
   );

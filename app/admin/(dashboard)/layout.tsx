@@ -10,7 +10,7 @@ import { LogoutButton } from "@/components/admin/LogoutButton";
  */
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mx-auto flex min-h-screen max-w-5xl flex-col px-6 py-8">
+    <div className="mx-auto flex min-h-screen w-full max-w-[1480px] flex-col px-6 py-8">
       <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-zh-smoke pb-5">
         <div>
           <p className="text-sm font-semibold text-zh-cream">ZOHARAV &amp; CO.</p>

@@ -32,6 +32,10 @@ export type ImageSlot = {
   fallback: string;
   /** Relative path under scripts/.seed-images/ used only by the seed script. */
   seedSource?: string;
+  /** Public path used by the admin scaled preview (Spanish locale). */
+  href?: string;
+  /** Section id on that page so the preview can jump to the image. */
+  anchor?: string;
 };
 
 export const IMAGE_SLOTS: ImageSlot[] = [
@@ -41,7 +45,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Inicio",
     recommendedWidth: 1920,
     recommendedHeight: 1080,
-    fallback: "/images/hero/yacht.svg",
+    fallback: "/images/hero/yacht.png",
     seedSource: "hero/yacht.jpg",
   },
   {
@@ -50,7 +54,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Inicio",
     recommendedWidth: 1600,
     recommendedHeight: 1200,
-    fallback: "/images/firm/office.svg",
+    fallback: "/images/firm/office.png",
     seedSource: "firm/office.jpg",
   },
   {
@@ -59,8 +63,72 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Inicio",
     recommendedWidth: 1600,
     recommendedHeight: 1200,
-    fallback: "/images/contact/tower.svg",
+    fallback: "/images/contact/tower.png",
     seedSource: "contact/tower.jpg",
+  },
+  {
+    key: "home.pro-support-1",
+    label: "Inicio — Soporte profesional (columna 1)",
+    page: "Inicio",
+    recommendedWidth: 720,
+    recommendedHeight: 1100,
+    fallback: "/images/services/jet.png",
+  },
+  {
+    key: "home.pro-support-2",
+    label: "Inicio — Soporte profesional (columna 2)",
+    page: "Inicio",
+    recommendedWidth: 720,
+    recommendedHeight: 1100,
+    fallback: "/images/pillars/oil-energy.png",
+  },
+  {
+    key: "home.pro-support-3",
+    label: "Inicio — Soporte profesional (columna 3)",
+    page: "Inicio",
+    recommendedWidth: 720,
+    recommendedHeight: 1100,
+    fallback: "/images/hero/yacht.png",
+  },
+  {
+    key: "home.services-frame",
+    label: "Inicio — Marco de la sección Servicios",
+    page: "Inicio",
+    recommendedWidth: 1600,
+    recommendedHeight: 1200,
+    fallback: "/images/services/jet.png",
+  },
+  {
+    key: "home.oil",
+    label: "Inicio — Banda Petróleo y energía",
+    page: "Inicio",
+    recommendedWidth: 1600,
+    recommendedHeight: 1200,
+    fallback: "/images/hero/yacht.png",
+  },
+  {
+    key: "home.mining",
+    label: "Inicio — Banda Minería",
+    page: "Inicio",
+    recommendedWidth: 1600,
+    recommendedHeight: 1200,
+    fallback: "/images/mining/emeralds.png",
+  },
+  {
+    key: "home.sustainability",
+    label: "Inicio — Banda Sostenibilidad",
+    page: "Inicio",
+    recommendedWidth: 1600,
+    recommendedHeight: 1200,
+    fallback: "/images/sustainability/plant.png",
+  },
+  {
+    key: "home.investment",
+    label: "Inicio — Banda Inversión",
+    page: "Inicio",
+    recommendedWidth: 1600,
+    recommendedHeight: 1200,
+    fallback: "/images/investment/handshake.png",
   },
   {
     key: "about.hero",
@@ -68,7 +136,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "La Firma (About)",
     recommendedWidth: 1920,
     recommendedHeight: 1080,
-    fallback: "/images/firm/office.svg",
+    fallback: "/images/firm/office.png",
     seedSource: "firm/office.jpg",
   },
   {
@@ -77,7 +145,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "La Firma (About)",
     recommendedWidth: 1600,
     recommendedHeight: 1200,
-    fallback: "/images/investment/handshake.svg",
+    fallback: "/images/investment/handshake.png",
     seedSource: "pillars/investment.jpg",
   },
   {
@@ -86,7 +154,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "La Firma (About)",
     recommendedWidth: 1920,
     recommendedHeight: 960,
-    fallback: "/images/contact/tower.svg",
+    fallback: "/images/contact/tower.png",
     seedSource: "contact/tower.jpg",
   },
   {
@@ -95,7 +163,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Reservas (Booking)",
     recommendedWidth: 1920,
     recommendedHeight: 1080,
-    fallback: "/images/firm/office.svg",
+    fallback: "/images/editorial/boardroom.jpg",
     seedSource: "firm/office.jpg",
   },
   {
@@ -104,7 +172,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Contacto",
     recommendedWidth: 1920,
     recommendedHeight: 1080,
-    fallback: "/images/contact/tower.svg",
+    fallback: "/images/contact/tower.png",
     seedSource: "contact/tower.jpg",
   },
   {
@@ -113,7 +181,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "FAQ",
     recommendedWidth: 1920,
     recommendedHeight: 1080,
-    fallback: "/images/firm/office.svg",
+    fallback: "/images/home/references/faq.png",
     seedSource: "firm/office.jpg",
   },
   {
@@ -122,7 +190,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "404",
     recommendedWidth: 1920,
     recommendedHeight: 1080,
-    fallback: "/images/firm/office.svg",
+    fallback: "/images/firm/office.png",
     seedSource: "firm/office.jpg",
   },
   {
@@ -140,7 +208,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Sectores",
     recommendedWidth: 1920,
     recommendedHeight: 1080,
-    fallback: "/images/hero/yacht.svg",
+    fallback: "/images/hero/yacht.png",
     seedSource: "hero/yacht.jpg",
   },
   {
@@ -149,8 +217,120 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Sectores",
     recommendedWidth: 1920,
     recommendedHeight: 900,
-    fallback: "/images/mining/emeralds.svg",
+    fallback: "/images/mining/emeralds.png",
     seedSource: "pillars/mining.jpg",
+  },
+  {
+    key: "sectors.card.energy-utilities",
+    label: "Sectores — Energía y servicios públicos",
+    page: "Sectores",
+    recommendedWidth: 1200,
+    recommendedHeight: 750,
+    fallback: "/images/sectors/energy-utilities.jpg",
+  },
+  {
+    key: "sectors.card.oil-gas",
+    label: "Sectores — Petróleo y gas",
+    page: "Sectores",
+    recommendedWidth: 1200,
+    recommendedHeight: 750,
+    fallback: "/images/sectors/oil-gas.jpg",
+  },
+  {
+    key: "sectors.card.mining",
+    label: "Sectores — Minería",
+    page: "Sectores",
+    recommendedWidth: 1200,
+    recommendedHeight: 750,
+    fallback: "/images/sectors/mining.jpg",
+  },
+  {
+    key: "sectors.card.manufacturing",
+    label: "Sectores — Manufactura",
+    page: "Sectores",
+    recommendedWidth: 1200,
+    recommendedHeight: 750,
+    fallback: "/images/sectors/manufacturing.jpg",
+  },
+  {
+    key: "sectors.card.logistics",
+    label: "Sectores — Logística",
+    page: "Sectores",
+    recommendedWidth: 1200,
+    recommendedHeight: 750,
+    fallback: "/images/sectors/logistics.jpg",
+  },
+  {
+    key: "sectors.card.agriculture",
+    label: "Sectores — Agricultura",
+    page: "Sectores",
+    recommendedWidth: 1200,
+    recommendedHeight: 750,
+    fallback: "/images/sectors/agriculture.jpg",
+  },
+  {
+    key: "sectors.card.financial",
+    label: "Sectores — Servicios financieros",
+    page: "Sectores",
+    recommendedWidth: 1200,
+    recommendedHeight: 750,
+    fallback: "/images/sectors/financial.jpg",
+  },
+  {
+    key: "sectors.card.public-sector",
+    label: "Sectores — Sector público",
+    page: "Sectores",
+    recommendedWidth: 1200,
+    recommendedHeight: 750,
+    fallback: "/images/sectors/public-sector.jpg",
+  },
+  {
+    key: "booking.category.strategic-operational-consulting",
+    label: "Reservas — Tarjeta Consultoría estratégica",
+    page: "Reservas (Booking)",
+    recommendedWidth: 1200,
+    recommendedHeight: 800,
+    fallback: "/images/services/ops/hero-impact.jpg",
+  },
+  {
+    key: "booking.category.investment-financial-advisory",
+    label: "Reservas — Tarjeta Inversión",
+    page: "Reservas (Booking)",
+    recommendedWidth: 1200,
+    recommendedHeight: 800,
+    fallback: "/images/investment/handshake.png",
+  },
+  {
+    key: "booking.category.energy-transition",
+    label: "Reservas — Tarjeta Transición energética",
+    page: "Reservas (Booking)",
+    recommendedWidth: 1200,
+    recommendedHeight: 800,
+    fallback: "/images/editorial/wind.jpg",
+  },
+  {
+    key: "booking.category.oil-and-energy",
+    label: "Reservas — Tarjeta Petróleo y energía",
+    page: "Reservas (Booking)",
+    recommendedWidth: 1200,
+    recommendedHeight: 800,
+    fallback: "/images/sectors/oil-gas.jpg",
+  },
+  {
+    key: "booking.category.mining-natural-resources",
+    label: "Reservas — Tarjeta Minería",
+    page: "Reservas (Booking)",
+    recommendedWidth: 1200,
+    recommendedHeight: 800,
+    fallback: "/images/sectors/mining.jpg",
+  },
+  {
+    key: "booking.category.sustainability-esg",
+    label: "Reservas — Tarjeta Sostenibilidad",
+    page: "Reservas (Booking)",
+    recommendedWidth: 1200,
+    recommendedHeight: 800,
+    fallback: "/images/sustainability/plant.png",
   },
   {
     key: "services-index.hero",
@@ -158,7 +338,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Servicios (índice)",
     recommendedWidth: 1920,
     recommendedHeight: 1080,
-    fallback: "/images/services/jet.svg",
+    fallback: "/images/services/jet.png",
     seedSource: "services/jet.jpg",
   },
   {
@@ -167,7 +347,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Insights",
     recommendedWidth: 1920,
     recommendedHeight: 1080,
-    fallback: "/images/offices/medellin.svg",
+    fallback: "/images/offices/medellin.jpg",
     seedSource: "offices/medellin.jpg",
   },
   {
@@ -176,7 +356,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Presencia Global",
     recommendedWidth: 1920,
     recommendedHeight: 1080,
-    fallback: "/images/offices/miami.svg",
+    fallback: "/images/offices/miami.png",
     seedSource: "offices/miami.jpg",
   },
   {
@@ -185,7 +365,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Servicios",
     recommendedWidth: 1600,
     recommendedHeight: 1000,
-    fallback: "/images/hero/yacht.svg",
+    fallback: "/images/editorial/wind.jpg",
     seedSource: "hero/yacht.jpg",
   },
   {
@@ -194,7 +374,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Servicios",
     recommendedWidth: 1600,
     recommendedHeight: 1000,
-    fallback: "/images/pillars/oil-energy.svg",
+    fallback: "/images/sectors/oil-gas.jpg",
     seedSource: "pillars/oil-energy.jpg",
   },
   {
@@ -203,7 +383,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Servicios",
     recommendedWidth: 1600,
     recommendedHeight: 1000,
-    fallback: "/images/mining/emeralds.svg",
+    fallback: "/images/sectors/mining.jpg",
     seedSource: "mining/emeralds.jpg",
   },
   {
@@ -212,7 +392,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Servicios",
     recommendedWidth: 1600,
     recommendedHeight: 1000,
-    fallback: "/images/sustainability/plant.svg",
+    fallback: "/images/sustainability/plant.png",
     seedSource: "sustainability/plant.jpg",
   },
   {
@@ -221,7 +401,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Servicios",
     recommendedWidth: 1600,
     recommendedHeight: 1000,
-    fallback: "/images/investment/handshake.svg",
+    fallback: "/images/investment/handshake.png",
     seedSource: "investment/handshake.jpg",
   },
   {
@@ -230,7 +410,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Servicios",
     recommendedWidth: 1600,
     recommendedHeight: 1000,
-    fallback: "/images/services/jet.svg",
+    fallback: "/images/services/jet.png",
     seedSource: "services/jet.jpg",
   },
   {
@@ -239,7 +419,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Oficinas",
     recommendedWidth: 1200,
     recommendedHeight: 900,
-    fallback: "/images/offices/medellin.svg",
+    fallback: "/images/offices/medellin.jpg",
     seedSource: "offices/medellin.jpg",
   },
   {
@@ -248,7 +428,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Oficinas",
     recommendedWidth: 1200,
     recommendedHeight: 900,
-    fallback: "/images/offices/miami.svg",
+    fallback: "/images/offices/miami.png",
     seedSource: "offices/miami.jpg",
   },
   {
@@ -257,98 +437,148 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Oficinas",
     recommendedWidth: 1200,
     recommendedHeight: 900,
-    fallback: "/images/offices/san-juan.svg",
+    fallback: "/images/offices/sanjuan.jpg",
     seedSource: "offices/san-juan.jpg",
   },
-  // Team portraits: one slot per content/team.ts entry, confirmed (both
-  // placeholder and confirmed seats render through TeamSlider's CSS
-  // monogram/initials tile today — no photo file exists for anyone yet).
-  // No seedSource: these intentionally start at image_url = null so the
-  // placeholder keeps showing until a real photo is uploaded.
   {
     key: "team.d-de-jesus.photo",
     label: "Equipo — D. De Jesús (Director general)",
     page: "Equipo",
     recommendedWidth: 800,
-    recommendedHeight: 800,
-    fallback: "",
+    recommendedHeight: 1000,
+    fallback: "/images/team/CEO.png",
   },
   {
     key: "team.leandro-garces.photo",
     label: "Equipo — Leandro Garcés (Director de operaciones)",
     page: "Equipo",
     recommendedWidth: 800,
-    recommendedHeight: 800,
-    fallback: "",
+    recommendedHeight: 1000,
+    fallback: "/images/team/Leandro.png",
   },
   {
-    key: "team.andres-pineda.photo",
-    label: "Equipo — Andrés Pineda (Ingeniero industrial | Estratega de crecimiento)",
+    key: "team.adrian-cole.photo",
+    label: "Equipo — Adrian Cole (Principal, Estrategia de crecimiento)",
     page: "Equipo",
     recommendedWidth: 800,
-    recommendedHeight: 800,
-    fallback: "",
+    recommendedHeight: 1000,
+    fallback: "/images/team/personal3.png",
   },
   {
-    key: "team.seat-oil-energy.photo",
-    label: "Equipo — Vacante: Asesor senior, Petróleo y energía",
+    key: "team.marcus-reid.photo",
+    label: "Equipo — Marcus Reid (Director, Mercados de energía)",
     page: "Equipo",
     recommendedWidth: 800,
-    recommendedHeight: 800,
-    fallback: "",
+    recommendedHeight: 1000,
+    fallback: "/images/team/personal4.png",
   },
   {
-    key: "team.seat-mining.photo",
-    label: "Equipo — Vacante: Asesor senior, Minería y recursos naturales",
+    key: "team.isabelle-laurent.photo",
+    label: "Equipo — Isabelle Laurent (Directora de sostenibilidad y ESG)",
     page: "Equipo",
     recommendedWidth: 800,
-    recommendedHeight: 800,
-    fallback: "",
+    recommendedHeight: 1000,
+    fallback: "/images/team/personal5.png",
   },
   {
-    key: "team.seat-sustainability.photo",
-    label: "Equipo — Vacante: Asesor senior, Sostenibilidad y ESG",
+    key: "team.natalia-rossi.photo",
+    label: "Equipo — Natalia Rossi (Socia, Asesoría financiera)",
     page: "Equipo",
     recommendedWidth: 800,
-    recommendedHeight: 800,
-    fallback: "",
+    recommendedHeight: 1000,
+    fallback: "/images/team/personal6.png",
   },
   {
-    key: "team.seat-investment.photo",
-    label: "Equipo — Vacante: Asesor senior, Inversión y asesoría financiera",
+    key: "team.alexander-grant.photo",
+    label: "Equipo — Alexander Grant (Asesor senior, Mesa Miami)",
     page: "Equipo",
     recommendedWidth: 800,
-    recommendedHeight: 800,
-    fallback: "",
+    recommendedHeight: 1000,
+    fallback: "/images/team/personal7.png",
   },
   {
-    key: "team.seat-strategy.photo",
-    label: "Equipo — Vacante: Asesor senior, Consultoría estratégica y operativa",
+    key: "team.nicolas-moreau.photo",
+    label: "Equipo — Nicolas Moreau (Director, Consultoría estratégica)",
     page: "Equipo",
     recommendedWidth: 800,
-    recommendedHeight: 800,
-    fallback: "",
+    recommendedHeight: 1000,
+    fallback: "/images/team/personal8.png",
   },
   {
-    key: "team.seat-presence-miami.photo",
-    label: "Equipo — Vacante: Asesor senior, Mesa Miami",
+    key: "team.victoria-hale.photo",
+    label: "Equipo — Victoria Hale (Socia, Asesoría de inversión)",
     page: "Equipo",
     recommendedWidth: 800,
-    recommendedHeight: 800,
-    fallback: "",
+    recommendedHeight: 1000,
+    fallback: "/images/team/personal9.png",
   },
   {
-    key: "team.seat-presence-puerto-rico.photo",
-    label: "Equipo — Vacante: Asesor senior, Mesa Puerto Rico",
+    key: "team.thomas-elias.photo",
+    label: "Equipo — Thomas Elias (Asesor senior, Mesa Caribe)",
     page: "Equipo",
     recommendedWidth: 800,
-    recommendedHeight: 800,
-    fallback: "",
+    recommendedHeight: 1000,
+    fallback: "/images/team/personal10.png",
   },
 ];
 
+export function isRasterPath(path: string) {
+  return /\.(avif|gif|jpe?g|png|webp)$/i.test(path);
+}
+
+const HOME_ANCHORS: Record<string, string> = {
+  "home.hero": "content",
+  "home.pro-support-1": "professional-support",
+  "home.pro-support-2": "professional-support",
+  "home.pro-support-3": "professional-support",
+  "home.firm": "firm",
+  "home.services-frame": "services",
+  "home.oil": "oil",
+  "home.mining": "mining",
+  "home.sustainability": "sustainability-home",
+  "home.investment": "investment",
+  "home.contact-frame": "contact",
+};
+
+const PAGE_HREF: Record<string, string> = {
+  Inicio: "/es",
+  Equipo: "/es#team",
+  "La Firma (About)": "/es/about",
+  "Reservas (Booking)": "/es/booking",
+  Contacto: "/es/contact",
+  FAQ: "/es/faq",
+  "404": "/es/pagina-inexistente-preview",
+  "Legal (Privacidad/Términos/etc.)": "/es/legal/privacy",
+  Sectores: "/es/sectors",
+  "Servicios (índice)": "/es/services",
+  Servicios: "/es/services",
+  Insights: "/es/insights",
+  "Presencia Global": "/es/global-presence",
+  Oficinas: "/es/global-presence",
+};
+
+export function previewHrefForPage(page: string) {
+  return PAGE_HREF[page] ?? "/es";
+}
+
 export function getImageSlot(key: string): ImageSlot | undefined {
   return IMAGE_SLOTS.find((slot) => slot.key === key);
+}
+
+/** Where the admin scaled preview should load and which section to jump to. */
+export function previewForSlot(slot: ImageSlot): { href: string; anchor?: string } {
+  if (slot.href) return { href: slot.href, anchor: slot.anchor };
+  if (slot.key.startsWith("team.")) return { href: "/es", anchor: "team" };
+  if (slot.key.startsWith("home.")) return { href: "/es", anchor: HOME_ANCHORS[slot.key] };
+  if (slot.key.startsWith("about.")) return { href: "/es/about", anchor: slot.key === "about.mission" ? "mission" : slot.key === "about.stats" ? "stats" : undefined };
+  if (slot.key.startsWith("sectors.card.")) return { href: "/es/sectors", anchor: "sectors" };
+  if (slot.key.startsWith("booking.category.")) return { href: "/es/booking" };
+  if (slot.key.startsWith("services.") && slot.key.endsWith(".cover")) {
+    const slug = slot.key.slice("services.".length, -".cover".length);
+    return { href: `/es/services/${slug}` };
+  }
+  if (slot.key.startsWith("offices.")) return { href: "/es/global-presence" };
+  return { href: PAGE_HREF[slot.page] ?? "/es" };
 }
 
 export function groupImageSlotsByPage(): Array<{ page: string; slots: ImageSlot[] }> {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type Slot = {
   key: string;
@@ -8,31 +8,29 @@ type Slot = {
   recommendedWidth: number;
   recommendedHeight: number;
   imageUrl: string | null;
+  fallback: string | null;
   updatedAt: string | null;
+  href: string;
+  anchor: string | null;
 };
 
-type Group = { page: string; slots: Slot[] };
+type Group = { page: string; href: string; slots: Slot[] };
 
 type SlotStatus = { kind: "idle" } | { kind: "working" } | { kind: "error"; message: string } | { kind: "ok" };
 
-/**
- * "El admin debe poder elegir y subir qué imágenes van en cada parte del
- * sitio (inicio y cada página)."
- *
- * Lists every image slot from lib/images/slots.ts (fetched via
- * GET /api/admin/images, grouped by page), with the recommended size
- * shown as a visible hint, a live preview (or "sin imagen" placeholder),
- * and an upload/remove action per slot. Upload optimization (resize to
- * fit, convert to WebP) happens server-side in
- * app/api/admin/images/[slotKey]/route.ts — this page only posts the raw
- * file. <details>/<summary> accordion per page group, same resilient,
- * JS-light pattern as components/site/FaqAccordion.tsx.
- */
+const DESKTOP_W = 1440;
+const DESKTOP_H = 2400;
+const PREVIEW_SCALE = 0.32;
+
 export default function ImagesAdminPage() {
   const [groups, setGroups] = useState<Group[] | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [activePage, setActivePage] = useState<string | null>(null);
+  const [activeSlot, setActiveSlot] = useState<string | null>(null);
+  const [previewSrc, setPreviewSrc] = useState("/es");
   const [statuses, setStatuses] = useState<Record<string, SlotStatus>>({});
   const fileInputs = useRef<Record<string, HTMLInputElement | null>>({});
+  const frameRef = useRef<HTMLIFrameElement>(null);
 
   const load = useCallback(async () => {
     setLoadError(null);
@@ -43,7 +41,9 @@ export default function ImagesAdminPage() {
         setLoadError(data?.error || "No se pudieron cargar las imágenes.");
         return;
       }
-      setGroups(data.groups ?? []);
+      const nextGroups: Group[] = data.groups ?? [];
+      setGroups(nextGroups);
+      setActivePage((current) => current ?? nextGroups[0]?.page ?? null);
     } catch {
       setLoadError("No se pudo conectar con el servidor.");
     }
@@ -53,8 +53,44 @@ export default function ImagesAdminPage() {
     load();
   }, [load]);
 
+  const currentGroup = useMemo(
+    () => groups?.find((group) => group.page === activePage) ?? groups?.[0] ?? null,
+    [groups, activePage],
+  );
+
+  useEffect(() => {
+    if (!currentGroup) return;
+    setPreviewSrc(currentGroup.href);
+    setActiveSlot(null);
+  }, [currentGroup?.page, currentGroup?.href]);
+
   function setStatus(slotKey: string, status: SlotStatus) {
     setStatuses((prev) => ({ ...prev, [slotKey]: status }));
+  }
+
+  function jumpToSlot(slot: Slot) {
+    setActiveSlot(slot.key);
+    const next = slot.anchor ? `${slot.href}#${slot.anchor}` : slot.href;
+    setPreviewSrc(next);
+    const frame = frameRef.current;
+    if (!frame?.contentWindow || !slot.anchor) return;
+    try {
+      frame.contentWindow.document.getElementById(slot.anchor)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch {
+      /* cross-origin during first paint is ignored */
+    }
+  }
+
+  function onFrameLoad() {
+    const slot = currentGroup?.slots.find((item) => item.key === activeSlot);
+    if (!slot?.anchor) return;
+    const frame = frameRef.current;
+    if (!frame?.contentWindow) return;
+    try {
+      frame.contentWindow.document.getElementById(slot.anchor)?.scrollIntoView({ block: "start" });
+    } catch {
+      /* ignore */
+    }
   }
 
   async function handleUpload(slotKey: string) {
@@ -81,6 +117,8 @@ export default function ImagesAdminPage() {
       if (input) input.value = "";
       setStatus(slotKey, { kind: "ok" });
       await load();
+      const frame = frameRef.current;
+      if (frame) frame.src = frame.src;
     } catch {
       setStatus(slotKey, { kind: "error", message: "No se pudo conectar con el servidor." });
     }
@@ -98,97 +136,145 @@ export default function ImagesAdminPage() {
       }
       setStatus(slotKey, { kind: "idle" });
       await load();
+      const frame = frameRef.current;
+      if (frame) frame.src = frame.src;
     } catch {
       setStatus(slotKey, { kind: "error", message: "No se pudo conectar con el servidor." });
     }
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5">
       <div>
-        <h1 className="text-lg font-semibold text-zh-cream">Imágenes</h1>
+        <h1 className="text-lg font-semibold text-zh-cream">Imágenes por sección</h1>
         <p className="text-sm text-zh-muted">
-          Elige y sube la imagen de cada sección del sitio. Toda imagen se optimiza automáticamente
-          (se ajusta al tamaño recomendado y se convierte a WebP) antes de publicarse.
+          Cada interruptor abre una página de la firma. La vista de la derecha es el sitio real a
+          tamaño de escritorio, reducido — no se adapta a móvil. Elige una sección para saltar a esa
+          imagen y sustituirla.
         </p>
       </div>
 
-      {loadError ? <p role="alert" className="text-sm text-[#e07a7a]">{loadError}</p> : null}
+      {loadError ? (
+        <p role="alert" className="text-sm text-[#e07a7a]">
+          {loadError}
+        </p>
+      ) : null}
 
       {groups === null && !loadError ? <p className="text-sm text-zh-muted">Cargando…</p> : null}
 
-      {groups?.map((group) => (
-        <details key={group.page} className="zh-admin-card" open>
-          <summary className="cursor-pointer px-5 py-4 text-sm font-semibold text-zh-cream">
-            {group.page}
-          </summary>
-          <div className="flex flex-col gap-4 border-t border-zh-smoke p-5">
-            {group.slots.map((slot) => {
+      {groups ? (
+        <div className="zh-admin-page-switch" role="tablist" aria-label="Páginas del sitio">
+          {groups.map((group) => (
+            <button
+              key={group.page}
+              type="button"
+              role="tab"
+              aria-selected={group.page === currentGroup?.page}
+              className={`zh-admin-page-chip${group.page === currentGroup?.page ? " is-on" : ""}`}
+              onClick={() => setActivePage(group.page)}
+            >
+              {group.page}
+            </button>
+          ))}
+        </div>
+      ) : null}
+
+      {currentGroup ? (
+        <div className="zh-admin-image-board">
+          <div className="zh-admin-preview-col">
+            <p className="zh-admin-preview-label">
+              Vista de escritorio · {DESKTOP_W}px · {Math.round(PREVIEW_SCALE * 100)}%
+            </p>
+            <div
+              className="zh-admin-preview-stage"
+              style={{
+                width: DESKTOP_W * PREVIEW_SCALE,
+                height: 900 * PREVIEW_SCALE,
+              }}
+            >
+              <iframe
+                ref={frameRef}
+                title={`Vista de ${currentGroup.page}`}
+                src={previewSrc}
+                onLoad={onFrameLoad}
+                className="zh-admin-preview-frame"
+                style={{
+                  width: DESKTOP_W,
+                  height: DESKTOP_H,
+                  transform: `scale(${PREVIEW_SCALE})`,
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="zh-admin-slot-col">
+            {currentGroup.slots.map((slot) => {
               const status = statuses[slot.key] ?? { kind: "idle" };
+              const preview = slot.imageUrl || slot.fallback;
+              const missingUpload = !slot.imageUrl;
               return (
                 <div
                   key={slot.key}
-                  className="flex flex-col gap-3 border-b border-zh-smoke pb-4 last:border-b-0 last:pb-0 sm:flex-row sm:items-start"
+                  className={`zh-admin-slot-row${activeSlot === slot.key ? " is-on" : ""}`}
                 >
-                  <div className="relative h-24 w-40 shrink-0 overflow-hidden rounded bg-zh-graphite">
+                  <button type="button" className="zh-admin-slot-jump" onClick={() => jumpToSlot(slot)}>
+                    <span className="zh-admin-slot-thumb">
+                      {preview ? (
+                        // eslint-disable-next-line @next/next/no-img-element -- admin thumbnail
+                        <img src={preview} alt="" />
+                      ) : (
+                        <span>Sin imagen</span>
+                      )}
+                    </span>
+                    <span className="zh-admin-slot-copy">
+                      <strong>{slot.label}</strong>
+                      <em>
+                        {slot.recommendedWidth}×{slot.recommendedHeight}px
+                        {missingUpload ? " · usando predeterminada" : " · imagen del admin"}
+                      </em>
+                    </span>
+                  </button>
+
+                  <div className="zh-admin-slot-actions">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={(el) => {
+                        fileInputs.current[slot.key] = el;
+                      }}
+                      className="text-xs text-zh-muted"
+                    />
+                    <button
+                      type="button"
+                      className="zh-admin-btn"
+                      disabled={status.kind === "working"}
+                      onClick={() => handleUpload(slot.key)}
+                    >
+                      {status.kind === "working" ? "Subiendo…" : "Subir"}
+                    </button>
                     {slot.imageUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element -- admin-only preview thumbnail, not worth next/image config for arbitrary Storage URLs here.
-                      <img src={slot.imageUrl} alt="" className="h-full w-full object-cover" />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center px-2 text-center text-[0.65rem] text-zh-muted">
-                        Sin imagen — usando la predeterminada
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex-1">
-                    <p className="text-sm text-zh-cream">{slot.label}</p>
-                    <p className="text-xs text-zh-muted">
-                      Tamaño recomendado: {slot.recommendedWidth}×{slot.recommendedHeight}px
-                    </p>
-
-                    <div className="mt-2 flex flex-wrap items-center gap-2">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        ref={(el) => {
-                          fileInputs.current[slot.key] = el;
-                        }}
-                        className="text-xs text-zh-muted"
-                      />
                       <button
                         type="button"
-                        className="zh-admin-btn"
+                        className="zh-admin-btn-danger"
                         disabled={status.kind === "working"}
-                        onClick={() => handleUpload(slot.key)}
+                        onClick={() => handleRemove(slot.key)}
                       >
-                        {status.kind === "working" ? "Subiendo…" : "Subir"}
+                        Quitar
                       </button>
-                      {slot.imageUrl ? (
-                        <button
-                          type="button"
-                          className="zh-admin-btn-danger"
-                          disabled={status.kind === "working"}
-                          onClick={() => handleRemove(slot.key)}
-                        >
-                          Quitar
-                        </button>
-                      ) : null}
-                    </div>
-
+                    ) : null}
                     {status.kind === "error" ? (
-                      <p role="alert" className="mt-1 text-xs text-[#e07a7a]">
+                      <p role="alert" className="text-xs text-[#e07a7a]">
                         {status.message}
                       </p>
                     ) : null}
-                    {status.kind === "ok" ? <p className="mt-1 text-xs text-[#4fd3a8]">Guardado.</p> : null}
+                    {status.kind === "ok" ? <p className="text-xs text-[#4fd3a8]">Guardado.</p> : null}
                   </div>
                 </div>
               );
             })}
           </div>
-        </details>
-      ))}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -82,7 +82,7 @@
 
 .card {
   flex: 0 0 auto;
-  width: clamp(132px, 15vw, 172px);
+  width: clamp(148px, 17vw, 196px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -95,7 +95,7 @@
 .portrait {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 4 / 5;
   border-radius: var(--zh-radius);
   overflow: hidden;
   background: linear-gradient(160deg, var(--zh-graphite) 0%, var(--zh-onyx) 60%, var(--zh-black) 100%);
@@ -173,7 +173,10 @@
 
 @media (max-width: 720px) {
   .section { padding-top: 2.4rem; padding-bottom: 2.8rem; }
-  .card { width: 128px; }
+  .card { width: 168px; }
+  .name { font-size: 1rem; }
+  .role { font-size: 0.8rem; }
+  .hint { font-size: 0.74rem; }
   .hint { text-align: left; }
 }
 

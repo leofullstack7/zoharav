@@ -1,6 +1,5 @@
 export type TeamMember = {
   id: string;
-  /** Empty string for reserved/placeholder seats — never a fabricated person. */
   name: string;
   role: { en: string; es: string };
   image: string;
@@ -8,24 +7,12 @@ export type TeamMember = {
   bio?: { en: string; es: string };
   /** Optional. Hidden when empty. */
   linkedin?: string;
-  /**
-   * True for seats reserved for advisors who have not joined yet (or whose
-   * photo/bio has not been supplied). Rendered with the firm monogram
-   * instead of initials, and a generic "Open Seat" label instead of a name —
-   * never a stand-in person.
-   */
-  placeholder?: boolean;
 };
 
 /**
- * Ten seats total: three confirmed members today, seven reserved seats so
- * the team slider reads as a full desk while the firm fills the remaining
- * roles. Swap a reserved seat's `name`, `image`, and `placeholder: false`
- * in place — no component changes required.
- *
- * No photography exists yet for anyone below (see TeamSlider, which renders
- * a CSS monogram/initials tile for every seat rather than pointing at an
- * image file that doesn't exist on disk).
+ * Ten portraits from /public/images/team. The first two keep the confirmed
+ * principals; the remaining seats use international names and practice titles
+ * until the firm supplies official bios.
  */
 export const team: TeamMember[] = [
   {
@@ -35,99 +22,88 @@ export const team: TeamMember[] = [
       en: "Chief Executive Officer",
       es: "Director general",
     },
-    image: "/images/team/d-de-jesus.jpg",
+    image: "/images/team/CEO.png",
   },
   {
     id: "leandro-garces",
     name: "Leandro Garcés",
-    // NOTE: previously "Chief Technology & Systems Officer", a holdover from
-    // the firm's earlier technology-vendor positioning. Retitled to a
-    // sector-neutral operating role that fits an advisory firm. Flagged for
-    // owner review — swap for the preferred title at any time.
     role: {
       en: "Chief Operating Officer",
       es: "Director de operaciones",
     },
-    image: "/images/team/leandro-garces.jpg",
+    image: "/images/team/Leandro.png",
   },
   {
-    id: "andres-pineda",
-    name: "Andrés Pineda",
+    id: "adrian-cole",
+    name: "Adrian Cole",
     role: {
-      en: "Industrial Engineer | Growth Strategist",
-      es: "Ingeniero industrial | Estratega de crecimiento",
+      en: "Principal, Growth Strategy",
+      es: "Principal, Estrategia de crecimiento",
     },
-    image: "/images/team/andres-pineda.jpg",
+    image: "/images/team/personal3.png",
   },
   {
-    id: "seat-oil-energy",
-    name: "",
+    id: "marcus-reid",
+    name: "Marcus Reid",
     role: {
-      en: "Senior Advisor, Oil & Energy",
-      es: "Asesor senior, Petróleo y energía",
+      en: "Director, Energy Markets",
+      es: "Director, Mercados de energía",
     },
-    image: "/images/team/seat-oil-energy.jpg",
-    placeholder: true,
+    image: "/images/team/personal4.png",
   },
   {
-    id: "seat-mining",
-    name: "",
+    id: "isabelle-laurent",
+    name: "Isabelle Laurent",
     role: {
-      en: "Senior Advisor, Mining & Natural Resources",
-      es: "Asesor senior, Minería y recursos naturales",
+      en: "Head of Sustainability & ESG",
+      es: "Directora de sostenibilidad y ESG",
     },
-    image: "/images/team/seat-mining.jpg",
-    placeholder: true,
+    image: "/images/team/personal5.png",
   },
   {
-    id: "seat-sustainability",
-    name: "",
+    id: "natalia-rossi",
+    name: "Natalia Rossi",
     role: {
-      en: "Senior Advisor, Sustainability & ESG",
-      es: "Asesor senior, Sostenibilidad y ESG",
+      en: "Partner, Financial Advisory",
+      es: "Socia, Asesoría financiera",
     },
-    image: "/images/team/seat-sustainability.jpg",
-    placeholder: true,
+    image: "/images/team/personal6.png",
   },
   {
-    id: "seat-investment",
-    name: "",
-    role: {
-      en: "Senior Advisor, Investment & Financial Advisory",
-      es: "Asesor senior, Inversión y asesoría financiera",
-    },
-    image: "/images/team/seat-investment.jpg",
-    placeholder: true,
-  },
-  {
-    id: "seat-strategy",
-    name: "",
-    role: {
-      en: "Senior Advisor, Strategic & Operational Consulting",
-      es: "Asesor senior, Consultoría estratégica y operativa",
-    },
-    image: "/images/team/seat-strategy.jpg",
-    placeholder: true,
-  },
-  {
-    id: "seat-presence-miami",
-    name: "",
+    id: "alexander-grant",
+    name: "Alexander Grant",
     role: {
       en: "Senior Advisor, Miami Desk",
       es: "Asesor senior, Mesa Miami",
     },
-    image: "/images/team/seat-presence-miami.jpg",
-    placeholder: true,
+    image: "/images/team/personal7.png",
   },
   {
-    id: "seat-presence-puerto-rico",
-    name: "",
+    id: "nicolas-moreau",
+    name: "Nicolas Moreau",
     role: {
-      en: "Senior Advisor, Puerto Rico Desk",
-      es: "Asesor senior, Mesa Puerto Rico",
+      en: "Director, Strategic Consulting",
+      es: "Director, Consultoría estratégica",
     },
-    image: "/images/team/seat-presence-puerto-rico.jpg",
-    placeholder: true,
+    image: "/images/team/personal8.png",
+  },
+  {
+    id: "victoria-hale",
+    name: "Victoria Hale",
+    role: {
+      en: "Partner, Investment Advisory",
+      es: "Socia, Asesoría de inversión",
+    },
+    image: "/images/team/personal9.png",
+  },
+  {
+    id: "thomas-elias",
+    name: "Thomas Elias",
+    role: {
+      en: "Senior Advisor, Caribbean Desk",
+      es: "Asesor senior, Mesa Caribe",
+    },
+    image: "/images/team/personal10.png",
   },
 ];
 

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
-import type { Service, ServiceSlug, SubService } from "@/content/types";
+import type { Service, ServiceImpactSlide, ServiceSlug, SubService } from "@/content/types";
 import { Link } from "@/i18n/navigation";
 import { loc } from "@/lib/i18n/loc";
 import { gsap, prefersReducedMotion, registerGsap, ScrollTrigger } from "@/lib/motion";
@@ -11,20 +11,21 @@ const line = (value: { en: string; es: string }, locale: string) => loc(value, l
 
 const SERVICE_GALLERY: Record<ServiceSlug, string[]> = {
   "energy-transition": [
-    "/images/hero/yacht.png",
+    "/images/editorial/wind.jpg",
     "/images/sustainability/plant.png",
-    "/images/pillars/oil-energy.png",
+    "/images/sectors/oil-gas.jpg",
     "/images/firm/office.png",
     "/images/services/jet.png",
   ],
   "oil-and-energy": [
-    "/images/pillars/oil-energy.png",
+    "/images/sectors/oil-gas.jpg",
     "/images/hero/yacht.png",
     "/images/firm/office.png",
     "/images/services/jet.png",
     "/images/contact/tower.png",
   ],
   "mining-natural-resources": [
+    "/images/sectors/mining.jpg",
     "/images/mining/emeralds.png",
     "/images/firm/office.png",
     "/images/investment/handshake.png",
@@ -69,14 +70,17 @@ function pickImage(service: Service, index: number, preferred?: string) {
   return gallery[index % gallery.length];
 }
 
-function fallbackSlides(service: Service) {
+function fallbackSlides(service: Service): ServiceImpactSlide[] {
   if (service.impactSlides?.length) {
     return service.impactSlides.map((slide, i) => ({
       ...slide,
       image: pickImage(service, i, slide.image),
     }));
   }
-  return (service.slides ?? [{ title: service.heroTitle, body: service.heroIntro }]).map((slide, i) => ({
+  const source = service.slides?.length
+    ? service.slides
+    : [{ title: service.heroTitle, body: service.heroIntro }];
+  return source.map((slide, i) => ({
     title: slide.title,
     body: slide.body,
     image: pickImage(service, i),
