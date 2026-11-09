@@ -6,6 +6,8 @@ import { getService, services } from "@/content/services";
 import type { Locale } from "@/content/types";
 import { loc } from "@/lib/i18n/loc";
 import { buildSystemPrompt } from "@/lib/chat/systemPrompt";
+import { readJsonBody, rejectIfRateLimited } from "@/lib/security/http";
+import { FIELD_LIMITS, readBoundedString } from "@/lib/security/input";
 
 /**
  * Octano chat endpoint.
@@ -128,19 +130,22 @@ function technicalErrorText(locale: Locale): string {
 }
 
 export async function POST(request: Request) {
-  let body: ChatRequestBody;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
+  const limited = await rejectIfRateLimited(request, "chat", 20, 10 * 60 * 1000);
+
+  const parsed = await readJsonBody<ChatRequestBody>(request, 200_000);
+  if (!parsed.ok) return parsed.response;
+  const body = parsed.value;
 
   const locale: Locale = isLocale(body.locale) ? body.locale : "en";
+  if (limited) {
+    return NextResponse.json<ChatResponseBody>(
+      { message: technicalErrorText(locale) },
+      { status: 429, headers: { "Retry-After": limited.headers.get("Retry-After") ?? "60" } },
+    );
+  }
   const messages = sanitizeMessages(body.messages);
-  const botName =
-    typeof body.botName === "string" && body.botName.trim().length > 0
-      ? body.botName.trim()
-      : process.env.BOT_DEFAULT_NAME || "Octano";
+  const submittedName = readBoundedString(body.botName, FIELD_LIMITS.botName);
+  const botName = submittedName || process.env.BOT_DEFAULT_NAME || "Octano";
 
   if (messages.length === 0) {
     return NextResponse.json({ error: "At least one message is required." }, { status: 400 });

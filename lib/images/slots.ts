@@ -72,7 +72,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Inicio",
     recommendedWidth: 720,
     recommendedHeight: 1100,
-    fallback: "/images/services/jet.png",
+    fallback: "/images/editorial/boardroom.jpg",
   },
   {
     key: "home.pro-support-2",
@@ -80,7 +80,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Inicio",
     recommendedWidth: 720,
     recommendedHeight: 1100,
-    fallback: "/images/pillars/oil-energy.png",
+    fallback: "/images/sectors/oil-gas.jpg",
   },
   {
     key: "home.pro-support-3",
@@ -88,7 +88,7 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     page: "Inicio",
     recommendedWidth: 720,
     recommendedHeight: 1100,
-    fallback: "/images/hero/yacht.png",
+    fallback: "/images/editorial/wind.jpg",
   },
   {
     key: "home.services-frame",

@@ -6,14 +6,15 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:security": "node --experimental-strip-types --test lib/security/input.test.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
     "gsap": "^3.15.0",
     "leaflet": "^1.9.4",
     "lenis": "^1.3.26",
-    "next": "15.5.27",
+    "next": "^15.5.29",
     "next-intl": "^4.14.9",
     "openai": "^7.45.1",
     "pg": "^8.23.1",
@@ -33,7 +34,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.5.27",
+    "eslint-config-next": "^15.5.29",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

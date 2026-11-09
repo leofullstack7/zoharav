@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { PoolClient } from "pg";
 import { withTransaction } from "@/lib/db/client";
+import { readJsonBody, rejectIfRateLimited } from "@/lib/security/http";
+import { FIELD_LIMITS, isNonEmptyString, isValidEmail, readBoundedString } from "@/lib/security/input";
 
 /**
  * Books an availability slot. This is the single, stable contract both the
@@ -34,32 +36,24 @@ export type CreateBookingPayload = {
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-function isNonEmptyString(value: unknown): value is string {
-  return typeof value === "string" && value.trim().length > 0;
-}
-
-function isValidEmail(value: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
 type SlotRow = {
   id: string;
   is_booked: boolean;
 };
 
 export async function POST(request: Request) {
-  let body: Partial<CreateBookingPayload>;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
+  const limited = await rejectIfRateLimited(request, "bookings", 8, 15 * 60 * 1000);
+  if (limited) return limited;
 
-  const slotId = typeof body.slotId === "string" ? body.slotId.trim() : "";
-  const name = typeof body.name === "string" ? body.name.trim() : "";
-  const email = typeof body.email === "string" ? body.email.trim() : "";
-  const phone = typeof body.phone === "string" ? body.phone.trim() : "";
-  const topic = typeof body.topic === "string" ? body.topic.trim() : "";
+  const parsed = await readJsonBody<Partial<CreateBookingPayload>>(request, 8_192);
+  if (!parsed.ok) return parsed.response;
+  const body = parsed.value;
+
+  const slotId = readBoundedString(body.slotId, 36);
+  const name = readBoundedString(body.name, FIELD_LIMITS.name);
+  const email = readBoundedString(body.email, FIELD_LIMITS.email);
+  const phone = readBoundedString(body.phone, FIELD_LIMITS.phone);
+  const topic = readBoundedString(body.topic, FIELD_LIMITS.topic);
 
   if (!isNonEmptyString(slotId) || !UUID_RE.test(slotId)) {
     return NextResponse.json({ error: "A valid slotId is required." }, { status: 400 });

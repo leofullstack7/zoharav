@@ -1,6 +1,8 @@
 import { site } from "@/content/site";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { readJsonBody, rejectIfRateLimited } from "@/lib/security/http";
+import { FIELD_LIMITS, isNonEmptyString, isValidEmail, readBoundedString } from "@/lib/security/input";
 
 /**
  * Receives newsletter signups from NewsletterForm and relays them by email
@@ -24,23 +26,15 @@ const FROM_ADDRESS = "Zoharav Newsletter <onboarding@resend.dev>";
 // right destination for operational notifications like this one.
 const TO_ADDRESS = site.supportEmail;
 
-function isNonEmptyString(value: unknown): value is string {
-  return typeof value === "string" && value.trim().length > 0;
-}
-
-function isValidEmail(value: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
 export async function POST(request: Request) {
-  let body: Partial<NewsletterSignupPayload>;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
+  const limited = await rejectIfRateLimited(request, "newsletter", 6, 15 * 60 * 1000);
+  if (limited) return limited;
 
-  const email = typeof body.email === "string" ? body.email.trim() : "";
+  const parsed = await readJsonBody<Partial<NewsletterSignupPayload>>(request, 2_048);
+  if (!parsed.ok) return parsed.response;
+  const body = parsed.value;
+
+  const email = readBoundedString(body.email, FIELD_LIMITS.email);
 
   if (!isNonEmptyString(email) || !isValidEmail(email)) {
     return NextResponse.json({ error: "A valid email address is required." }, { status: 400 });

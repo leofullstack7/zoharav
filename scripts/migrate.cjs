@@ -158,6 +158,12 @@ async function main() {
         value text,
         updated_at timestamptz not null default now()
       );
+
+      create table if not exists rate_limits (
+        bucket text primary key,
+        window_start timestamptz not null,
+        hit_count integer not null
+      );
     `);
 
     await client.query(
@@ -182,7 +188,7 @@ async function main() {
     select table_name
     from information_schema.tables
     where table_schema = 'public'
-      and table_name in ('availability_slots', 'bookings', 'bot_settings')
+      and table_name in ('availability_slots', 'bookings', 'bot_settings', 'rate_limits')
     order by table_name;
   `);
   console.log("Tables present:", tableCheck.rows.map((r) => r.table_name));

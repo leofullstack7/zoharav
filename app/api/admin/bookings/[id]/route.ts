@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { PoolClient } from "pg";
 import { getAdminSession } from "@/lib/auth/requireAdmin";
 import { withTransaction } from "@/lib/db/client";
+import { FIELD_LIMITS, clip, stripControlChars } from "@/lib/security/input";
 
 /**
  * Admin-only: update a booking. Two independent concerns share this one
@@ -100,7 +101,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     if (raw !== null && typeof raw !== "string") {
       return NextResponse.json({ error: `${key} debe ser un texto o null.` }, { status: 400 });
     }
-    textUpdates.push({ column, value: raw });
+    textUpdates.push({
+      column,
+      value: raw === null ? null : clip(stripControlChars(raw).trim(), FIELD_LIMITS.adminText),
+    });
   }
 
   const wantsDealValue = "dealValue" in record;

@@ -6,6 +6,7 @@ import {
   createAdminSessionCookieValue,
   timingSafeEqualString,
 } from "@/lib/auth/adminSession";
+import { readJsonBody, rejectIfRateLimited } from "@/lib/security/http";
 
 /**
  * Admin login. Reads ADMIN_USERNAME / ADMIN_PASSWORD_HASH from the
@@ -33,12 +34,14 @@ import {
 const GENERIC_INVALID_CREDENTIALS = { error: "Credenciales inválidas." };
 
 export async function POST(request: Request) {
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
+  const limited = await rejectIfRateLimited(request, "admin-login", 8, 15 * 60 * 1000);
+  if (limited) return limited;
+
+  const parsed = await readJsonBody<unknown>(request, 4_096);
+  if (!parsed.ok) {
     return NextResponse.json({ error: "Cuerpo de solicitud inválido." }, { status: 400 });
   }
+  const body = parsed.value;
 
   const username =
     typeof body === "object" && body !== null && "username" in body && typeof body.username === "string"

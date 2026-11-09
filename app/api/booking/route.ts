@@ -1,6 +1,9 @@
+import { bookingCategories } from "@/content/booking";
 import { site } from "@/content/site";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { readJsonBody, rejectIfRateLimited } from "@/lib/security/http";
+import { FIELD_LIMITS, isNonEmptyString, isValidEmail, oneLine, readBoundedMultiline, readBoundedString } from "@/lib/security/input";
 
 /**
  * Receives booking-request submissions from BookingForm and relays them by
@@ -28,28 +31,25 @@ const FROM_ADDRESS = "Zoharav Bookings <onboarding@resend.dev>";
 // right destination for operational lead notifications like this one.
 const TO_ADDRESS = site.supportEmail;
 
-function isNonEmptyString(value: unknown): value is string {
-  return typeof value === "string" && value.trim().length > 0;
-}
-
-function isValidEmail(value: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
+const ALLOWED_CATEGORIES = new Set(
+  bookingCategories.flatMap((category) => [category.id, category.name.en, category.name.es]),
+);
 
 export async function POST(request: Request) {
-  let body: Partial<BookingRequestPayload>;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
+  const limited = await rejectIfRateLimited(request, "booking-email", 8, 15 * 60 * 1000);
+  if (limited) return limited;
 
-  const name = typeof body.name === "string" ? body.name.trim() : "";
-  const email = typeof body.email === "string" ? body.email.trim() : "";
-  const phone = typeof body.phone === "string" ? body.phone.trim() : "";
-  const company = typeof body.company === "string" ? body.company.trim() : "";
-  const message = typeof body.message === "string" ? body.message.trim() : "";
-  const category = typeof body.category === "string" ? body.category.trim() : "";
+  const parsed = await readJsonBody<Partial<BookingRequestPayload>>(request, 16_384);
+  if (!parsed.ok) return parsed.response;
+  const body = parsed.value;
+
+  const name = readBoundedString(body.name, FIELD_LIMITS.name);
+  const email = readBoundedString(body.email, FIELD_LIMITS.email);
+  const phone = readBoundedString(body.phone, FIELD_LIMITS.phone);
+  const company = readBoundedString(body.company, FIELD_LIMITS.company);
+  const message = readBoundedMultiline(body.message, FIELD_LIMITS.message);
+  const categoryRaw = readBoundedString(body.category, FIELD_LIMITS.category);
+  const category = ALLOWED_CATEGORIES.has(categoryRaw) ? categoryRaw : "";
 
   if (!isNonEmptyString(email) || !isValidEmail(email)) {
     return NextResponse.json({ error: "A valid email address is required." }, { status: 400 });
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const subject = category ? `Booking request — ${category}` : "Booking request";
+  const subject = category ? `Booking request — ${oneLine(category)}` : "Booking request";
   const lines = [
     `Session requested: ${category || "(not specified)"}`,
     "",

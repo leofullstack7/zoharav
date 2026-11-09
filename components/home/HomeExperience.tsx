@@ -235,13 +235,13 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
           </Reveal>
           <div className="pro-support-gallery" aria-hidden>
             <figure>
-              <img src={images.proSupport[0] ?? "/images/services/jet.png"} alt="" />
+              <img src={images.proSupport[0] ?? "/images/editorial/boardroom.jpg"} alt="" />
             </figure>
             <figure>
-              <img src={images.proSupport[1] ?? "/images/pillars/oil-energy.png"} alt="" />
+              <img src={images.proSupport[1] ?? "/images/sectors/oil-gas.jpg"} alt="" />
             </figure>
             <figure>
-              <img src={images.proSupport[2] ?? "/images/hero/yacht.png"} alt="" />
+              <img src={images.proSupport[2] ?? "/images/editorial/wind.jpg"} alt="" />
             </figure>
           </div>
         </div>
