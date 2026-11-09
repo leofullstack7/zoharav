@@ -1,3 +1,4 @@
+import { getService } from "./services";
 import type { Localized, ServiceSlug } from "./types";
 
 export type BookingOption = {
@@ -13,7 +14,7 @@ export type BookingCategory = {
 };
 
 /** Session categories. Technology lines from the previous booking flow are not included. */
-export const bookingCategories: BookingCategory[] = [
+const BOOKING_CATEGORY_BASE: BookingCategory[] = [
   {
     id: "strategic-operational-consulting",
     name: {
@@ -97,6 +98,16 @@ export const bookingCategories: BookingCategory[] = [
     ],
   },
 ];
+
+/** Keep labels/ids aligned with the live sub-services of each line. */
+export const bookingCategories: BookingCategory[] = BOOKING_CATEGORY_BASE.map((category) => {
+  const subs = getService(category.id)?.subServices;
+  if (!subs?.length) return category;
+  return {
+    ...category,
+    options: subs.map((sub) => ({ id: sub.id, label: sub.title })),
+  };
+});
 
 export const bookingCopy = {
   title: { en: "Book a Strategic Session", es: "Reserve una sesión estratégica" },

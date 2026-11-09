@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Service, ServiceImpactSlide, ServiceSlug, SubService } from "@/content/types";
 import { Link } from "@/i18n/navigation";
 import { loc } from "@/lib/i18n/loc";
@@ -15,13 +16,13 @@ const SERVICE_GALLERY: Record<ServiceSlug, string[]> = {
     "/images/sustainability/plant.png",
     "/images/sectors/oil-gas.jpg",
     "/images/firm/office.png",
-    "/images/services/jet.png",
+    "/images/editorial/boardroom.jpg",
   ],
   "oil-and-energy": [
     "/images/sectors/oil-gas.jpg",
     "/images/hero/yacht.png",
     "/images/firm/office.png",
-    "/images/services/jet.png",
+    "/images/editorial/boardroom.jpg",
     "/images/contact/tower.png",
   ],
   "mining-natural-resources": [
@@ -30,28 +31,26 @@ const SERVICE_GALLERY: Record<ServiceSlug, string[]> = {
     "/images/firm/office.png",
     "/images/investment/handshake.png",
     "/images/hero/yacht.png",
-    "/images/services/jet.png",
   ],
   "sustainability-esg": [
     "/images/sustainability/plant.png",
-    "/images/hero/yacht.png",
+    "/images/editorial/wind.jpg",
     "/images/firm/office.png",
     "/images/offices/miami.png",
-    "/images/services/jet.png",
+    "/images/editorial/boardroom.jpg",
   ],
   "investment-financial-advisory": [
     "/images/investment/handshake.png",
     "/images/firm/office.png",
-    "/images/services/jet.png",
+    "/images/editorial/boardroom.jpg",
     "/images/contact/tower.png",
     "/images/hero/yacht.png",
   ],
   "strategic-operational-consulting": [
     "/images/services/ops/hero-impact.jpg",
     "/images/services/ops/hero-digital.jpg",
-    "/images/services/jet.png",
+    "/images/editorial/boardroom.jpg",
     "/images/services/ops/lean.png",
-    "/images/services/ops/digital-supply.png",
     "/images/firm/office.png",
   ],
 };
@@ -61,7 +60,7 @@ function asRaster(src: string) {
 }
 
 function galleryFor(service: Service) {
-  return SERVICE_GALLERY[service.slug] ?? [asRaster(service.image), "/images/firm/office.png", "/images/services/jet.png"];
+  return SERVICE_GALLERY[service.slug] ?? [asRaster(service.image), "/images/firm/office.png", "/images/editorial/boardroom.jpg"];
 }
 
 function pickImage(service: Service, index: number, preferred?: string) {
@@ -94,12 +93,27 @@ function fallbackPillars(service: Service) {
       image: pickImage(service, i + 1, pillar.image),
     }));
   }
+  const method = service.methodologies[0];
+  if (method) {
+    return method.phases.slice(0, 3).map((phase, i) => ({
+      id: `${method.id}-${phase.step}`,
+      title: phase.title,
+      body: phase.body,
+      image: pickImage(service, i + 1),
+    }));
+  }
   return service.subServices.slice(0, 3).map((sub, i) => ({
     id: sub.id,
     title: sub.title,
     body: sub.body,
     image: pickImage(service, i, sub.image),
   }));
+}
+
+function bookingHref(slug: string, offerId?: string) {
+  const params = new URLSearchParams({ line: slug });
+  if (offerId) params.set("offer", offerId);
+  return `/booking?${params.toString()}`;
 }
 
 export function ServiceExperience({
@@ -116,14 +130,20 @@ export function ServiceExperience({
   const slides = fallbackSlides(service);
   const pillars = fallbackPillars(service);
   const methodology = service.methodologies[0] ?? service.methodologies[service.methodologies.length - 1];
-  const [slide, setSlide] = useState(0);
+  const heroImage = coverPhoto || pickImage(service, 0, asRaster(service.image));
   const [active, setActive] = useState<SubService | null>(
     () => service.subServices.find((sub) => sub.id === initialSubId) ?? null,
   );
   const [pulseId, setPulseId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const rootRef = useRef<HTMLElement>(null);
   const modalTitleId = useId();
   const pulseTimer = useRef<number | null>(null);
+  const es = locale === "es";
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const focusSub = (id: string, openModal = false) => {
     const match = service.subServices.find((sub) => sub.id === id);
@@ -144,8 +164,6 @@ export function ServiceExperience({
       const hash = window.location.hash.replace(/^#/, "");
       const target = hash || initialSubId;
       if (!target) return;
-      // Hash from the menu → scroll + pulse the practice chip.
-      // Legacy /[item] routes still open the modal via initialSubId.
       focusSub(target, Boolean(initialSubId && !hash));
     };
     const timer = window.setTimeout(run, 220);
@@ -178,28 +196,71 @@ export function ServiceExperience({
   }, [active]);
 
   useEffect(() => {
-    if (slides.length < 2 || prefersReducedMotion()) return;
-    const timer = window.setInterval(() => {
-      setSlide((value) => (value + 1) % slides.length);
-    }, 7000);
-    return () => window.clearInterval(timer);
-  }, [slides.length]);
-
-  useEffect(() => {
     const root = rootRef.current;
     if (!root || prefersReducedMotion()) return;
     registerGsap();
     const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>(".svc-reveal").forEach((el, i) => {
+      gsap.fromTo(
+        ".svc-hero-copy",
+        { y: 36, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1.15, ease: "power3.out", delay: 0.12 },
+      );
+      gsap.fromTo(
+        ".svc-hero-img",
+        { scale: 1.12 },
+        { scale: 1, duration: 2.4, ease: "power2.out" },
+      );
+      gsap.utils.toArray<HTMLElement>(".svc-pillar").forEach((el, i) => {
         gsap.fromTo(
           el,
-          { y: 48, opacity: 0 },
+          { y: 64, opacity: 0, rotateX: 8 },
           {
             y: 0,
             opacity: 1,
-            duration: 1,
+            rotateX: 0,
+            duration: 1.05,
             ease: "power3.out",
-            delay: (i % 4) * 0.05,
+            delay: i * 0.12,
+            scrollTrigger: { trigger: el, start: "top 88%" },
+          },
+        );
+      });
+      gsap.utils.toArray<HTMLElement>(".svc-offer").forEach((el) => {
+        const photo = el.querySelector(".svc-offer-visual");
+        gsap.fromTo(
+          el,
+          { y: 72, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1.1,
+            ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 86%" },
+          },
+        );
+        if (photo) {
+          gsap.fromTo(
+            photo,
+            { scale: 1.16, filter: "blur(16px)" },
+            {
+              scale: 1,
+              filter: "blur(0px)",
+              duration: 1.35,
+              ease: "power2.out",
+              scrollTrigger: { trigger: el, start: "top 86%" },
+            },
+          );
+        }
+      });
+      gsap.utils.toArray<HTMLElement>(".svc-reveal").forEach((el) => {
+        gsap.fromTo(
+          el,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.95,
+            ease: "power3.out",
             scrollTrigger: { trigger: el, start: "top 88%" },
           },
         );
@@ -253,42 +314,25 @@ export function ServiceExperience({
     window.history.replaceState(null, "", window.location.pathname);
   };
 
-  const current = slides[slide] ?? slides[0];
+  const heroMetrics = slides[0]?.metrics;
 
   return (
     <main id="content" className="svc-page" ref={rootRef}>
       <section className="svc-hero">
-        {slides.map((entry, index) => (
-          <div
-            key={entry.title.en}
-            className={`svc-hero-slide${index === slide ? " is-on" : ""}`}
-            aria-hidden={index !== slide}
-          >
-            <Image
-              src={index === 0 && coverPhoto ? coverPhoto : entry.image}
-              alt=""
-              fill
-              priority={index === 0}
-              sizes="100vw"
-              className="svc-hero-img"
-            />
-          </div>
-        ))}
+        <div className="svc-hero-slide is-on">
+          <Image src={heroImage} alt="" fill priority sizes="100vw" className="svc-hero-img" />
+        </div>
         <div className="svc-hero-veil" />
         <div className="svc-hero-copy">
           <p className="svc-kicker">
             <span>{service.number}</span>
             {line(service.name, locale)}
           </p>
-          <h1 key={current.title.en} className="svc-hero-title">
-            {line(current.title, locale)}
-          </h1>
-          <p key={current.body.en} className="svc-hero-lede">
-            {line(current.body, locale)}
-          </p>
-          {current.metrics ? (
+          <h1 className="svc-hero-title">{line(service.heroTitle, locale)}</h1>
+          <p className="svc-hero-lede">{line(service.heroIntro, locale)}</p>
+          {heroMetrics ? (
             <ul className="svc-metrics">
-              {current.metrics.map((metric) => (
+              {heroMetrics.map((metric) => (
                 <li key={metric.value}>
                   <strong>{metric.value}</strong>
                   <span>{line(metric.label, locale)}</span>
@@ -297,65 +341,27 @@ export function ServiceExperience({
             </ul>
           ) : null}
           <div className="svc-hero-actions">
-            <Link className="btn-gold" href="/booking">
-              {locale === "es" ? "Reservar consulta" : "Book a consultation"} →
+            <Link className="btn-gold" href={bookingHref(service.slug)}>
+              {es ? "Reservar consulta" : "Book a consultation"} →
             </Link>
             <a className="text-link" href="#subservices">
-              {locale === "es" ? "Ver prácticas" : "View practices"}
+              {es ? "Ver prácticas" : "View practices"}
             </a>
           </div>
-        </div>
-        {slides.length > 1 ? (
-          <>
-            <button
-              type="button"
-              className="svc-hero-nav prev"
-              aria-label={locale === "es" ? "Anterior" : "Previous"}
-              onClick={() => setSlide((value) => (value - 1 + slides.length) % slides.length)}
-            >
-              ‹
-            </button>
-            <button
-              type="button"
-              className="svc-hero-nav next"
-              aria-label={locale === "es" ? "Siguiente" : "Next"}
-              onClick={() => setSlide((value) => (value + 1) % slides.length)}
-            >
-              ›
-            </button>
-            <div className="svc-hero-dots" role="tablist" aria-label="Slides">
-              {slides.map((entry, index) => (
-                <button
-                  key={entry.title.en}
-                  type="button"
-                  role="tab"
-                  aria-selected={index === slide}
-                  className={index === slide ? "is-on" : undefined}
-                  onClick={() => setSlide(index)}
-                />
-              ))}
-            </div>
-          </>
-        ) : null}
-      </section>
-
-      <section className="svc-band svc-intro svc-reveal">
-        <div className="svc-wrap">
-          <p className="svc-kicker">{locale === "es" ? "La línea" : "The line"}</p>
-          <h2>{line(service.heroTitle, locale)}</h2>
-          <p className="svc-lede">{line(service.heroIntro, locale)}</p>
         </div>
       </section>
 
       <section className="svc-pillars">
         <div className="svc-wrap">
           <header className="svc-section-head svc-reveal">
-            <p className="svc-kicker">{locale === "es" ? "Cómo se siente el trabajo" : "How the work lands"}</p>
-            <h2>{locale === "es" ? "Tres focos. Un criterio." : "Three lenses. One judgment."}</h2>
+            <p className="svc-kicker">{es ? "La línea" : "The line"}</p>
+            <h2>{es ? "Cómo se siente el trabajo" : "How the work lands"}</h2>
+            <p className="svc-lede">{line(service.cardLine, locale)}</p>
           </header>
           <div className="svc-pillar-grid">
             {pillars.map((pillar, index) => (
-              <article className="svc-pillar svc-reveal" key={pillar.id} style={{ transitionDelay: `${index * 80}ms` }}>
+              <article className="svc-pillar" key={pillar.id}>
+                <span className="svc-pillar-index">{String(index + 1).padStart(2, "0")}</span>
                 <div className="svc-pillar-media">
                   <Image src={pillar.image} alt="" fill sizes="(max-width: 900px) 100vw, 33vw" />
                 </div>
@@ -368,34 +374,46 @@ export function ServiceExperience({
       </section>
 
       <section className="svc-band svc-subs" id="subservices">
-        <div className="svc-wrap">
+        <div className="svc-wrap svc-wrap-wide">
           <header className="svc-section-head svc-reveal">
-            <p className="svc-kicker">{locale === "es" ? "Prácticas" : "Practices"}</p>
-            <h2>{locale === "es" ? "Subservicios de esta línea" : "Sub-services in this line"}</h2>
+            <p className="svc-kicker">{es ? "Prácticas" : "Practices"}</p>
+            <h2>{es ? "Cada práctica, a su medida" : "Each practice, on its own terms"}</h2>
             <p className="svc-lede">
-              {locale === "es"
-                ? "Abra cada práctica para ver el detalle, los entregables y una imagen del trabajo."
-                : "Open each practice for detail, deliverables, and a visual of the work."}
+              {es
+                ? "Abra el detalle de cada subservicio o reserve esa consulta de inmediato."
+                : "Open the detail of each sub-service, or book that consultation at once."}
             </p>
           </header>
-          <ul className="svc-sub-rail">
-            {service.subServices.map((sub, index) => (
-              <li key={sub.id} className="svc-reveal" style={{ transitionDelay: `${index * 40}ms` }}>
-                <button
-                  type="button"
-                  className={`svc-sub-chip${pulseId === sub.id ? " is-pulse" : ""}`}
-                  onClick={() => openSub(sub)}
+          <div className="svc-offer-list">
+            {service.subServices.map((sub, index) => {
+              const image = pickImage(service, index, sub.image);
+              const flip = index % 2 === 1;
+              return (
+                <article
+                  key={sub.id}
                   id={sub.id}
+                  className={`svc-offer${flip ? " is-flip" : ""}${pulseId === sub.id ? " is-pulse" : ""}`}
                 >
-                  <span className="svc-sub-index">{String(index + 1).padStart(2, "0")}</span>
-                  <span className="svc-sub-label">{line(sub.title, locale)}</span>
-                  <span className="svc-sub-arrow" aria-hidden>
-                    →
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
+                  <div className="svc-offer-copy">
+                    <span className="svc-offer-index">{String(index + 1).padStart(2, "0")}</span>
+                    <h3>{line(sub.title, locale)}</h3>
+                  </div>
+                  <div className="svc-offer-visual" aria-hidden>
+                    <Image src={image} alt="" fill sizes="(max-width: 900px) 100vw, 46vw" />
+                  </div>
+                  <p className="svc-offer-body">{line(sub.tagline, locale)}</p>
+                  <div className="svc-offer-actions">
+                    <button type="button" className="svc-offer-more" onClick={() => openSub(sub)}>
+                      {es ? "Leer más" : "Read more"}
+                    </button>
+                    <Link className="btn-gold" href={bookingHref(service.slug, sub.id)}>
+                      {es ? "Agendar" : "Book a consultation"}
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -403,7 +421,7 @@ export function ServiceExperience({
         <section className="svc-method">
           <div className="svc-wrap">
             <header className="svc-section-head svc-reveal">
-              <p className="svc-kicker">{locale === "es" ? "Metodología" : "Methodology"}</p>
+              <p className="svc-kicker">{es ? "Metodología" : "Methodology"}</p>
               <h2>{line(methodology.name, locale)}</h2>
               <p className="svc-lede">{line(methodology.intro, locale)}</p>
             </header>
@@ -442,26 +460,27 @@ export function ServiceExperience({
 
       <section className="svc-cta svc-reveal">
         <div className="svc-wrap svc-cta-inner">
-          <h2>{locale === "es" ? "¿Listos para el siguiente mandato?" : "Ready for the next mandate?"}</h2>
+          <h2>{es ? "¿Listos para el siguiente mandato?" : "Ready for the next mandate?"}</h2>
           <p>
-            {locale === "es"
+            {es
               ? "Sesenta minutos con un asesor senior. La reserva se acredita al encargo si continúan."
               : "Sixty minutes with a senior advisor. The retainer credits to the engagement if you continue."}
           </p>
-          <Link className="btn-gold" href="/booking">
-            {locale === "es" ? "Reservar consulta" : "Book a consultation"} →
+          <Link className="btn-gold" href={bookingHref(service.slug)}>
+            {es ? "Reservar consulta" : "Book a consultation"} →
           </Link>
         </div>
       </section>
 
-      {active ? (
-        <div className="svc-modal" role="dialog" aria-modal="true" aria-labelledby={modalTitleId}>
-          <button type="button" className="svc-modal-backdrop" aria-label="Close" onClick={closeSub} />
-          <div className="svc-modal-panel">
-            <button type="button" className="svc-modal-close" onClick={closeSub} aria-label={locale === "es" ? "Cerrar" : "Close"}>
+      {active && mounted
+        ? createPortal(
+        <div className="svc-studio" role="dialog" aria-modal="true" aria-labelledby={modalTitleId}>
+          <button type="button" className="svc-studio-backdrop" aria-label={es ? "Cerrar" : "Close"} onClick={closeSub} />
+          <div className="svc-studio-panel">
+            <button type="button" className="svc-studio-close" onClick={closeSub} aria-label={es ? "Cerrar" : "Close"}>
               ×
             </button>
-            <div className="svc-modal-media">
+            <div className="svc-studio-media">
               <Image
                 src={pickImage(
                   service,
@@ -470,26 +489,34 @@ export function ServiceExperience({
                 )}
                 alt=""
                 fill
-                sizes="(max-width: 900px) 100vw, 48vw"
+                sizes="100vw"
+                className="svc-studio-photo"
               />
             </div>
-            <div className="svc-modal-copy">
+            <div className="svc-studio-copy">
               <p className="svc-kicker">{line(service.name, locale)}</p>
               <h2 id={modalTitleId}>{line(active.title, locale)}</h2>
-              <p className="svc-modal-tag">{line(active.tagline, locale)}</p>
-              <p>{line(active.body, locale)}</p>
-              <ul className="svc-modal-bullets">
-                {active.bullets.map((bullet) => (
-                  <li key={bullet.en}>{line(bullet, locale)}</li>
+              <p className="svc-studio-tag">{line(active.tagline, locale)}</p>
+              <p className="svc-studio-body">{line(active.body, locale)}</p>
+              <ul className="svc-studio-tiles">
+                {active.bullets.map((bullet, index) => (
+                  <li key={bullet.en} style={{ animationDelay: `${0.08 * index}s` }}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <p>{line(bullet, locale)}</p>
+                  </li>
                 ))}
               </ul>
-              <Link className="btn-gold" href="/booking" onClick={closeSub}>
-                {line(active.cta, locale)} →
-              </Link>
+              <div className="svc-studio-actions">
+                <Link className="btn-gold" href={bookingHref(service.slug, active.id)} onClick={closeSub}>
+                  {es ? "Agendar esta práctica" : "Book this practice"} →
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      ) : null}
+        </div>,
+        document.body,
+      )
+        : null}
     </main>
   );
 }

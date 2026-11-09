@@ -25,13 +25,22 @@ export async function generateMetadata({
   });
 }
 
-export default async function BookingPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function BookingPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ line?: string; offer?: string }>;
+}) {
   const { locale } = await params;
+  const query = await searchParams;
   setRequestLocale(locale);
   const [heroPhoto, categoryPhotos] = await Promise.all([
     getSiteImagePhoto("booking.hero"),
     getSiteImagePhotos(bookingCategories.map((category) => `booking.category.${category.id}`)),
   ]);
+  const line = typeof query.line === "string" ? query.line : null;
+  const offer = typeof query.offer === "string" ? query.offer : null;
   return (
     <main id="content">
       <GoldenCoreHero>
@@ -45,7 +54,13 @@ export default async function BookingPage({ params }: { params: Promise<{ locale
       </GoldenCoreHero>
       <section className="panel">
         <Reveal>
-          <BookingExperience locale={locale} categories={bookingCategories} photos={categoryPhotos} />
+          <BookingExperience
+            locale={locale}
+            categories={bookingCategories}
+            photos={categoryPhotos}
+            initialLine={line}
+            initialOffer={offer}
+          />
         </Reveal>
       </section>
     </main>

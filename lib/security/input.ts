@@ -7,7 +7,7 @@ export const FIELD_LIMITS = {
   name: 120,
   email: 254,
   phone: 40,
-  topic: 200,
+  topic: 280,
   company: 160,
   message: 4000,
   category: 120,

@@ -1,12 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
-import type { BookingCategory } from "@/content/booking";
+import type { BookingCategory, BookingOption } from "@/content/booking";
 import { loc } from "@/lib/i18n/loc";
 import type { AvailabilitySlot } from "@/components/chat/types";
 import { BookingSelectOverlay } from "@/components/booking/BookingSelectOverlay";
 
-type Stage = "grid" | "selecting" | "calendar" | "details" | "done";
+type Stage = "grid" | "offers" | "selecting" | "calendar" | "details" | "done";
 
 function prefersReducedMotion() {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -46,14 +46,25 @@ export function BookingExperience({
   locale,
   categories,
   photos,
+  initialLine,
+  initialOffer,
 }: {
   locale: string;
   categories: BookingCategory[];
   photos: Record<string, string | null>;
+  initialLine?: string | null;
+  initialOffer?: string | null;
 }) {
   const es = locale === "es";
-  const [stage, setStage] = useState<Stage>("grid");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const presetCategory = categories.find((item) => item.id === initialLine) ?? null;
+  const presetOption = presetCategory?.options.find((item) => item.id === initialOffer) ?? null;
+  const [stage, setStage] = useState<Stage>(() => {
+    if (presetCategory && presetOption) return prefersReducedMotion() ? "calendar" : "selecting";
+    if (presetCategory) return "offers";
+    return "grid";
+  });
+  const [selectedId, setSelectedId] = useState<string | null>(presetCategory?.id ?? null);
+  const [selectedOfferId, setSelectedOfferId] = useState<string | null>(presetOption?.id ?? null);
   const [slots, setSlots] = useState<AvailabilitySlot[] | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
   const [cursor, setCursor] = useState(() => {
@@ -70,7 +81,11 @@ export function BookingExperience({
   const [conflict, setConflict] = useState(false);
 
   const selected = categories.find((item) => item.id === selectedId) ?? null;
+  const selectedOffer = selected?.options.find((item) => item.id === selectedOfferId) ?? null;
   const selectedName = selected ? loc(selected.name, locale) : "";
+  const selectedOfferName = selectedOffer ? loc(selectedOffer.label, locale) : "";
+  const overlayTitle = selectedOfferName || selectedName;
+  const topicLabel = [selectedName, selectedOfferName].filter(Boolean).join(" · ");
 
   async function loadSlots() {
     setLoadFailed(false);
@@ -113,6 +128,20 @@ export function BookingExperience({
 
   function choose(category: BookingCategory) {
     setSelectedId(category.id);
+    setSelectedOfferId(null);
+    setPickedDay(null);
+    setPickedSlot(null);
+    setConflict(false);
+    if (!category.options.length) {
+      if (prefersReducedMotion()) setStage("calendar");
+      else setStage("selecting");
+      return;
+    }
+    setStage("offers");
+  }
+
+  function chooseOffer(option: BookingOption) {
+    setSelectedOfferId(option.id);
     setPickedDay(null);
     setPickedSlot(null);
     setConflict(false);
@@ -126,6 +155,14 @@ export function BookingExperience({
   function backToGrid() {
     setStage("grid");
     setSelectedId(null);
+    setSelectedOfferId(null);
+    setPickedDay(null);
+    setPickedSlot(null);
+  }
+
+  function backToOffers() {
+    setStage("offers");
+    setSelectedOfferId(null);
     setPickedDay(null);
     setPickedSlot(null);
   }
@@ -156,7 +193,7 @@ export function BookingExperience({
           name: name.trim(),
           email: email.trim(),
           phone: phone.trim() || undefined,
-          topic: selectedName,
+          topic: topicLabel,
         }),
       });
       const data: { ok?: boolean; error?: string } = await response.json();
@@ -188,11 +225,11 @@ export function BookingExperience({
 
   return (
     <div className={`booking-stage is-${stage}`}>
-      {stage === "selecting" && selectedName ? (
-        <BookingSelectOverlay title={selectedName} onDone={finishSelect} />
+      {stage === "selecting" && overlayTitle ? (
+        <BookingSelectOverlay title={overlayTitle} onDone={finishSelect} />
       ) : null}
 
-      <div className="booking-grid" hidden={stage === "details" || stage === "done" || stage === "selecting"}>
+      <div className="booking-grid" hidden={stage !== "grid"}>
         {categories.map((category) => {
           const name = loc(category.name, locale);
           const picked = category.id === selectedId;
@@ -221,14 +258,47 @@ export function BookingExperience({
         })}
       </div>
 
+      {stage === "offers" && selected ? (
+        <section className="booking-offers" aria-live="polite">
+          <header className="booking-calendar-head">
+            <p className="booking-cal-index">{es ? "01 · Práctica" : "01 · Practice"}</p>
+            <h2>{selectedName}</h2>
+            <p className="booking-cal-sub">
+              {es
+                ? "Elija el subservicio de esta consulta. Luego verá la disponibilidad."
+                : "Choose the sub-service for this consultation. Availability follows."}
+            </p>
+            <button type="button" className="text-link as-button" onClick={backToGrid}>
+              {es ? "Cambiar línea" : "Change line"}
+            </button>
+          </header>
+          <ul className="booking-offer-list">
+            {selected.options.map((option) => (
+              <li key={option.id}>
+                <button type="button" className="booking-offer" onClick={() => chooseOffer(option)}>
+                  <span>{loc(option.label, locale)}</span>
+                  <span aria-hidden>→</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       {stage === "calendar" ? (
         <section className="booking-calendar" aria-live="polite">
           <header className="booking-calendar-head">
-            <p className="booking-cal-index">{es ? "01 · Disponibilidad" : "01 · Availability"}</p>
-            <h2>{selectedName}</h2>
+            <p className="booking-cal-index">{es ? "02 · Disponibilidad" : "02 · Availability"}</p>
+            <h2>{selectedOfferName || selectedName}</h2>
+            {selectedOfferName ? <p className="booking-cal-line">{selectedName}</p> : null}
             <p className="booking-cal-sub">
               {es ? "Sesión de 60 minutos. Elige el día que brilla, luego la hora." : "A 60-minute session. Choose the day that lights, then the hour."}
             </p>
+            {selected ? (
+              <button type="button" className="text-link as-button" onClick={backToOffers}>
+                {es ? "Cambiar práctica" : "Change practice"}
+              </button>
+            ) : null}
             <button type="button" className="text-link as-button" onClick={backToGrid}>
               {es ? "Cambiar línea" : "Change line"}
             </button>
@@ -347,7 +417,7 @@ export function BookingExperience({
       {stage === "details" && pickedSlot ? (
         <form className="form-grid booking-details" onSubmit={onSubmit}>
           <p className="kicker" style={{ gridColumn: "1 / -1" }}>
-            {selectedName}
+            {topicLabel}
             {" · "}
             {dayHeading(pickedSlot.startsAt, locale)} · {timeLabel(pickedSlot.startsAt, locale)}
             {" "}

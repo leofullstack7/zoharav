@@ -2619,6 +2619,58 @@
   color: rgba(232, 238, 245, 0.62);
   font-size: 0.95rem;
 }
+.booking-cal-line {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--zh-gold-200);
+}
+.booking-offers {
+  position: relative;
+  z-index: 3;
+  animation: booking-calendar-in 0.7s var(--zh-ease) both;
+}
+.booking-offer-list {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.booking-offer {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.05rem 0.2rem 1.05rem 0;
+  border: 0;
+  border-top: 1px solid rgba(186, 198, 214, 0.16);
+  background: transparent;
+  color: #f4f7fb;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+.booking-offer span:first-child {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+.booking-offer span:last-child {
+  opacity: 0.5;
+  transition: transform 0.35s var(--zh-ease), opacity 0.35s var(--zh-ease);
+}
+.booking-offer:hover,
+.booking-offer:focus-visible {
+  color: var(--zh-gold-50);
+}
+.booking-offer:hover span:last-child {
+  transform: translateX(6px);
+  opacity: 1;
+}
 .booking-calendar-note {
   color: var(--zh-muted);
   font-size: 0.95rem;
