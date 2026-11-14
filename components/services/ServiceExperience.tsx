@@ -137,18 +137,6 @@ export function ServiceExperience({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- focus on mount / hash only
   }, [service.slug, initialSubId]);
 
-  useEffect(() => {
-    if (!active) return;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setActive(null);
-    };
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [active]);
 
   useEffect(() => {
     const root = rootRef.current;

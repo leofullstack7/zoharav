@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useLayoutEffect, useRef } from "react";
 import type { Service, SubService } from "@/content/types";
 import { Link } from "@/i18n/navigation";
 import { loc, locParagraphs } from "@/lib/i18n/loc";
@@ -25,6 +25,34 @@ function subImage(sub: SubService, service: Service, media: ServicePageMedia) {
   );
 }
 
+function lockPageScroll() {
+  const y = window.scrollY;
+  const { body, documentElement } = document;
+  body.dataset.svcScrollY = String(y);
+  body.style.position = "fixed";
+  body.style.top = `-${y}px`;
+  body.style.left = "0";
+  body.style.right = "0";
+  body.style.width = "100%";
+  body.style.overflow = "hidden";
+  documentElement.style.overflow = "hidden";
+  return y;
+}
+
+function unlockPageScroll() {
+  const { body, documentElement } = document;
+  const y = Number(body.dataset.svcScrollY ?? "0");
+  body.style.position = "";
+  body.style.top = "";
+  body.style.left = "";
+  body.style.right = "";
+  body.style.width = "";
+  body.style.overflow = "";
+  documentElement.style.overflow = "";
+  delete body.dataset.svcScrollY;
+  window.scrollTo(0, y);
+}
+
 export function ServicePracticeModal({
   active,
   service,
@@ -41,51 +69,87 @@ export function ServicePracticeModal({
   bookingHref: (offerId?: string) => string;
 }) {
   const titleId = useId();
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const src = subImage(active, service, media);
   const paragraphs = locParagraphs(active.body, locale);
   const studioShots = media.studioDetails[active.id] ?? [];
 
   useEffect(() => {
+    lockPageScroll();
+    const scroller = scrollerRef.current;
+    if (scroller) scroller.scrollTop = 0;
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      unlockPageScroll();
+    };
+  }, [active.id, onClose]);
+
+  useLayoutEffect(() => {
     const panel = panelRef.current;
-    if (!panel || prefersReducedMotion()) return;
+    const scroller = scrollerRef.current;
+    if (!panel || !scroller) return;
+
+    scroller.scrollTop = 0;
+
+    if (prefersReducedMotion()) {
+      panel.classList.add("is-motion-ready");
+      return;
+    }
+
     registerGsap();
+    const reveal = panel.querySelectorAll<HTMLElement>("[data-reveal]");
+    const banner = panel.querySelector<HTMLElement>(".svc-studio-banner__frame");
+    const benefits = panel.querySelectorAll<HTMLElement>(".svc-studio-benefit");
+    const offer = panel.querySelector<HTMLElement>(".svc-studio-offer");
+
+    gsap.set(panel, { opacity: 0, y: 28, scale: 0.98 });
+    if (banner) gsap.set(banner, { scale: 1.14, opacity: 0.5 });
+    gsap.set(reveal, { opacity: 0, y: 36 });
+    gsap.set(benefits, { opacity: 0, y: 24 });
+    gsap.set(offer, { opacity: 0, y: 20, scale: 0.97 });
+
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ".svc-studio-banner__img",
-        { scale: 1.12, opacity: 0.85 },
-        { scale: 1, opacity: 1, duration: 1.25, ease: "power2.out" },
-      );
-      gsap.fromTo(
-        ".svc-studio-reveal",
-        { y: 28, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.72,
-          ease: "power3.out",
-          stagger: 0.07,
-          delay: 0.12,
-        },
-      );
-      gsap.fromTo(
-        ".svc-studio-benefit",
-        { y: 20, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.55,
-          ease: "power2.out",
-          stagger: 0.06,
-          delay: 0.35,
-        },
-      );
+      const tl = gsap.timeline({
+        defaults: { ease: "power3.out" },
+        onComplete: () => panel.classList.add("is-motion-ready"),
+      });
+
+      tl.to(panel, { opacity: 1, y: 0, scale: 1, duration: 0.65 }, 0)
+        .to(
+          banner,
+          { scale: 1, opacity: 1, duration: 1.1, ease: "power2.out" },
+          banner ? 0.05 : 0,
+        )
+        .to(reveal, { opacity: 1, y: 0, duration: 0.75, stagger: 0.09 }, 0.18)
+        .to(benefits, { opacity: 1, y: 0, duration: 0.55, stagger: 0.07 }, "-=0.35")
+        .to(offer, { opacity: 1, y: 0, scale: 1, duration: 0.6 }, "-=0.2");
+
+      if (banner) {
+        gsap.to(banner, {
+          scale: 1.05,
+          duration: 9,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+          delay: 1.2,
+        });
+      }
     }, panel);
-    return () => ctx.revert();
+
+    return () => {
+      ctx.revert();
+      panel.classList.remove("is-motion-ready");
+    };
   }, [active.id]);
 
   return (
-    <div className="svc-studio" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+    <div className="svc-studio" ref={scrollerRef} role="dialog" aria-modal="true" aria-labelledby={titleId}>
       <button
         type="button"
         className="svc-studio-backdrop"
@@ -98,16 +162,18 @@ export function ServicePracticeModal({
         </button>
 
         <header className="svc-studio-banner">
-          <Image
-            src={src}
-            alt={media.alts.subs[active.id] ?? ""}
-            fill
-            priority
-            sizes="100vw"
-            className="svc-studio-banner__img"
-          />
+          <div className="svc-studio-banner__frame">
+            <Image
+              src={src}
+              alt={media.alts.subs[active.id] ?? ""}
+              fill
+              priority
+              sizes="100vw"
+              className="svc-studio-banner__img"
+            />
+          </div>
           <div className="svc-studio-banner__veil" />
-          <div className="svc-studio-banner__copy svc-studio-reveal">
+          <div className="svc-studio-banner__copy" data-reveal>
             <p className="svc-kicker">{line(service.name, locale)}</p>
             <h2 id={titleId}>{line(active.title, locale)}</h2>
             <p className="svc-studio-banner__tag">{line(active.tagline, locale)}</p>
@@ -116,35 +182,39 @@ export function ServicePracticeModal({
 
         <div className="svc-studio-body-wrap">
           <div className="svc-studio-inner">
-            <PracticeModalAccent />
-            <p className="svc-studio-lede svc-studio-reveal">{line(active.hover, locale)}</p>
+            <div data-reveal>
+              <PracticeModalAccent />
+            </div>
+            <p className="svc-studio-lede" data-reveal>
+              {line(active.hover, locale)}
+            </p>
 
-            <div className="svc-studio-story svc-studio-reveal">
+            <div className="svc-studio-story" data-reveal>
               {paragraphs.map((paragraph) => (
                 <p key={paragraph.slice(0, 48)}>{paragraph}</p>
               ))}
             </div>
 
             {studioShots.length > 0 ? (
-              <div className="svc-studio-gallery svc-studio-reveal" aria-hidden>
+              <div className="svc-studio-gallery" data-reveal aria-hidden>
                 {studioShots.map((shot, visualIndex) => (
                   <figure key={`${active.id}-${visualIndex}`} className="svc-studio-gallery__item">
                     <Image
                       src={shot}
                       alt={(media.alts.studioDetails[active.id] ?? [])[visualIndex] ?? ""}
                       fill
-                      sizes="(max-width: 720px) 80vw, 320px"
+                      sizes="(max-width: 720px) 50vw, 240px"
                     />
                   </figure>
                 ))}
               </div>
             ) : null}
 
-            <div className="svc-studio-deliver svc-studio-reveal">
+            <div className="svc-studio-deliver" data-reveal>
               <p className="svc-studio-deliver__kicker">{uiLoc("practiceDeliverables", locale)}</p>
               <ul className="svc-studio-benefits">
                 {active.bullets.map((bullet, index) => (
-                  <li className="svc-studio-benefit" key={bullet.en} style={{ animationDelay: `${0.05 * index}s` }}>
+                  <li className="svc-studio-benefit" key={bullet.en}>
                     <span className="svc-studio-benefit__icon">{practiceBulletIcon(index)}</span>
                     <p>{line(bullet, locale)}</p>
                   </li>
@@ -152,7 +222,7 @@ export function ServicePracticeModal({
               </ul>
             </div>
 
-            <aside className="svc-studio-offer svc-studio-reveal">
+            <aside className="svc-studio-offer">
               <svg className="svc-studio-offer__glyph" viewBox="0 0 48 48" aria-hidden>
                 <circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.35" />
                 <path
