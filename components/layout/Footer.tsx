@@ -5,12 +5,13 @@ import { activeOffices } from "@/content/offices";
 import { compliance, site } from "@/content/site";
 import { Link } from "@/i18n/navigation";
 import { loc } from "@/lib/i18n/loc";
+import { uiLoc } from "@/lib/i18n/ui";
 
 export function Footer({ locale }: { locale: string }) {
   const year = new Date().getFullYear();
   const columns = [
-    { title: locale === "es" ? "Firma" : "Company", items: footerNav.company },
-    { title: locale === "es" ? "Soporte" : "Support", items: footerNav.support },
+    { title: uiLoc("company", locale), items: footerNav.company },
+    { title: uiLoc("supportNav", locale), items: footerNav.support },
     { title: "Legal", items: footerNav.legal },
   ];
 
@@ -19,12 +20,8 @@ export function Footer({ locale }: { locale: string }) {
       <Monogram className="mb-4 h-14 w-14" />
       <p className="footer-word">{site.name}</p>
       <div className="footer-newsletter">
-        <h3>{locale === "es" ? "Perspectivas de Zoharav" : "Insights by Zoharav"}</h3>
-        <p>
-          {locale === "es"
-            ? "Reciba análisis selectos directamente en su correo."
-            : "Get select analysis delivered straight to your inbox."}
-        </p>
+        <h3>{uiLoc("insightsBy", locale)}</h3>
+        <p>{uiLoc("newsletterBlurb", locale)}</p>
         <NewsletterForm locale={locale} />
       </div>
       <div className="footer-grid">
@@ -41,7 +38,7 @@ export function Footer({ locale }: { locale: string }) {
           </div>
         ))}
         <div>
-          <h3>{locale === "es" ? "Oficinas" : "Offices"}</h3>
+          <h3>{uiLoc("offices", locale)}</h3>
           <ul>
             {activeOffices.map((office) => (
               <li key={office.id}>{loc(office.city, locale)}</li>
@@ -51,7 +48,7 @@ export function Footer({ locale }: { locale: string }) {
       </div>
       <div className="footer-end">
         <p>
-          © {year} {site.name}. {locale === "es" ? "Todos los derechos reservados." : "All rights reserved."}
+          © {year} {site.name}. {uiLoc("rights", locale)}
         </p>
         <p>
           <Link href="/#compliance">{loc(compliance.footerLine, locale)}</Link>

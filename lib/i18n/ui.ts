@@ -54,6 +54,18 @@ export const ui = {
   practiceStep: L("Practice", "Práctica"),
   bookingSelectPractice: L("Choose a practice", "Elija una práctica"),
   bookingSelectLine: L("Choose a line", "Elija una línea"),
+  openPracticeLede: L(
+    "Open the detail of each sub-service, or book that consultation at once.",
+    "Abra el detalle de cada subservicio o reserve esa consulta de inmediato.",
+  ),
+  sessionCredit: L(
+    "Sixty minutes with a senior advisor. The retainer credits to the engagement if you continue.",
+    "Sesenta minutos con un asesor senior. La reserva se acredita al encargo si continúan.",
+  ),
+  newsletterBlurb: L(
+    "Get select analysis delivered straight to your inbox.",
+    "Reciba análisis selectos directamente en su correo.",
+  ),
 } satisfies Record<string, Localized>;
 
 export function uiLoc(key: keyof typeof ui, locale: string): string {

@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { mdxFilePath, resolveMdxLocale } from "./localeFile";
 
 /**
  * The four legal documents authored as MDX source under content/legal/<locale>/<id>.mdx.
@@ -40,8 +41,9 @@ function parseFrontmatter(raw: string): { frontmatter: Record<string, string>; b
 }
 
 export function getLegalDoc(id: LegalDocId, locale: string): LegalDoc {
-  const safeLocale = locale === "es" ? "es" : "en";
-  const filePath = path.join(process.cwd(), "content", "legal", safeLocale, `${id}.mdx`);
+  const legalDir = path.join(process.cwd(), "content", "legal");
+  const filePath = mdxFilePath(legalDir, `${id}.mdx`, locale);
+  const safeLocale = resolveMdxLocale(locale);
   const raw = fs.readFileSync(filePath, "utf8");
   const { frontmatter, body } = parseFrontmatter(raw);
 

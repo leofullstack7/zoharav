@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import type { Service, ServiceImpactSlide, SubService } from "@/content/types";
 import { Link } from "@/i18n/navigation";
 import { loc } from "@/lib/i18n/loc";
+import { uiLoc } from "@/lib/i18n/ui";
 import type { ServicePageMedia } from "@/lib/images/resolveServicePageMedia";
 import { gsap, prefersReducedMotion, registerGsap, ScrollTrigger } from "@/lib/motion";
 
@@ -95,8 +96,6 @@ export function ServiceExperience({
   const rootRef = useRef<HTMLElement>(null);
   const modalTitleId = useId();
   const pulseTimer = useRef<number | null>(null);
-  const es = locale === "es";
-
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -298,10 +297,10 @@ export function ServiceExperience({
           ) : null}
           <div className="svc-hero-actions">
             <Link className="btn-gold" href={bookingHref(service.slug)}>
-              {es ? "Reservar consulta" : "Book a consultation"} →
+              {uiLoc("bookConsultation", locale)} →
             </Link>
             <a className="text-link" href="#subservices">
-              {es ? "Ver prácticas" : "View practices"}
+              {uiLoc("viewPractices", locale)}
             </a>
           </div>
         </div>
@@ -310,8 +309,8 @@ export function ServiceExperience({
       <section className="svc-pillars">
         <div className="svc-wrap">
           <header className="svc-section-head svc-reveal">
-            <p className="svc-kicker">{es ? "La línea" : "The line"}</p>
-            <h2>{es ? "Cómo se siente el trabajo" : "How the work lands"}</h2>
+            <p className="svc-kicker">{uiLoc("theLine", locale)}</p>
+            <h2>{uiLoc("howWorkLands", locale)}</h2>
             <p className="svc-lede">{line(service.cardLine, locale)}</p>
           </header>
           <div className="svc-pillar-grid">
@@ -332,13 +331,9 @@ export function ServiceExperience({
       <section className="svc-band svc-subs" id="subservices">
         <div className="svc-wrap svc-wrap-wide">
           <header className="svc-section-head svc-reveal">
-            <p className="svc-kicker">{es ? "Prácticas" : "Practices"}</p>
-            <h2>{es ? "Cada práctica, a su medida" : "Each practice, on its own terms"}</h2>
-            <p className="svc-lede">
-              {es
-                ? "Abra el detalle de cada subservicio o reserve esa consulta de inmediato."
-                : "Open the detail of each sub-service, or book that consultation at once."}
-            </p>
+            <p className="svc-kicker">{uiLoc("practices", locale)}</p>
+            <h2>{uiLoc("eachPractice", locale)}</h2>
+            <p className="svc-lede">{uiLoc("openPracticeLede", locale)}</p>
           </header>
           <div className="svc-offer-list">
             {service.subServices.map((sub, index) => {
@@ -362,10 +357,10 @@ export function ServiceExperience({
                   <p className="svc-offer-body">{line(sub.tagline, locale)}</p>
                   <div className="svc-offer-actions">
                     <button type="button" className="svc-offer-more" onClick={() => openSub(sub)}>
-                      {es ? "Leer más" : "Read more"}
+                      {uiLoc("readMore", locale)}
                     </button>
                     <Link className="btn-gold" href={bookingHref(service.slug, sub.id)}>
-                      {es ? "Agendar" : "Book a consultation"}
+                      {uiLoc("bookConsultation", locale)}
                     </Link>
                   </div>
                 </article>
@@ -379,7 +374,7 @@ export function ServiceExperience({
         <section className="svc-method">
           <div className="svc-wrap">
             <header className="svc-section-head svc-reveal">
-              <p className="svc-kicker">{es ? "Metodología" : "Methodology"}</p>
+              <p className="svc-kicker">{uiLoc("methodology", locale)}</p>
               <h2>{line(methodology.name, locale)}</h2>
               <p className="svc-lede">{line(methodology.intro, locale)}</p>
             </header>
@@ -418,14 +413,10 @@ export function ServiceExperience({
 
       <section className="svc-cta svc-reveal">
         <div className="svc-wrap svc-cta-inner">
-          <h2>{es ? "¿Listos para el siguiente mandato?" : "Ready for the next mandate?"}</h2>
-          <p>
-            {es
-              ? "Sesenta minutos con un asesor senior. La reserva se acredita al encargo si continúan."
-              : "Sixty minutes with a senior advisor. The retainer credits to the engagement if you continue."}
-          </p>
+          <h2>{uiLoc("readyMandate", locale)}</h2>
+          <p>{uiLoc("sessionCredit", locale)}</p>
           <Link className="btn-gold" href={bookingHref(service.slug)}>
-            {es ? "Reservar consulta" : "Book a consultation"} →
+            {uiLoc("bookConsultation", locale)} →
           </Link>
         </div>
       </section>
@@ -433,9 +424,9 @@ export function ServiceExperience({
       {active && mounted
         ? createPortal(
         <div className="svc-studio" role="dialog" aria-modal="true" aria-labelledby={modalTitleId}>
-          <button type="button" className="svc-studio-backdrop" aria-label={es ? "Cerrar" : "Close"} onClick={closeSub} />
+          <button type="button" className="svc-studio-backdrop" aria-label={uiLoc("close", locale)} onClick={closeSub} />
           <div className="svc-studio-panel">
-            <button type="button" className="svc-studio-close" onClick={closeSub} aria-label={es ? "Cerrar" : "Close"}>
+            <button type="button" className="svc-studio-close" onClick={closeSub} aria-label={uiLoc("close", locale)}>
               ×
             </button>
             <div className="svc-studio-media">
@@ -472,7 +463,7 @@ export function ServiceExperience({
               </ul>
               <div className="svc-studio-actions">
                 <Link className="btn-gold" href={bookingHref(service.slug, active.id)} onClick={closeSub}>
-                  {es ? "Agendar esta práctica" : "Book this practice"} →
+                  {uiLoc("bookThisPractice", locale)} →
                 </Link>
               </div>
             </div>

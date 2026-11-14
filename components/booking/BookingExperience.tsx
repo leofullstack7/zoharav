@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import type { BookingCategory, BookingOption } from "@/content/booking";
 import { loc } from "@/lib/i18n/loc";
+import { intlBcp47 } from "@/lib/i18n/locale";
 import type { AvailabilitySlot } from "@/components/chat/types";
 import { BookingSelectOverlay } from "@/components/booking/BookingSelectOverlay";
 
@@ -21,14 +22,14 @@ function localDayKey(iso: string) {
 }
 
 function monthLabel(year: number, month: number, locale: string) {
-  return new Intl.DateTimeFormat(locale === "es" ? "es-CO" : "en-US", {
+  return new Intl.DateTimeFormat(intlBcp47(locale), {
     month: "long",
     year: "numeric",
   }).format(new Date(year, month, 1));
 }
 
 function dayHeading(iso: string, locale: string) {
-  return new Intl.DateTimeFormat(locale === "es" ? "es-CO" : "en-US", {
+  return new Intl.DateTimeFormat(intlBcp47(locale), {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -36,7 +37,7 @@ function dayHeading(iso: string, locale: string) {
 }
 
 function timeLabel(iso: string, locale: string) {
-  return new Intl.DateTimeFormat(locale === "es" ? "es-CO" : "en-US", {
+  return new Intl.DateTimeFormat(intlBcp47(locale), {
     hour: "numeric",
     minute: "2-digit",
   }).format(new Date(iso));

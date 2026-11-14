@@ -23,7 +23,7 @@ export function isRtl(locale: string): boolean {
 /** BCP 47 tag for Intl formatters (dates, numbers). */
 export function intlBcp47(locale: string): string {
   if (locale === "es") return "es-CO";
-  if (locale === "ar") return "ar";
+  if (locale === "ar") return "ar-u-nu-latn";
   return "en-US";
 }
 

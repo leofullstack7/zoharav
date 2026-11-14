@@ -233,7 +233,7 @@ export function Header({ locale }: { locale: string }) {
                             type="button"
                             aria-expanded={mobileSub === entry.slug}
                             onClick={() => setMobileSub((value) => (value === entry.slug ? null : entry.slug))}
-                            aria-label={locale === "es" ? "Subservicios" : "Subservices"}
+                            aria-label={uiLoc("subservices", locale)}
                           >
                             {mobileSub === entry.slug ? "−" : "+"}
                           </button>

@@ -15,6 +15,7 @@ import { compliance, site } from "@/content/site";
 import type { HomeImages } from "@/lib/images/homeImages";
 import { Link } from "@/i18n/navigation";
 import { loc } from "@/lib/i18n/loc";
+import { uiLoc } from "@/lib/i18n/ui";
 
 const line = (value: { en: string; es: string }, locale: string) => loc(value, locale);
 
@@ -146,10 +147,10 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
           <p className="hero-lede">{line(slide.lede, locale)}</p>
           <div className="hero-actions">
             <Link className="btn-gold" href="/booking">
-              {locale === "es" ? "Reservar sesión" : "Reserve a session"} <span aria-hidden>→</span>
+              {uiLoc("reserveSession", locale)} <span aria-hidden>→</span>
             </Link>
             <a className="text-link" href="#trust">
-              {locale === "es" ? "Por qué confiar" : "Why the trust holds"}
+              {uiLoc("whyTrust", locale)}
             </a>
           </div>
         </div>
@@ -165,9 +166,9 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
             <header className="firm-head">
               <p className="firm-kicker">
                 <span>00</span>
-                {locale === "es" ? "Antes del discurso" : "Before the pitch"}
+                {uiLoc("beforePitch", locale)}
               </p>
-              <h2>{locale === "es" ? "Lo que sostiene la confianza" : "What the trust rests on"}</h2>
+              <h2>{uiLoc("whatTrustRests", locale)}</h2>
             </header>
           </Reveal>
           <div className="trust-grid">

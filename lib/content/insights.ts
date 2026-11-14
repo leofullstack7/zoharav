@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { resolveMdxLocale } from "./localeFile";
 
 /**
  * Loads the editorial essays authored as MDX source under content/insights/<slug>.<locale>.mdx.
@@ -47,15 +48,18 @@ function listSlugs(): string[] {
   if (!fs.existsSync(INSIGHTS_DIR)) return [];
   const slugs = new Set<string>();
   for (const file of fs.readdirSync(INSIGHTS_DIR)) {
-    const match = file.match(/^(.+)\.(en|es)\.mdx$/);
+    const match = file.match(/^(.+)\.(en|es|ar)\.mdx$/);
     if (match) slugs.add(match[1]);
   }
   return [...slugs];
 }
 
 function readInsight(slug: string, locale: string): Insight | undefined {
-  const safeLocale = locale === "es" ? "es" : "en";
-  const filePath = path.join(INSIGHTS_DIR, `${slug}.${safeLocale}.mdx`);
+  const safeLocale = resolveMdxLocale(locale);
+  let filePath = path.join(INSIGHTS_DIR, `${slug}.${safeLocale}.mdx`);
+  if (!fs.existsSync(filePath) && safeLocale === "ar") {
+    filePath = path.join(INSIGHTS_DIR, `${slug}.en.mdx`);
+  }
   if (!fs.existsSync(filePath)) return undefined;
 
   const raw = fs.readFileSync(filePath, "utf8");

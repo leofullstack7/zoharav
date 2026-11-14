@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap");
+
 /* Arabic / RTL layout — logical properties where the main shell needs a nudge. */
 
 html[dir="rtl"] {
@@ -6,7 +8,7 @@ html[dir="rtl"] {
 }
 
 html[dir="rtl"] body {
-  font-family: var(--font-arabic), var(--font-sans);
+  font-family: "Noto Sans Arabic", var(--font-sans);
   letter-spacing: 0;
   line-height: 1.85;
 }
@@ -16,7 +18,7 @@ html[dir="rtl"] h2,
 html[dir="rtl"] h3,
 html[dir="rtl"] h4,
 html[dir="rtl"] .font-wordmark {
-  font-family: var(--font-arabic-display), var(--font-display);
+  font-family: "Noto Sans Arabic", var(--font-display);
   line-height: 1.25;
 }
 

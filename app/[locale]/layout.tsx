@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 import { CookieConsent } from "@/components/site/CookieConsent";
 import { site } from "@/content/site";
 import { routing } from "@/i18n/routing";
+import { loc } from "@/lib/i18n/loc";
+import { isRtl, openGraphLocale } from "@/lib/i18n/locale";
 import { SmoothScroll } from "@/lib/motion";
 import "@/styles/globals.css";
 
@@ -49,9 +51,9 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const copy = locale === "es" ? site.seo.description.es : site.seo.description.en;
-  const title = locale === "es" ? site.seo.title.es : site.seo.title.en;
-  const ogLocale = locale === "es" ? "es_ES" : "en_US";
+  const copy = loc(site.seo.description, locale);
+  const title = loc(site.seo.title, locale);
+  const ogLocale = openGraphLocale(locale);
 
   return {
     metadataBase: new URL(site.url),
@@ -105,6 +107,7 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
+      dir={isRtl(locale) ? "rtl" : "ltr"}
       className={`${cormorant.variable} ${manrope.variable} ${cinzel.variable} ${bodoni.variable}`}
     >
       <body>
