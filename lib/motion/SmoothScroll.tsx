@@ -3,6 +3,7 @@
 import { useEffect, type ReactNode } from "react";
 import Lenis from "lenis";
 import { gsap, prefersReducedMotion, registerGsap, ScrollTrigger } from "./gsap";
+import { setLenisInstance } from "./lenis-instance";
 
 /**
  * Lenis (lerp 0.09) synced to ScrollTrigger.
@@ -13,7 +14,8 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     registerGsap();
     if (prefersReducedMotion()) return;
 
-    const lenis = new Lenis({ lerp: 0.09 });
+    const lenis = new Lenis({ lerp: 0.09, allowNestedScroll: true });
+    setLenisInstance(lenis);
     lenis.on("scroll", ScrollTrigger.update);
 
     const tick = (time: number) => {
@@ -25,6 +27,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
 
     return () => {
       gsap.ticker.remove(tick);
+      setLenisInstance(undefined);
       lenis.destroy();
     };
   }, []);

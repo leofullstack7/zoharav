@@ -469,23 +469,20 @@
   line-height: 1.65;
 }
 
-/* Studio overlay (Leer más) — un solo scroll vertical en el overlay */
+/* Studio overlay (Leer más) — scroll nativo solo dentro del panel */
 .svc-studio {
   position: fixed;
   inset: 0;
   z-index: 420;
-  overflow-x: hidden;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
   overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
-  scrollbar-width: none;
-}
-.svc-studio::-webkit-scrollbar {
-  display: none;
 }
 .svc-studio-backdrop {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 0;
   border: 0;
@@ -495,13 +492,31 @@
 .svc-studio-panel {
   position: relative;
   z-index: 1;
+  flex: 1 1 auto;
   width: min(100%, 52rem);
+  min-height: 0;
   margin: 0 auto;
-  min-height: 100dvh;
-  overflow: visible;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
   background: #08090d;
   box-shadow: 0 0 80px rgba(0, 0, 0, 0.65);
   will-change: transform, opacity;
+}
+@media (pointer: fine) {
+  .svc-studio-panel {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(215, 201, 164, 0.45) rgba(255, 255, 255, 0.06);
+  }
+  .svc-studio-panel::-webkit-scrollbar {
+    width: 8px;
+  }
+  .svc-studio-panel::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(215, 201, 164, 0.42);
+  }
 }
 .svc-studio-panel:not(.is-motion-ready) [data-reveal],
 .svc-studio-panel:not(.is-motion-ready) .svc-studio-benefit,
@@ -510,6 +525,7 @@
 }
 .svc-studio-panel--stack {
   display: block;
+  min-height: min(100%, 100dvh);
   padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
 }
 .svc-studio-close {

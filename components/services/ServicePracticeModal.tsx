@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { loc, locParagraphs } from "@/lib/i18n/loc";
 import { uiLoc } from "@/lib/i18n/ui";
 import type { ServicePageMedia } from "@/lib/images/resolveServicePageMedia";
-import { gsap, prefersReducedMotion, registerGsap } from "@/lib/motion";
+import { gsap, pauseSiteScroll, prefersReducedMotion, registerGsap, resumeSiteScroll } from "@/lib/motion";
 import { PracticeModalAccent, practiceBulletIcon } from "./practiceModalIcons";
 
 function line(value: { en: string; es: string }, locale: string) {
@@ -69,7 +69,6 @@ export function ServicePracticeModal({
   bookingHref: (offerId?: string) => string;
 }) {
   const titleId = useId();
-  const scrollerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const src = subImage(active, service, media);
   const paragraphs = locParagraphs(active.body, locale);
@@ -77,8 +76,8 @@ export function ServicePracticeModal({
 
   useEffect(() => {
     lockPageScroll();
-    const scroller = scrollerRef.current;
-    if (scroller) scroller.scrollTop = 0;
+    pauseSiteScroll();
+    panelRef.current?.scrollTo({ top: 0, left: 0 });
 
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
@@ -87,15 +86,15 @@ export function ServicePracticeModal({
     return () => {
       window.removeEventListener("keydown", onKey);
       unlockPageScroll();
+      resumeSiteScroll();
     };
   }, [active.id, onClose]);
 
   useLayoutEffect(() => {
     const panel = panelRef.current;
-    const scroller = scrollerRef.current;
-    if (!panel || !scroller) return;
+    if (!panel) return;
 
-    scroller.scrollTop = 0;
+    panel.scrollTop = 0;
 
     if (prefersReducedMotion()) {
       panel.classList.add("is-motion-ready");
@@ -108,7 +107,7 @@ export function ServicePracticeModal({
     const benefits = panel.querySelectorAll<HTMLElement>(".svc-studio-benefit");
     const offer = panel.querySelector<HTMLElement>(".svc-studio-offer");
 
-    gsap.set(panel, { opacity: 0, y: 28, scale: 0.98 });
+    gsap.set(panel, { opacity: 0 });
     if (banner) gsap.set(banner, { scale: 1.14, opacity: 0.5 });
     gsap.set(reveal, { opacity: 0, y: 36 });
     gsap.set(benefits, { opacity: 0, y: 24 });
@@ -120,7 +119,7 @@ export function ServicePracticeModal({
         onComplete: () => panel.classList.add("is-motion-ready"),
       });
 
-      tl.to(panel, { opacity: 1, y: 0, scale: 1, duration: 0.65 }, 0)
+      tl.to(panel, { opacity: 1, duration: 0.65 }, 0)
         .to(
           banner,
           { scale: 1, opacity: 1, duration: 1.1, ease: "power2.out" },
@@ -149,14 +148,19 @@ export function ServicePracticeModal({
   }, [active.id]);
 
   return (
-    <div className="svc-studio" ref={scrollerRef} role="dialog" aria-modal="true" aria-labelledby={titleId}>
+    <div className="svc-studio" role="dialog" aria-modal="true" aria-labelledby={titleId}>
       <button
         type="button"
         className="svc-studio-backdrop"
         aria-label={uiLoc("close", locale)}
         onClick={onClose}
       />
-      <div ref={panelRef} className="svc-studio-panel svc-studio-panel--stack">
+      <div
+        ref={panelRef}
+        className="svc-studio-panel svc-studio-panel--stack"
+        data-lenis-prevent
+        data-lenis-prevent-wheel
+      >
         <button type="button" className="svc-studio-close" onClick={onClose} aria-label={uiLoc("close", locale)}>
           ×
         </button>
