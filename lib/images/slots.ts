@@ -19,6 +19,8 @@
  * omit it and stay `image_url = null` until an admin uploads one.
  */
 
+import { buildServiceMediaSlots } from "./serviceMedia";
+
 export type ImageSlot = {
   /** Stable primary key, also the `site_images.slot_key` column value. */
   key: string;
@@ -38,7 +40,7 @@ export type ImageSlot = {
   anchor?: string;
 };
 
-export const IMAGE_SLOTS: ImageSlot[] = [
+const BASE_IMAGE_SLOTS: ImageSlot[] = [
   {
     key: "home.hero",
     label: "Inicio — Imagen principal (hero)",
@@ -522,6 +524,8 @@ export const IMAGE_SLOTS: ImageSlot[] = [
   },
 ];
 
+export const IMAGE_SLOTS: ImageSlot[] = [...BASE_IMAGE_SLOTS, ...buildServiceMediaSlots()];
+
 export function isRasterPath(path: string) {
   return /\.(avif|gif|jpe?g|png|webp)$/i.test(path);
 }
@@ -576,6 +580,14 @@ export function previewForSlot(slot: ImageSlot): { href: string; anchor?: string
   if (slot.key.startsWith("services.") && slot.key.endsWith(".cover")) {
     const slug = slot.key.slice("services.".length, -".cover".length);
     return { href: `/es/services/${slug}` };
+  }
+  const subMatch = slot.key.match(/^services\.([^.]+)\.sub\.([^.]+)(?:\.detail-\d+)?$/);
+  if (subMatch) {
+    return { href: `/es/services/${subMatch[1]}`, anchor: subMatch[2] };
+  }
+  const pillarMatch = slot.key.match(/^services\.([^.]+)\.pillar\./);
+  if (pillarMatch) {
+    return { href: `/es/services/${pillarMatch[1]}` };
   }
   if (slot.key.startsWith("offices.")) return { href: "/es/global-presence" };
   return { href: PAGE_HREF[slot.page] ?? "/es" };

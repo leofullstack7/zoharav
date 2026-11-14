@@ -1,0 +1,77 @@
+/* Arabic / RTL layout — logical properties where the main shell needs a nudge. */
+
+html[dir="rtl"] {
+  --zh-flow-start: right;
+  --zh-flow-end: left;
+}
+
+html[dir="rtl"] body {
+  font-family: var(--font-arabic), var(--font-sans);
+  letter-spacing: 0;
+  line-height: 1.85;
+}
+
+html[dir="rtl"] h1,
+html[dir="rtl"] h2,
+html[dir="rtl"] h3,
+html[dir="rtl"] h4,
+html[dir="rtl"] .font-wordmark {
+  font-family: var(--font-arabic-display), var(--font-display);
+  line-height: 1.25;
+}
+
+html[dir="rtl"] .site-header nav {
+  direction: rtl;
+}
+
+html[dir="rtl"] .lang-switch {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .zh-skip {
+  inset-inline-start: 1rem;
+  inset-inline-end: auto;
+}
+
+html[dir="rtl"] .btn-gold span[aria-hidden],
+html[dir="rtl"] .mobile-cta span[aria-hidden],
+html[dir="rtl"] a[class*="→"] {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+/* Service offer rows use physical L/R in CSS; keep alternating art direction in RTL. */
+html[dir="rtl"] .svc-offer:not(.is-flip) .svc-offer-grid {
+  direction: rtl;
+}
+
+html[dir="rtl"] .svc-offer.is-flip .svc-offer-grid {
+  direction: ltr;
+}
+
+html[dir="rtl"] .svc-hero-copy,
+html[dir="rtl"] .svc-pillars,
+html[dir="rtl"] .svc-section-head,
+html[dir="rtl"] .svc-offer-copy {
+  text-align: start;
+}
+
+html[dir="rtl"] .booking-hour-face,
+html[dir="rtl"] .booking-cal-line {
+  direction: rtl;
+}
+
+html[dir="rtl"] .fullscreen-menu {
+  text-align: start;
+}
+
+html[dir="rtl"] .footer-grid {
+  direction: rtl;
+}
+
+@media (max-width: 980px) {
+  html[dir="rtl"] .svc-offer-grid,
+  html[dir="rtl"] .svc-offer.is-flip .svc-offer-grid {
+    direction: rtl;
+  }
+}

@@ -7,7 +7,9 @@ import { navigation } from "@/content/navigation";
 import { services } from "@/content/services";
 import { site } from "@/content/site";
 import { Link, usePathname } from "@/i18n/navigation";
+import { LocaleSwitch } from "@/components/layout/LocaleSwitch";
 import { loc } from "@/lib/i18n/loc";
+import { uiLoc } from "@/lib/i18n/ui";
 
 type ServiceCoverPayload = Record<string, { photoUrl: string | null; art: string }>;
 
@@ -183,18 +185,16 @@ export function Header({ locale }: { locale: string }) {
               </Link>
             ),
           )}
-          <Link href="/" locale={locale === "es" ? "en" : "es"} className="lang-link">
-            {locale === "es" ? "EN" : "ES"}
-          </Link>
+          <LocaleSwitch locale={locale} />
           <Link href="/booking" className="btn-gold">
-            {locale === "es" ? "Reservar" : "Book"} <span aria-hidden>→</span>
+            {uiLoc("bookShort", locale)} <span aria-hidden>→</span>
           </Link>
         </nav>
         <button
           className="menu-toggle"
           type="button"
           aria-expanded={open}
-          aria-label={open ? (locale === "es" ? "Cerrar menú" : "Close menu") : locale === "es" ? "Abrir menú" : "Open menu"}
+          aria-label={open ? uiLoc("closeMenu", locale) : uiLoc("openMenu", locale)}
           onClick={() => setOpen((v) => !v)}
         >
           <span className={`menu-icon${open ? " is-open" : ""}`} aria-hidden>
@@ -261,11 +261,9 @@ export function Header({ locale }: { locale: string }) {
             ),
           )}
           <Link href="/booking" className="mobile-cta" onClick={() => setOpen(false)}>
-            {locale === "es" ? "Reservar consulta" : "Book a consultation"}
+            {uiLoc("bookConsultation", locale)}
           </Link>
-          <Link href="/" locale={locale === "es" ? "en" : "es"} className="mobile-lang" onClick={() => setOpen(false)}>
-            {locale === "es" ? "English" : "Español"}
-          </Link>
+          <LocaleSwitch locale={locale} className="mobile-lang lang-switch" onNavigate={() => setOpen(false)} />
         </div>
       ) : null}
     </>

@@ -129,6 +129,37 @@
   width: 100%;
 }
 
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.35rem;
+  border: 1px solid rgba(186, 198, 214, 0.35);
+  background: rgba(8, 12, 18, 0.45);
+}
+
+.lang-switch a {
+  min-width: 2.1rem;
+  padding: 0.28rem 0.4rem;
+  color: var(--zh-muted) !important;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em !important;
+  text-align: center;
+  text-decoration: none;
+  transition: color 0.25s ease, background 0.25s ease;
+}
+
+.lang-switch a.is-active {
+  color: var(--zh-black) !important;
+  background: var(--zh-gold-400);
+  letter-spacing: 0.1em !important;
+}
+
+html[dir="rtl"] .lang-switch a {
+  letter-spacing: 0 !important;
+  font-size: 0.72rem;
+}
+
 .lang-link {
   color: var(--zh-gold-200) !important;
   letter-spacing: 0.22em !important;

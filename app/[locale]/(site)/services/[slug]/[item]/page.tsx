@@ -3,6 +3,7 @@ import { ServiceExperience } from "@/components/services/ServiceExperience";
 import { getOffer, getService, services } from "@/content/services";
 import { loc } from "@/lib/i18n/loc";
 import { getSiteImagePhoto } from "@/lib/images/getSiteImage";
+import { resolveServicePageMedia } from "@/lib/images/resolveServicePageMedia";
 import { buildPageMetadata, trimCopy } from "@/lib/seo";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -47,13 +48,17 @@ export default async function ServiceItemPage({
   const offer = getOffer(slug, item);
   const service = getService(slug);
   if (!offer || !service) notFound();
-  const coverPhoto = await getSiteImagePhoto(`services.${service.slug}.cover`);
+  const [coverPhoto, media] = await Promise.all([
+    getSiteImagePhoto(`services.${service.slug}.cover`),
+    resolveServicePageMedia(service),
+  ]);
 
   return (
     <ServiceExperience
       service={service}
       locale={locale}
       coverPhoto={coverPhoto}
+      media={media}
       initialSubId={item}
     />
   );

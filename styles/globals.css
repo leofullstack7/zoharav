@@ -5,6 +5,7 @@
 @import "./pages-redesign.css";
 @import "./service-page.css";
 @import "./office-map.css";
+@import "./rtl.css";
 
 @theme inline {
   --color-zh-black: var(--zh-black);

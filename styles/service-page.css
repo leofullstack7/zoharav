@@ -534,6 +534,26 @@
   font-size: clamp(1.15rem, 2vw, 1.45rem);
   color: #d7c9a4;
 }
+.svc-studio-visuals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 1.1rem 0 0.35rem;
+}
+
+.svc-studio-visual {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid rgba(186, 198, 214, 0.22);
+  mask-image: radial-gradient(ellipse 92% 88% at 50% 50%, #000 58%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 92% 88% at 50% 50%, #000 58%, transparent 100%);
+}
+
+.svc-studio-visual img {
+  object-fit: cover;
+}
+
 .svc-studio-body {
   margin: 0.2rem 0 0.4rem;
   max-width: 38rem;
@@ -603,6 +623,7 @@
     mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
   }
   .svc-studio-tiles { grid-template-columns: 1fr; }
+  .svc-studio-visuals { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .svc-hero { min-height: 78vh; }

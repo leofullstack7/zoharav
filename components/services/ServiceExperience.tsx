@@ -3,77 +3,23 @@
 import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import type { Service, ServiceImpactSlide, ServiceSlug, SubService } from "@/content/types";
+import type { Service, ServiceImpactSlide, SubService } from "@/content/types";
 import { Link } from "@/i18n/navigation";
 import { loc } from "@/lib/i18n/loc";
+import type { ServicePageMedia } from "@/lib/images/resolveServicePageMedia";
 import { gsap, prefersReducedMotion, registerGsap, ScrollTrigger } from "@/lib/motion";
 
 const line = (value: { en: string; es: string }, locale: string) => loc(value, locale);
-
-const SERVICE_GALLERY: Record<ServiceSlug, string[]> = {
-  "energy-transition": [
-    "/images/editorial/wind.jpg",
-    "/images/sustainability/plant.png",
-    "/images/sectors/oil-gas.jpg",
-    "/images/firm/office.png",
-    "/images/editorial/boardroom.jpg",
-  ],
-  "oil-and-energy": [
-    "/images/sectors/oil-gas.jpg",
-    "/images/hero/yacht.png",
-    "/images/firm/office.png",
-    "/images/editorial/boardroom.jpg",
-    "/images/contact/tower.png",
-  ],
-  "mining-natural-resources": [
-    "/images/sectors/mining.jpg",
-    "/images/mining/emeralds.png",
-    "/images/firm/office.png",
-    "/images/investment/handshake.png",
-    "/images/hero/yacht.png",
-  ],
-  "sustainability-esg": [
-    "/images/sustainability/plant.png",
-    "/images/editorial/wind.jpg",
-    "/images/firm/office.png",
-    "/images/offices/miami.png",
-    "/images/editorial/boardroom.jpg",
-  ],
-  "investment-financial-advisory": [
-    "/images/investment/handshake.png",
-    "/images/firm/office.png",
-    "/images/editorial/boardroom.jpg",
-    "/images/contact/tower.png",
-    "/images/hero/yacht.png",
-  ],
-  "strategic-operational-consulting": [
-    "/images/services/ops/hero-impact.jpg",
-    "/images/services/ops/hero-digital.jpg",
-    "/images/editorial/boardroom.jpg",
-    "/images/services/ops/lean.png",
-    "/images/firm/office.png",
-  ],
-};
 
 function asRaster(src: string) {
   return src.replace(/\.svg$/i, ".png");
 }
 
-function galleryFor(service: Service) {
-  return SERVICE_GALLERY[service.slug] ?? [asRaster(service.image), "/images/firm/office.png", "/images/editorial/boardroom.jpg"];
-}
-
-function pickImage(service: Service, index: number, preferred?: string) {
-  if (preferred && !preferred.endsWith(".svg")) return preferred;
-  const gallery = galleryFor(service);
-  return gallery[index % gallery.length];
-}
-
-function fallbackSlides(service: Service): ServiceImpactSlide[] {
+function fallbackSlides(service: Service, media: ServicePageMedia): ServiceImpactSlide[] {
   if (service.impactSlides?.length) {
     return service.impactSlides.map((slide, i) => ({
       ...slide,
-      image: pickImage(service, i, slide.image),
+      image: slide.image && !slide.image.endsWith(".svg") ? slide.image : media.pillars[i % 3],
     }));
   }
   const source = service.slides?.length
@@ -82,31 +28,39 @@ function fallbackSlides(service: Service): ServiceImpactSlide[] {
   return source.map((slide, i) => ({
     title: slide.title,
     body: slide.body,
-    image: pickImage(service, i),
+    image: media.pillars[i % 3],
   }));
 }
 
-function fallbackPillars(service: Service) {
+function fallbackPillars(service: Service, media: ServicePageMedia) {
+  let items: { id: string; title: SubService["title"]; body: SubService["body"]; image?: string }[];
   if (service.pillars?.length) {
-    return service.pillars.map((pillar, i) => ({
-      ...pillar,
-      image: pickImage(service, i + 1, pillar.image),
+    items = service.pillars.map((pillar) => ({
+      id: pillar.id,
+      title: pillar.title,
+      body: pillar.body,
+      image: pillar.image,
     }));
-  }
-  const method = service.methodologies[0];
-  if (method) {
-    return method.phases.slice(0, 3).map((phase, i) => ({
+  } else if (service.methodologies[0]) {
+    const method = service.methodologies[0];
+    items = method.phases.slice(0, 3).map((phase) => ({
       id: `${method.id}-${phase.step}`,
       title: phase.title,
       body: phase.body,
-      image: pickImage(service, i + 1),
+    }));
+  } else {
+    items = service.subServices.slice(0, 3).map((sub) => ({
+      id: sub.id,
+      title: sub.title,
+      body: sub.body,
     }));
   }
-  return service.subServices.slice(0, 3).map((sub, i) => ({
-    id: sub.id,
-    title: sub.title,
-    body: sub.body,
-    image: pickImage(service, i, sub.image),
+  return items.map((pillar, i) => ({
+    ...pillar,
+    image:
+      pillar.image && !pillar.image.endsWith(".svg")
+        ? pillar.image
+        : media.pillars[i] ?? media.subs[service.subServices[i]?.id ?? ""] ?? asRaster(service.image),
   }));
 }
 
@@ -120,17 +74,19 @@ export function ServiceExperience({
   service,
   locale,
   coverPhoto,
+  media,
   initialSubId,
 }: {
   service: Service;
   locale: string;
   coverPhoto: string | null;
+  media: ServicePageMedia;
   initialSubId?: string;
 }) {
-  const slides = fallbackSlides(service);
-  const pillars = fallbackPillars(service);
+  const slides = fallbackSlides(service, media);
+  const pillars = fallbackPillars(service, media);
   const methodology = service.methodologies[0] ?? service.methodologies[service.methodologies.length - 1];
-  const heroImage = coverPhoto || pickImage(service, 0, asRaster(service.image));
+  const heroImage = coverPhoto || asRaster(service.image);
   const [active, setActive] = useState<SubService | null>(
     () => service.subServices.find((sub) => sub.id === initialSubId) ?? null,
   );
@@ -386,7 +342,9 @@ export function ServiceExperience({
           </header>
           <div className="svc-offer-list">
             {service.subServices.map((sub, index) => {
-              const image = pickImage(service, index, sub.image);
+              const image =
+                media.subs[sub.id] ??
+                (sub.image && !sub.image.endsWith(".svg") ? sub.image : asRaster(service.image));
               const flip = index % 2 === 1;
               return (
                 <article
@@ -482,11 +440,10 @@ export function ServiceExperience({
             </button>
             <div className="svc-studio-media">
               <Image
-                src={pickImage(
-                  service,
-                  service.subServices.findIndex((sub) => sub.id === active.id),
-                  active.image,
-                )}
+                src={
+                  media.subs[active.id] ??
+                  (active.image && !active.image.endsWith(".svg") ? active.image : asRaster(service.image))
+                }
                 alt=""
                 fill
                 sizes="100vw"
@@ -498,6 +455,13 @@ export function ServiceExperience({
               <h2 id={modalTitleId}>{line(active.title, locale)}</h2>
               <p className="svc-studio-tag">{line(active.tagline, locale)}</p>
               <p className="svc-studio-body">{line(active.body, locale)}</p>
+              <div className="svc-studio-visuals" aria-hidden>
+                {(media.studioDetails[active.id] ?? []).map((src, visualIndex) => (
+                  <div className="svc-studio-visual" key={`${active.id}-${visualIndex}`}>
+                    <Image src={src} alt="" fill sizes="(max-width: 720px) 33vw, 240px" />
+                  </div>
+                ))}
+              </div>
               <ul className="svc-studio-tiles">
                 {active.bullets.map((bullet, index) => (
                   <li key={bullet.en} style={{ animationDelay: `${0.08 * index}s` }}>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getPathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { site } from "@/content/site";
+import { openGraphLocale } from "@/lib/i18n/locale";
 
 const DEFAULT_OG_IMAGE = "/images/firm/office.png";
 
@@ -52,7 +53,7 @@ export function buildPageMetadata({
    * path swaps to the raster fallback.
    */
   const ogImage = (image ?? DEFAULT_OG_IMAGE).replace(/\.svg$/, ".png");
-  const ogLocale = locale === "es" ? "es_ES" : "en_US";
+  const ogLocale = openGraphLocale(locale);
 
   return {
     title: absoluteTitle ? { absolute: title } : title,

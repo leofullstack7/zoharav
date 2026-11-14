@@ -179,7 +179,7 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
                 <Link href={item.href}>{line(item.cta, locale)}</Link>
               </article>
             ))}
-          </div>
+              </div>
           <div className="stat-row trust-stats">
             {homeStats
               .filter((stat) => stat.kind === "company")
@@ -203,7 +203,7 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
 
       <section className="pro-support" id="professional-support">
         <div className="pro-support-layout">
-          <Reveal>
+        <Reveal>
             <div className="pro-support-copy">
               <h2>
                 <span className="pro-support-serif">
@@ -288,7 +288,7 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
 
       <section className="chapter studio zhv-zone" id="services">
         <div className="firm-layout">
-          <Reveal>
+            <Reveal>
             <header className="firm-head">
               <p className="firm-kicker">
                 <span>02</span>
@@ -296,7 +296,7 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
               </p>
               <h2>{locale === "es" ? "Servicios" : "Services"}</h2>
             </header>
-          </Reveal>
+            </Reveal>
           <div className="studio-main studio-services">
             <LiveFrame
               src="/images/services/jet.svg"
@@ -304,7 +304,7 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
               photoUrl={images.servicesFrame}
             />
             <ol className="studio-rows">
-              {homeServiceCards.map((card, index) => (
+            {homeServiceCards.map((card, index) => (
                 <li key={card.id}>
                   <Link href="/services">
                     <span>0{index + 1}</span>
@@ -312,26 +312,26 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
                     <p>{line(card.body, locale)}</p>
                   </Link>
                 </li>
-              ))}
+            ))}
             </ol>
-          </div>
-          <div className="line-grid">
-            {services.map((service, index) => (
-              <Reveal delay={index * 70} key={service.slug}>
-                <Link className="line-card" href={`/services/${service.slug}`}>
+        </div>
+        <div className="line-grid">
+          {services.map((service, index) => (
+            <Reveal delay={index * 70} key={service.slug}>
+              <Link className="line-card" href={`/services/${service.slug}`}>
                   <ArtOverPhoto
                     photoUrl={images.serviceCovers[service.slug] ?? null}
                     artSrc={service.image}
                     sizes="(max-width: 900px) 100vw, 33vw"
                   />
-                  <div>
-                    <h3>{line(service.name, locale)}</h3>
-                    <p>{line(service.cardLine, locale)}</p>
-                  </div>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
+                <div>
+                  <h3>{line(service.name, locale)}</h3>
+                  <p>{line(service.cardLine, locale)}</p>
+                </div>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
         </div>
       </section>
 
@@ -377,24 +377,24 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
               <h2>{line(chapters.presence.title, locale)}</h2>
             </header>
             <p className="firm-lede presence-lede">{line(chapters.presence.body, locale)}</p>
-          </Reveal>
-          <div className="cities">
-            {activeOffices.map((office, index) => (
-              <Reveal delay={index * 100} key={office.id}>
+        </Reveal>
+        <div className="cities">
+          {activeOffices.map((office, index) => (
+            <Reveal delay={index * 100} key={office.id}>
                 <Link className="city" href="/global-presence">
-                  <div className="frame">
+                <div className="frame">
                     <ArtOverPhoto
                       photoUrl={images.officeCovers[office.id] ?? null}
                       artSrc={office.image}
                       sizes="(max-width: 900px) 50vw, 25vw"
                     />
-                  </div>
-                  <h3>{line(office.city, locale)}</h3>
-                  <p>{line(office.role, locale)}</p>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
+                </div>
+                <h3>{line(office.city, locale)}</h3>
+                <p>{line(office.role, locale)}</p>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
         </div>
       </section>
 
@@ -449,7 +449,7 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
 
       <section className="chapter studio zhv-zone" id="contact">
         <div className="firm-layout">
-          <Reveal>
+        <Reveal>
             <header className="firm-head">
               <p className="firm-kicker">
                 <span>{chapters.contact.number}</span>
@@ -475,7 +475,7 @@ export function HomeExperience({ locale, images }: { locale: string; images: Hom
               alt="Corporate tower and palms at sunset"
               photoUrl={images.contactFrame}
             />
-          </div>
+            </div>
         </div>
       </section>
     </div>
