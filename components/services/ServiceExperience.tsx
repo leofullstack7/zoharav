@@ -275,7 +275,7 @@ export function ServiceExperience({
     <main id="content" className="svc-page" ref={rootRef}>
       <section className="svc-hero">
         <div className="svc-hero-slide is-on">
-          <Image src={heroImage} alt="" fill priority sizes="100vw" className="svc-hero-img" />
+          <Image src={heroImage} alt={media.alts.cover} fill priority sizes="100vw" className="svc-hero-img" />
         </div>
         <div className="svc-hero-veil" />
         <div className="svc-hero-copy">
@@ -318,7 +318,7 @@ export function ServiceExperience({
               <article className="svc-pillar" key={pillar.id}>
                 <span className="svc-pillar-index">{String(index + 1).padStart(2, "0")}</span>
                 <div className="svc-pillar-media">
-                  <Image src={pillar.image} alt="" fill sizes="(max-width: 900px) 100vw, 33vw" />
+                  <Image src={pillar.image} alt={media.alts.pillars[index] ?? ""} fill sizes="(max-width: 900px) 100vw, 33vw" />
                 </div>
                 <h3>{line(pillar.title, locale)}</h3>
                 <p>{line(pillar.body, locale)}</p>
@@ -352,7 +352,7 @@ export function ServiceExperience({
                     <h3>{line(sub.title, locale)}</h3>
                   </div>
                   <div className="svc-offer-visual" aria-hidden>
-                    <Image src={image} alt="" fill sizes="(max-width: 900px) 100vw, 46vw" />
+                    <Image src={image} alt={media.alts.subs[sub.id] ?? ""} fill sizes="(max-width: 900px) 100vw, 46vw" />
                   </div>
                   <p className="svc-offer-body">{line(sub.tagline, locale)}</p>
                   <div className="svc-offer-actions">
@@ -435,7 +435,7 @@ export function ServiceExperience({
                   media.subs[active.id] ??
                   (active.image && !active.image.endsWith(".svg") ? active.image : asRaster(service.image))
                 }
-                alt=""
+                alt={media.alts.subs[active.id] ?? ""}
                 fill
                 sizes="100vw"
                 className="svc-studio-photo"
@@ -449,7 +449,12 @@ export function ServiceExperience({
               <div className="svc-studio-visuals" aria-hidden>
                 {(media.studioDetails[active.id] ?? []).map((src, visualIndex) => (
                   <div className="svc-studio-visual" key={`${active.id}-${visualIndex}`}>
-                    <Image src={src} alt="" fill sizes="(max-width: 720px) 33vw, 240px" />
+                    <Image
+                      src={src}
+                      alt={(media.alts.studioDetails[active.id] ?? [])[visualIndex] ?? ""}
+                      fill
+                      sizes="(max-width: 720px) 33vw, 240px"
+                    />
                   </div>
                 ))}
               </div>

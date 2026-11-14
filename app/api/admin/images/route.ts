@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/lib/auth/requireAdmin";
 import { query } from "@/lib/db/client";
+import { resolveAltText } from "@/lib/images/slotAlt";
 import { groupImageSlotsByPage, previewForSlot, previewHrefForPage } from "@/lib/images/slots";
 
 /**
@@ -22,8 +23,8 @@ export async function GET() {
   }
 
   try {
-    const result = await query<{ slot_key: string; image_url: string | null; updated_at: string }>(
-      "select slot_key, image_url, updated_at from site_images",
+    const result = await query<{ slot_key: string; image_url: string | null; alt_text: string | null; updated_at: string }>(
+      "select slot_key, image_url, alt_text, updated_at from site_images",
     );
     const rowsByKey = new Map(result.rows.map((row) => [row.slot_key, row]));
 
@@ -39,6 +40,7 @@ export async function GET() {
           recommendedWidth: slot.recommendedWidth,
           recommendedHeight: slot.recommendedHeight,
           imageUrl: row?.image_url ?? null,
+          altText: resolveAltText(slot.key, row?.alt_text ?? null),
           fallback: slot.fallback || null,
           updatedAt: row?.updated_at ?? null,
           href: preview.href,

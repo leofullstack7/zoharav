@@ -164,6 +164,20 @@ async function main() {
         window_start timestamptz not null,
         hit_count integer not null
       );
+
+      create table if not exists site_images (
+        slot_key text primary key,
+        label text not null,
+        page text not null,
+        recommended_width int not null,
+        recommended_height int not null,
+        image_url text,
+        storage_path text,
+        alt_text text,
+        updated_at timestamptz not null default now()
+      );
+
+      alter table site_images add column if not exists alt_text text;
     `);
 
     await client.query(

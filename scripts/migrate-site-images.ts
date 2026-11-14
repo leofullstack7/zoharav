@@ -112,9 +112,10 @@ function buildClientConfig(rawConnectionString: string) {
 }
 
 async function optimizeToWebp(input: Buffer, maxWidth: number, maxHeight: number): Promise<Buffer> {
-  return sharp(input)
+  return sharp(input, { failOn: "none" })
+    .rotate()
     .resize({ width: maxWidth, height: maxHeight, fit: "inside", withoutEnlargement: true })
-    .webp({ quality: 82 })
+    .webp({ quality: 80, effort: 5, smartSubsample: true })
     .toBuffer();
 }
 
@@ -147,8 +148,10 @@ async function main() {
         recommended_height int not null,
         image_url text,
         storage_path text,
+        alt_text text,
         updated_at timestamptz not null default now()
       );
+      alter table site_images add column if not exists alt_text text;
     `);
     await pg.query("commit");
     console.log("site_images table ready.");
@@ -181,10 +184,10 @@ async function main() {
         // Team portraits: no real photo exists yet — insert/leave the row
         // null so the public placeholder keeps showing.
         await pg.query(
-          `insert into site_images (slot_key, label, page, recommended_width, recommended_height, image_url, storage_path, updated_at)
-           values ($1, $2, $3, $4, $5, null, null, now())
+          `insert into site_images (slot_key, label, page, recommended_width, recommended_height, image_url, storage_path, alt_text, updated_at)
+           values ($1, $2, $3, $4, $5, null, null, $6, now())
            on conflict (slot_key) do nothing`,
-          [slot.key, slot.label, slot.page, slot.recommendedWidth, slot.recommendedHeight],
+          [slot.key, slot.label, slot.page, slot.recommendedWidth, slot.recommendedHeight, slot.label],
         );
         console.log(`[seed] ${slot.key} — no photo available, left null.`);
         continue;
@@ -210,8 +213,8 @@ async function main() {
       const imageUrl = publicUrlData.publicUrl;
 
       await pg.query(
-        `insert into site_images (slot_key, label, page, recommended_width, recommended_height, image_url, storage_path, updated_at)
-         values ($1, $2, $3, $4, $5, $6, $7, now())
+        `insert into site_images (slot_key, label, page, recommended_width, recommended_height, image_url, storage_path, alt_text, updated_at)
+         values ($1, $2, $3, $4, $5, $6, $7, $8, now())
          on conflict (slot_key) do update set
            label = excluded.label,
            page = excluded.page,
@@ -219,8 +222,9 @@ async function main() {
            recommended_height = excluded.recommended_height,
            image_url = excluded.image_url,
            storage_path = excluded.storage_path,
+           alt_text = coalesce(site_images.alt_text, excluded.alt_text),
            updated_at = excluded.updated_at`,
-        [slot.key, slot.label, slot.page, slot.recommendedWidth, slot.recommendedHeight, imageUrl, storagePath],
+        [slot.key, slot.label, slot.page, slot.recommendedWidth, slot.recommendedHeight, imageUrl, storagePath, slot.label],
       );
 
       console.log(

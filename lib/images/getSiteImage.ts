@@ -1,6 +1,7 @@
 import "server-only";
 import { unstable_cache } from "next/cache";
 import { query } from "@/lib/db/client";
+import { resolveAltText } from "./slotAlt";
 import { getImageSlot, IMAGE_SLOTS, isRasterPath } from "./slots";
 
 /**
@@ -14,15 +15,20 @@ import { getImageSlot, IMAGE_SLOTS, isRasterPath } from "./slots";
  */
 export const SITE_IMAGES_CACHE_TAG = "site-images";
 
-const fetchImageUrl = unstable_cache(
-  async (slotKey: string): Promise<string | null> => {
-    const result = await query<{ image_url: string | null }>(
-      "select image_url from site_images where slot_key = $1",
+type SiteImageRow = {
+  image_url: string | null;
+  alt_text: string | null;
+};
+
+const fetchImageRow = unstable_cache(
+  async (slotKey: string): Promise<SiteImageRow | null> => {
+    const result = await query<SiteImageRow>(
+      "select image_url, alt_text from site_images where slot_key = $1",
       [slotKey],
     );
-    return result.rows[0]?.image_url ?? null;
+    return result.rows[0] ?? null;
   },
-  ["site-image-url"],
+  ["site-image-row"],
   { revalidate: 300, tags: [SITE_IMAGES_CACHE_TAG] },
 );
 
@@ -40,23 +46,31 @@ export async function getSiteImage(slotKey: string): Promise<string> {
   }
 
   try {
-    const url = await fetchImageUrl(slotKey);
-    return url || slot.fallback;
+    const row = await fetchImageRow(slotKey);
+    return row?.image_url || slot.fallback;
   } catch (err) {
     console.error(`getSiteImage: failed to resolve "${slotKey}", using fallback.`, err);
     return slot.fallback;
   }
 }
 
+export async function getSiteImageAlt(slotKey: string): Promise<string> {
+  const slot = getImageSlot(slotKey);
+  if (!slot) {
+    throw new Error(`getSiteImageAlt: unknown image slot "${slotKey}".`);
+  }
+  try {
+    const row = await fetchImageRow(slotKey);
+    return resolveAltText(slotKey, row?.alt_text);
+  } catch (err) {
+    console.error(`getSiteImageAlt: failed to resolve "${slotKey}", using label.`, err);
+    return resolveAltText(slotKey, null);
+  }
+}
+
 /**
  * Raw admin-uploaded (or seeded) photo URL for a slot, or `null` when none
  * exists — unlike `getSiteImage`, this does NOT substitute the fallback.
- * Used wherever the caller needs to render the photo as a separate,
- * darkened backdrop layer *behind* the slot's hand-built SVG art (see
- * components/site/ArtOverPhoto.tsx) rather than as a straight replacement
- * for it: the two are composited together, so the caller needs to know
- * whether a photo exists at all before deciding whether to render that
- * second layer.
  */
 export async function getSiteImagePhoto(slotKey: string): Promise<string | null> {
   const slot = getImageSlot(slotKey);
@@ -65,7 +79,8 @@ export async function getSiteImagePhoto(slotKey: string): Promise<string | null>
   }
   const rasterFallback = isRasterPath(slot.fallback) ? slot.fallback : null;
   try {
-    return (await fetchImageUrl(slotKey)) || rasterFallback;
+    const row = await fetchImageRow(slotKey);
+    return row?.image_url || rasterFallback;
   } catch (err) {
     console.error(`getSiteImagePhoto: failed to resolve "${slotKey}".`, err);
     return rasterFallback;
@@ -90,6 +105,15 @@ export async function getSiteImagePhotos<K extends string>(
     slotKeys.map(async (key) => [key, await getSiteImagePhoto(key)] as const),
   );
   return Object.fromEntries(entries) as Record<K, string | null>;
+}
+
+export async function getSiteImageAlts<K extends string>(
+  slotKeys: readonly K[],
+): Promise<Record<K, string>> {
+  const entries = await Promise.all(
+    slotKeys.map(async (key) => [key, await getSiteImageAlt(key)] as const),
+  );
+  return Object.fromEntries(entries) as Record<K, string>;
 }
 
 /** Every registered slot key, for callers that want to resolve "all of them". */

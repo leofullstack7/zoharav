@@ -2,7 +2,7 @@ import "server-only";
 import { services } from "@/content/services";
 import { activeOffices } from "@/content/offices";
 import { team } from "@/content/team";
-import { getSiteImagePhoto, getSiteImagePhotos } from "./getSiteImage";
+import { getSiteImageAlts, getSiteImagePhoto, getSiteImagePhotos } from "./getSiteImage";
 
 /**
  * Consolidated, home-page-shaped bundle of every admin photo (or raster
@@ -22,6 +22,16 @@ export type HomeImages = {
   serviceCovers: Record<string, string | null>;
   officeCovers: Record<string, string | null>;
   teamPhotos: Record<string, string | null>;
+  alts: {
+    hero: string;
+    firm: string;
+    contactFrame: string;
+    proSupport: [string, string, string];
+    oil: string;
+    mining: string;
+    sustainability: string;
+    investment: string;
+  };
 };
 
 export async function getHomeImages(): Promise<HomeImages> {
@@ -72,6 +82,20 @@ export async function getHomeImages(): Promise<HomeImages> {
     teamPhotosById[member.id] = teamPhotos[`team.${member.id}.photo`] ?? null;
   }
 
+  const homeAltKeys = [
+    "home.hero",
+    "home.firm",
+    "home.contact-frame",
+    "home.pro-support-1",
+    "home.pro-support-2",
+    "home.pro-support-3",
+    "home.oil",
+    "home.mining",
+    "home.sustainability",
+    "home.investment",
+  ] as const;
+  const homeAlts = await getSiteImageAlts(homeAltKeys);
+
   return {
     hero,
     firm,
@@ -85,5 +109,19 @@ export async function getHomeImages(): Promise<HomeImages> {
     serviceCovers: serviceCoversBySlug,
     officeCovers: officeCoversById,
     teamPhotos: teamPhotosById,
+    alts: {
+      hero: homeAlts["home.hero"],
+      firm: homeAlts["home.firm"],
+      contactFrame: homeAlts["home.contact-frame"],
+      proSupport: [
+        homeAlts["home.pro-support-1"],
+        homeAlts["home.pro-support-2"],
+        homeAlts["home.pro-support-3"],
+      ],
+      oil: homeAlts["home.oil"],
+      mining: homeAlts["home.mining"],
+      sustainability: homeAlts["home.sustainability"],
+      investment: homeAlts["home.investment"],
+    },
   };
 }

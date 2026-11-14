@@ -3,6 +3,7 @@ import { getAdminSession } from "@/lib/auth/requireAdmin";
 import { query } from "@/lib/db/client";
 import { isLikelyImage, optimizeToWebp } from "@/lib/images/optimize";
 import { revalidateSiteImage } from "@/lib/images/revalidateSiteImage";
+import { sanitizeAltText } from "@/lib/images/slotAlt";
 import { getImageSlot } from "@/lib/images/slots";
 import { getSupabaseAdminClient, SITE_IMAGES_BUCKET } from "@/lib/supabase/admin";
 
@@ -61,7 +62,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ slo
     return NextResponse.json({ error: "El archivo no parece ser una imagen válida." }, { status: 400 });
   }
 
-  let optimized: Buffer;
+  const altField = formData.get("altText");
+  const altText =
+    typeof altField === "string"
+      ? sanitizeAltText(altField, slot.label)
+      : sanitizeAltText("", slot.label);
+
+  let optimized: Awaited<ReturnType<typeof optimizeToWebp>>;
   try {
     optimized = await optimizeToWebp(inputBuffer, slot.recommendedWidth, slot.recommendedHeight);
   } catch (err) {
@@ -84,7 +91,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ slo
 
     const { error: uploadError } = await supabase.storage
       .from(SITE_IMAGES_BUCKET)
-      .upload(storagePath, optimized, { contentType: "image/webp", upsert: false });
+      .upload(storagePath, optimized.buffer, { contentType: "image/webp", upsert: false });
     if (uploadError) {
       console.error(`Failed to upload image for slot "${slotKey}":`, uploadError);
       return NextResponse.json({ error: "No se pudo subir la imagen." }, { status: 500 });
@@ -94,13 +101,23 @@ export async function POST(request: Request, { params }: { params: Promise<{ slo
     const imageUrl = publicUrlData.publicUrl;
 
     await query(
-      `insert into site_images (slot_key, label, page, recommended_width, recommended_height, image_url, storage_path, updated_at)
-       values ($1, $2, $3, $4, $5, $6, $7, now())
+      `insert into site_images (slot_key, label, page, recommended_width, recommended_height, image_url, storage_path, alt_text, updated_at)
+       values ($1, $2, $3, $4, $5, $6, $7, $8, now())
        on conflict (slot_key) do update set
          image_url = excluded.image_url,
          storage_path = excluded.storage_path,
+         alt_text = excluded.alt_text,
          updated_at = excluded.updated_at`,
-      [slotKey, slot.label, slot.page, slot.recommendedWidth, slot.recommendedHeight, imageUrl, storagePath],
+      [
+        slotKey,
+        slot.label,
+        slot.page,
+        slot.recommendedWidth,
+        slot.recommendedHeight,
+        imageUrl,
+        storagePath,
+        altText,
+      ],
     );
 
     if (previousStoragePath) {
@@ -115,10 +132,58 @@ export async function POST(request: Request, { params }: { params: Promise<{ slo
 
     revalidateSiteImage(slotKey);
 
-    return NextResponse.json({ ok: true, imageUrl }, { status: 200 });
+    return NextResponse.json(
+      {
+        ok: true,
+        imageUrl,
+        altText,
+        optimized: {
+          beforeBytes: optimized.beforeBytes,
+          afterBytes: optimized.afterBytes,
+          width: optimized.width,
+          height: optimized.height,
+          format: "webp",
+        },
+      },
+      { status: 200 },
+    );
   } catch (err) {
     console.error(`Failed to save uploaded image for slot "${slotKey}":`, err);
     return NextResponse.json({ error: "No se pudo guardar la imagen." }, { status: 500 });
+  }
+}
+
+/** Updates ALT text without re-uploading the binary (SEO / accessibility). */
+export async function PATCH(request: Request, { params }: { params: Promise<{ slotKey: string }> }) {
+  const unauthorized = await requireAdminOr401();
+  if (unauthorized) return unauthorized;
+
+  const { slotKey } = await params;
+  const slot = getImageSlot(slotKey);
+  if (!slot) {
+    return NextResponse.json({ error: "Slot de imagen desconocido." }, { status: 404 });
+  }
+
+  let body: { altText?: string };
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "JSON inválido." }, { status: 400 });
+  }
+  const altText = sanitizeAltText(body.altText ?? "", slot.label);
+
+  try {
+    await query(
+      `insert into site_images (slot_key, label, page, recommended_width, recommended_height, image_url, storage_path, alt_text, updated_at)
+       values ($1, $2, $3, $4, $5, null, null, $6, now())
+       on conflict (slot_key) do update set alt_text = excluded.alt_text, updated_at = now()`,
+      [slotKey, slot.label, slot.page, slot.recommendedWidth, slot.recommendedHeight, altText],
+    );
+    revalidateSiteImage(slotKey);
+    return NextResponse.json({ ok: true, altText }, { status: 200 });
+  } catch (err) {
+    console.error(`Failed to update alt for slot "${slotKey}":`, err);
+    return NextResponse.json({ error: "No se pudo guardar el texto ALT." }, { status: 500 });
   }
 }
 

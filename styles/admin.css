@@ -798,6 +798,29 @@ body {
   margin-top: 0.65rem;
 }
 
+.zh-admin-alt-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1 1 100%;
+}
+
+.zh-admin-alt-field span {
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--zh-muted);
+}
+
+.zh-admin-alt-field input {
+  width: 100%;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid rgba(186, 198, 214, 0.35);
+  background: rgba(8, 12, 18, 0.55);
+  color: var(--zh-cream);
+  font-size: 0.78rem;
+}
+
 @media (max-width: 1100px) {
   .zh-admin-image-board {
     grid-template-columns: 1fr;

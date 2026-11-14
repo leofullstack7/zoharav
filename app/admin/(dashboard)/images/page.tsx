@@ -8,6 +8,7 @@ type Slot = {
   recommendedWidth: number;
   recommendedHeight: number;
   imageUrl: string | null;
+  altText: string;
   fallback: string | null;
   updatedAt: string | null;
   href: string;
@@ -16,7 +17,11 @@ type Slot = {
 
 type Group = { page: string; href: string; slots: Slot[] };
 
-type SlotStatus = { kind: "idle" } | { kind: "working" } | { kind: "error"; message: string } | { kind: "ok" };
+type SlotStatus =
+  | { kind: "idle" }
+  | { kind: "working" }
+  | { kind: "error"; message: string }
+  | { kind: "ok"; message?: string };
 
 const DESKTOP_W = 1440;
 const DESKTOP_H = 2400;
@@ -29,6 +34,7 @@ export default function ImagesAdminPage() {
   const [activeSlot, setActiveSlot] = useState<string | null>(null);
   const [previewSrc, setPreviewSrc] = useState("/es");
   const [statuses, setStatuses] = useState<Record<string, SlotStatus>>({});
+  const [altDrafts, setAltDrafts] = useState<Record<string, string>>({});
   const fileInputs = useRef<Record<string, HTMLInputElement | null>>({});
   const frameRef = useRef<HTMLIFrameElement>(null);
 
@@ -43,6 +49,15 @@ export default function ImagesAdminPage() {
       }
       const nextGroups: Group[] = data.groups ?? [];
       setGroups(nextGroups);
+      setAltDrafts((prev) => {
+        const next = { ...prev };
+        for (const group of nextGroups) {
+          for (const slot of group.slots) {
+            if (next[slot.key] === undefined) next[slot.key] = slot.altText;
+          }
+        }
+        return next;
+      });
       setActivePage((current) => current ?? nextGroups[0]?.page ?? null);
     } catch {
       setLoadError("No se pudo conectar con el servidor.");
@@ -101,10 +116,17 @@ export default function ImagesAdminPage() {
       return;
     }
 
+    const altText = (altDrafts[slotKey] ?? "").trim();
+    if (altText.length < 4) {
+      setStatus(slotKey, { kind: "error", message: "Escribe un texto ALT descriptivo (mín. 4 caracteres)." });
+      return;
+    }
+
     setStatus(slotKey, { kind: "working" });
     try {
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("altText", altText);
       const response = await fetch(`/api/admin/images/${encodeURIComponent(slotKey)}`, {
         method: "POST",
         body: formData,
@@ -115,10 +137,38 @@ export default function ImagesAdminPage() {
         return;
       }
       if (input) input.value = "";
-      setStatus(slotKey, { kind: "ok" });
+      const savedKb = data?.optimized
+        ? `${Math.round(data.optimized.beforeBytes / 1024)}→${Math.round(data.optimized.afterBytes / 1024)} KB WebP`
+        : "WebP";
+      setStatus(slotKey, { kind: "ok", message: `Optimizado (${savedKb}).` });
       await load();
       const frame = frameRef.current;
       if (frame) frame.src = frame.src;
+    } catch {
+      setStatus(slotKey, { kind: "error", message: "No se pudo conectar con el servidor." });
+    }
+  }
+
+  async function handleSaveAlt(slotKey: string) {
+    const altText = (altDrafts[slotKey] ?? "").trim();
+    if (altText.length < 4) {
+      setStatus(slotKey, { kind: "error", message: "Escribe un texto ALT descriptivo (mín. 4 caracteres)." });
+      return;
+    }
+    setStatus(slotKey, { kind: "working" });
+    try {
+      const response = await fetch(`/api/admin/images/${encodeURIComponent(slotKey)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ altText }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        setStatus(slotKey, { kind: "error", message: data?.error || "No se pudo guardar el ALT." });
+        return;
+      }
+      setStatus(slotKey, { kind: "ok", message: "Texto ALT guardado." });
+      await load();
     } catch {
       setStatus(slotKey, { kind: "error", message: "No se pudo conectar con el servidor." });
     }
@@ -150,7 +200,8 @@ export default function ImagesAdminPage() {
         <p className="text-sm text-zh-muted">
           Cada interruptor abre una página de la firma. La vista de la derecha es el sitio real a
           tamaño de escritorio, reducido — no se adapta a móvil. Elige una sección para saltar a esa
-          imagen y sustituirla.
+          imagen y sustituirla. Al subir, el sistema la redimensiona, la convierte a WebP y comprime
+          automáticamente. El texto ALT es obligatorio para SEO y accesibilidad.
         </p>
       </div>
 
@@ -236,6 +287,26 @@ export default function ImagesAdminPage() {
                   </button>
 
                   <div className="zh-admin-slot-actions">
+                    <label className="zh-admin-alt-field">
+                      <span>Texto ALT (SEO)</span>
+                      <input
+                        type="text"
+                        value={altDrafts[slot.key] ?? slot.altText}
+                        maxLength={280}
+                        onChange={(event) =>
+                          setAltDrafts((prev) => ({ ...prev, [slot.key]: event.target.value }))
+                        }
+                        placeholder={slot.label}
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      className="zh-admin-btn"
+                      disabled={status.kind === "working"}
+                      onClick={() => handleSaveAlt(slot.key)}
+                    >
+                      Guardar ALT
+                    </button>
                     <input
                       type="file"
                       accept="image/*"
@@ -267,7 +338,9 @@ export default function ImagesAdminPage() {
                         {status.message}
                       </p>
                     ) : null}
-                    {status.kind === "ok" ? <p className="text-xs text-[#4fd3a8]">Guardado.</p> : null}
+                    {status.kind === "ok" ? (
+                      <p className="text-xs text-[#4fd3a8]">{status.message ?? "Guardado."}</p>
+                    ) : null}
                   </div>
                 </div>
               );
