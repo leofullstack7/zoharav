@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Service, ServiceImpactSlide, SubService } from "@/content/types";
 import { Link } from "@/i18n/navigation";
@@ -9,6 +9,7 @@ import { loc } from "@/lib/i18n/loc";
 import { uiLoc } from "@/lib/i18n/ui";
 import type { ServicePageMedia } from "@/lib/images/resolveServicePageMedia";
 import { gsap, prefersReducedMotion, registerGsap, ScrollTrigger } from "@/lib/motion";
+import { ServicePracticeModal } from "./ServicePracticeModal";
 
 const line = (value: { en: string; es: string }, locale: string) => loc(value, locale);
 
@@ -94,7 +95,6 @@ export function ServiceExperience({
   const [pulseId, setPulseId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const rootRef = useRef<HTMLElement>(null);
-  const modalTitleId = useId();
   const pulseTimer = useRef<number | null>(null);
   useEffect(() => {
     setMounted(true);
@@ -354,7 +354,8 @@ export function ServiceExperience({
                   <div className="svc-offer-visual" aria-hidden>
                     <Image src={image} alt={media.alts.subs[sub.id] ?? ""} fill sizes="(max-width: 900px) 100vw, 46vw" />
                   </div>
-                  <p className="svc-offer-body">{line(sub.tagline, locale)}</p>
+                  <p className="svc-offer-hook">{line(sub.tagline, locale)}</p>
+                  <p className="svc-offer-body">{line(sub.hover, locale)}</p>
                   <div className="svc-offer-actions">
                     <button type="button" className="svc-offer-more" onClick={() => openSub(sub)}>
                       {uiLoc("readMore", locale)}
@@ -423,59 +424,16 @@ export function ServiceExperience({
 
       {active && mounted
         ? createPortal(
-        <div className="svc-studio" role="dialog" aria-modal="true" aria-labelledby={modalTitleId}>
-          <button type="button" className="svc-studio-backdrop" aria-label={uiLoc("close", locale)} onClick={closeSub} />
-          <div className="svc-studio-panel">
-            <button type="button" className="svc-studio-close" onClick={closeSub} aria-label={uiLoc("close", locale)}>
-              ×
-            </button>
-            <div className="svc-studio-media">
-              <Image
-                src={
-                  media.subs[active.id] ??
-                  (active.image && !active.image.endsWith(".svg") ? active.image : asRaster(service.image))
-                }
-                alt={media.alts.subs[active.id] ?? ""}
-                fill
-                sizes="100vw"
-                className="svc-studio-photo"
-              />
-            </div>
-            <div className="svc-studio-copy">
-              <p className="svc-kicker">{line(service.name, locale)}</p>
-              <h2 id={modalTitleId}>{line(active.title, locale)}</h2>
-              <p className="svc-studio-tag">{line(active.tagline, locale)}</p>
-              <p className="svc-studio-body">{line(active.body, locale)}</p>
-              <div className="svc-studio-visuals" aria-hidden>
-                {(media.studioDetails[active.id] ?? []).map((src, visualIndex) => (
-                  <div className="svc-studio-visual" key={`${active.id}-${visualIndex}`}>
-                    <Image
-                      src={src}
-                      alt={(media.alts.studioDetails[active.id] ?? [])[visualIndex] ?? ""}
-                      fill
-                      sizes="(max-width: 720px) 33vw, 240px"
-                    />
-                  </div>
-                ))}
-              </div>
-              <ul className="svc-studio-tiles">
-                {active.bullets.map((bullet, index) => (
-                  <li key={bullet.en} style={{ animationDelay: `${0.08 * index}s` }}>
-                    <span>{String(index + 1).padStart(2, "0")}</span>
-                    <p>{line(bullet, locale)}</p>
-                  </li>
-                ))}
-              </ul>
-              <div className="svc-studio-actions">
-                <Link className="btn-gold" href={bookingHref(service.slug, active.id)} onClick={closeSub}>
-                  {uiLoc("bookThisPractice", locale)} →
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>,
-        document.body,
-      )
+            <ServicePracticeModal
+              active={active}
+              service={service}
+              locale={locale}
+              media={media}
+              onClose={closeSub}
+              bookingHref={(offerId) => bookingHref(service.slug, offerId)}
+            />,
+            document.body,
+          )
         : null}
     </main>
   );

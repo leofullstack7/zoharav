@@ -58,6 +58,7 @@ export const ui = {
     "Open the detail of each sub-service, or book that consultation at once.",
     "Abra el detalle de cada subservicio o reserve esa consulta de inmediato.",
   ),
+  practiceDeliverables: L("What this engagement delivers", "Qué entrega este encargo"),
   sessionCredit: L(
     "Sixty minutes with a senior advisor. The retainer credits to the engagement if you continue.",
     "Sesenta minutos con un asesor senior. La reserva se acredita al encargo si continúan.",
